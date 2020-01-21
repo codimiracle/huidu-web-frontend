@@ -1,0 +1,33 @@
+{
+  "name": "huidu-web-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@zeit/next-less": "^1.0.1",
+    "antd": "^3.25.2",
+    "isomorphic-unfetch": "^3.0.0",
+    "less": "^3.10.3",
+    "next": "^9.1.4",
+    "react": "^16.12.0",
+    "react-color": "^2.17.3",
+    "react-dom": "^16.12.0",
+    "react-markdown": "^4.2.2",
+    "react-responsive": "^8.0.1",
+    "react-scrollbar": "^0.5.6"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.9.0",
+    "@types/node": "^13.1.2",
+    "@types/react-responsive": "^8.0.2",
+    "enzyme": "3.10.0",
+    "enzyme-adapter-react-16": "1.15.1",
+    "jest": "^24.9.0",
+    "typescript": "^3.7.4"
+  }
+}
