@@ -13,13 +13,15 @@ test('api definition retrive should be success', () => {
 
 test('placeholder replace should be success', () => {
   let apiDefinition = retriveApiDefinition(APIDefinitionData, API.BookEntity);
-  expect(placeholderReplacer(apiDefinition, { 'book-id': '2432' })).not.toBe(apiDefinition);
+  expect(placeholderReplacer(apiDefinition, { 'book_id': '2432' })).not.toBe(apiDefinition);
 })
 
 test('fetch API should return but error', () => {
   fetchData<BookCommodity>(API.BookEntity).then((data: BookCommodity) => {
     console.log(data);
     expect(data).not.toBeNull();
+  }).catch((err) => {
+    fail(err);
   });
 })
 

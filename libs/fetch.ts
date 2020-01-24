@@ -17,6 +17,7 @@ export function placeholderReplacer(apiDefinition: string, data: any) {
   for (let key in data) {
     apiDefinition = apiDefinition.replace(`:${key}`, encodeURI(data[key]));
   }
+  return apiDefinition;
 }
 
 export default async function (api: API, init?: RequestInit): Promise<Response> {
@@ -27,7 +28,7 @@ export default async function (api: API, init?: RequestInit): Promise<Response> 
   if (init && init.method && init.method.toLowerCase() === 'get') {
     const { body, ...other } = init;
     let data = JSON.parse(body.toString());
-    placeholderReplacer(apiDefinition, data);
+    apiDefinition = placeholderReplacer(apiDefinition, data);
     init = other;
   }
   return await fetch(apiDefinition, init);
