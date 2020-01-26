@@ -20,7 +20,7 @@ export default class GridView extends React.Component<GridViewProps, GridViewSta
       for (let col = 0; col < cols; col++) {
         r.push(
           <Col key={`${row}-${col}`} span={24 / cols}>
-            {itemRender(dataSource[index])}
+            {index < dataSource.length && dataSource[index] && itemRender(dataSource[index])}
           </Col>
         )
         index++;
