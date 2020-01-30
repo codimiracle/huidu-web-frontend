@@ -1,6 +1,8 @@
 import React from 'react';
 import { ElectronicBook } from '../types/electronic-book';
 import { Tag, Button, Rate } from 'antd';
+import DirectLink from './direct-link';
+import Link from 'next/link';
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
@@ -30,11 +32,11 @@ export default class ElectronicBookView extends React.Component<ElectronicBookVi
           <img src={renderringBook.metadata.cover || EMPTY_IMAGE} />
         </div>
         <div className="body">
-    <div><strong>{renderringBook.metadata.name}</strong> <Tag>{renderringBook.status}</Tag> <span className="author">{renderringBook.metadata.authors.join('')}</span></div>
+          <div><strong><Link href="/bookshop/electronic-books/[book_id]" as={`/bookshop/electronic-books/${renderringBook.id}`}><a>{renderringBook.metadata.name}</a></Link></strong> <Tag>{renderringBook.status}</Tag> <span className="author">{renderringBook.metadata.author}</span></div>
           <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
           <p className="description">{renderringBook.metadata.description}</p>
           <div className="actions">
-            <Button>在线阅读</Button> <Button>加入书架</Button>
+            <DirectLink href="/reader/[book_id]" as={`/reader/${renderringBook.id}`}><Button>在线阅读</Button></DirectLink> <Button onClick={() => this.onJoinShelfClick()}>加入书架</Button>
           </div>
         </div>
         <style jsx>{`
