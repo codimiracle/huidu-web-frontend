@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ElectronicBook } from '../../../../types/electronic-book';
+import { AudioBook } from '../../../../types/audio-book';
 import { BookType } from '../../../../types/book';
 import { APIResponse } from '../../../../types/api';
 
 export interface BookJSON {
-  book: ElectronicBook
+  book: AudioBook
 }
 export default function (request: NextApiRequest, response: NextApiResponse) {
   const { book_id } = request.query;
@@ -12,12 +12,12 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
     book: {
       id: `${book_id}`,
       contentId: '32423',
-      type: BookType.ElectronicBook,
+      type: BookType.AudioBook,
       metadata: {
         id: 'somebook',
         name: 'Book Name',
         description: 'Book Description',
-        cover: '/assets/empty.png',
+        cover: '/assets/empty-audio.png',
         words: '10 万字',
         author: 'Hero',
         isbm: '342-23432454-34232',
@@ -29,9 +29,9 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         tags: [],
         extra: null
       },
-      allEpisodesMoney: 0,
       episodes: 34,
       episodeList: null,
+      allEpisodesMoney: 0,
       status: 'status',
       comments: 342,
       rate: 0.5,

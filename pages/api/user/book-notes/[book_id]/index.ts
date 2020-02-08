@@ -1,38 +1,28 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { APIResponse } from '../../../../../types/api';
-import { Episode } from '../../../../../types/episode';
+import { BookNotes } from '../../../../../types/notes';
 import { BookType } from '../../../../../types/book';
 
-export interface EpisodeJSON {
-  episode: Episode
+export interface BookNotesJSON {
+  bookNotes: BookNotes
 }
 
 export default function (request: NextApiRequest, response: NextApiResponse) {
-  const { book_id, episode_id } = request.query;
-  let data: EpisodeJSON = {
-    episode: {
-      id: `${episode_id}`,
-      title: '示例章节',
-      content: {
-        type: 'html',
-        source: `<strong>示例内容 ${episode_id} </strong>`
-      },
-      next: null,
-      commodity: null,
-      createTime: "2020-01-28T08:13:18.596Z",
-      updateTime: "2020-01-28T08:13:18.596Z",
+  const { book_id } = request.query;
+  let data: BookNotesJSON = {
+    bookNotes: {
+      bookId: `${book_id}`,
       book: {
         id: `${book_id}`,
         contentId: '32423',
         type: BookType.ElectronicBook,
-        allEpisodesMoney: 0,
         metadata: {
           id: 'somebook',
           name: 'Book Name',
           description: 'Book Description',
           cover: '/assets/empty.png',
+          words: '10 万字',
           author: 'Hero',
-          words: '5 万字',
           isbm: '342-23432454-34232',
         },
         category: {
@@ -42,6 +32,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
           tags: [],
           extra: null
         },
+        allEpisodesMoney: 0,
         episodes: 34,
         episodeList: null,
         status: 'status',
@@ -51,9 +42,25 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         createTime: '2020-01-29T14:16:58.269Z',
         updateTime: '2020-01-29T14:16:58.269Z'
       },
+      notes: [
+        {
+          ref: `示例章节`,
+          episodeId: '32423',
+          content: {
+            type: 'plaintext',
+            source: '这是一条笔记'
+          },
+          domMark: {
+            startDom: '#1',
+            startOffset: 0,
+            endDom: '#1',
+            endOffset: 100,
+          }
+        }
+      ]
     }
   }
-  let json: APIResponse<EpisodeJSON> = {
+  let json: APIResponse<BookNotesJSON> = {
     code: 200,
     message: 'success',
     data: data

@@ -2,9 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ElectronicBook } from '../../../../types/electronic-book';
 import { BookType } from '../../../../types/book';
 import { APIResponse } from '../../../../types/api';
+import { PaperBook } from '../../../../types/paper-book';
+import { CommodityStatus } from '../../../../types/commodity';
 
 export interface BookJSON {
-  book: ElectronicBook
+  book: PaperBook
 }
 export default function (request: NextApiRequest, response: NextApiResponse) {
   const { book_id } = request.query;
@@ -12,7 +14,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
     book: {
       id: `${book_id}`,
       contentId: '32423',
-      type: BookType.ElectronicBook,
+      type: BookType.PaperBook,
       metadata: {
         id: 'somebook',
         name: 'Book Name',
@@ -22,6 +24,18 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         author: 'Hero',
         isbm: '342-23432454-34232',
       },
+      commodity: {
+        id: '352423',
+        name: 'Book Name',
+        introduction: 'Commodity Introduction',
+        type: 'paper-book',
+        picture: '/assets/huidu.png',
+        rate: 3.5,
+        extra: null,
+        stock: 100,
+        prices: 40,
+        status: CommodityStatus.PutOnSale
+      },
       category: {
         id: '54634',
         name: '电子书',
@@ -29,10 +43,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         tags: [],
         extra: null
       },
-      allEpisodesMoney: 0,
       episodes: 34,
-      episodeList: null,
-      status: 'status',
       comments: 342,
       rate: 0.5,
       commentList: [],

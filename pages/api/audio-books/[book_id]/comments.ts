@@ -21,7 +21,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       title: 'user-comment',
       content: {
         type: "plaintext",
-        source: "hello this is a ebook comments"
+        source: "Hello, this is a comment"
       },
       owner: UNKNOW_USER,
       contentId: 'comment-sfa',

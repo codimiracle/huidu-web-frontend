@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { APIResponse } from '../../../types/api';
-import { ElectronicBook } from '../../../types/electronic-book';
+import { PaperBook } from '../../../types/paper-book';
 import { BookType } from '../../../types/book';
+import { CommodityStatus } from '../../../types/commodity';
 
-export interface ElectronicBookListJSON {
+export interface PaperBookListJSON {
   page: number,
   limit: number,
-  list: Array<ElectronicBook>,
+  list: Array<PaperBook>,
   total: number,
 }
 
@@ -15,12 +16,12 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
   let pageInt = parseInt(page.toString());
   let limitInt = parseInt(limit.toString());
   let filterObj = JSON.parse(filter.toString());
-  let data: Array<ElectronicBook> = [];
+  let data: Array<PaperBook> = [];
   for (let index = 0; index < limitInt; index++) {
     data.push({
       id: `${limitInt * pageInt + index}`,
       contentId: '32423',
-      type: BookType.ElectronicBook,
+      type: BookType.PaperBook,
       metadata: {
         id: 'somebook',
         name: 'Book Name',
@@ -33,14 +34,22 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       category: {
         id: '54634',
         name: '电子书',
-        description: '在线读物',
+        description: '纸质读物',
         tags: [],
         extra: null
       },
       episodes: 34,
-      episodeList: null,
-      allEpisodesMoney: 0,
-      status: 'status',
+      commodity: {
+        id: '34324',
+        name: 'book name',
+        introduction: 'Book Description',
+        prices: 342,
+        type: 'paper-book',
+        picture: '/assets/huidu.png',
+        rate: 3.5,
+        extra: null,
+        status: CommodityStatus.PutOnSale
+      },
       comments: 342,
       rate: 0.5,
       commentList: [],
@@ -48,7 +57,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       updateTime: '2020-01-29T14:16:58.269Z'
     });
   }
-  let json: APIResponse<ElectronicBookListJSON> = {
+  let json: APIResponse<PaperBookListJSON> = {
     code: 200,
     message: 'success',
     data: {

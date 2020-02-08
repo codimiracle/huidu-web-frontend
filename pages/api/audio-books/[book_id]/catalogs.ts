@@ -1,14 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { APIResponse } from '../../../../types/api';
-import { Catalogs } from '../../../../types/electronic-book';
+import { AudioCatalogs } from '../../../../types/audio-book';
 
-export interface CatalogsJSON {
-  catalogs: Array<Catalogs>
+export interface AudioCatalogsJSON {
+  catalogs: Array<AudioCatalogs>
 }
 
 export default function (request: NextApiRequest, response: NextApiResponse) {
   const { book_id } = request.query;
-  let data: CatalogsJSON = {
+  let data: AudioCatalogsJSON = {
     catalogs: [
       {
         title: '第一章',
@@ -20,7 +20,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       }
     ]
   }
-  let json: APIResponse<CatalogsJSON> = {
+  let json: APIResponse<AudioCatalogsJSON> = {
     code: 200,
     message: 'success',
     data: data 

@@ -1,35 +1,23 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { APIResponse } from '../../../../types/api';
-import { Episode } from '../../../../types/episode';
-import { BookType } from '../../../../types/book';
-
-interface LastUpdateJSON {
-  episode: Episode
-}
+import { ElectronicBookListJSON } from '.';
+import { APIResponse } from '../../../types/api';
+import { BookType } from '../../../types/book';
+import { ElectronicBook } from '../../../types/electronic-book';
 export default function (request: NextApiRequest, response: NextApiResponse) {
-  const { book_id } = request.query;
-  let data: LastUpdateJSON = {
-    episode: {
-      id: '32432',
-      title: '示例章节',
-      content: {
-        type: 'html',
-        source: "<strong>示例内容</strong>"
-      },
-      commodity: null,
-      createTime: "2020-01-28T08:13:18.596Z",
-      updateTime: "2020-01-28T08:13:18.596Z",
-      book: {
-        id: `${book_id}`,
+  if (request.method.toLowerCase() == 'get') {
+    const { q } = request.query;
+    let data: Array<ElectronicBook> = [];
+    for (let index = 0; index < 10; index++) {
+      data.push({
+        id: `${index}`,
         contentId: '32423',
         type: BookType.ElectronicBook,
-        allEpisodesMoney: 0,
         metadata: {
           id: 'somebook',
           name: 'Book Name',
           description: 'Book Description',
           cover: '/assets/empty.png',
-          words: '',
+          words: '4 万字',
           author: 'Hero',
           isbm: '342-23432454-34232',
         },
@@ -42,19 +30,29 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         },
         episodes: 34,
         episodeList: null,
+        allEpisodesMoney: 0,
         status: 'status',
         comments: 342,
         rate: 0.5,
+        likes: 0,
+        reposts: 0,
         commentList: [],
         createTime: '2020-01-29T14:16:58.269Z',
         updateTime: '2020-01-29T14:16:58.269Z'
-      },
+      });
     }
+    let json: APIResponse<ElectronicBookListJSON> = {
+      code: 200,
+      message: 'success',
+      data: {
+        page: 1,
+        limit: 10,
+        total: 100,
+        list: data
+      }
+    }
+    response.status(200).json(json);
+    return;
   }
-  let result: APIResponse<LastUpdateJSON> = {
-    code: 200,
-    message: 'success',
-    data: data
-  }
-  response.status(200).json(result);
+  response.status(404);
 }

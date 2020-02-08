@@ -1,23 +1,21 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { APIResponse } from '../../../../../types/api';
-import { Episode } from '../../../../../types/episode';
-import { BookType } from '../../../../../types/book';
+import { APIResponse } from '../../../../types/api';
+import { Episode } from '../../../../types/episode';
+import { BookType } from '../../../../types/book';
 
-export interface EpisodeJSON {
+interface LastUpdateJSON {
   episode: Episode
 }
-
 export default function (request: NextApiRequest, response: NextApiResponse) {
-  const { book_id, episode_id } = request.query;
-  let data: EpisodeJSON = {
+  const { book_id } = request.query;
+  let data: LastUpdateJSON = {
     episode: {
-      id: `${episode_id}`,
+      id: '32432',
       title: '示例章节',
       content: {
         type: 'html',
-        source: `<strong>示例内容 ${episode_id} </strong>`
+        source: "<strong>示例内容</strong>"
       },
-      next: null,
       commodity: null,
       createTime: "2020-01-28T08:13:18.596Z",
       updateTime: "2020-01-28T08:13:18.596Z",
@@ -25,14 +23,12 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         id: `${book_id}`,
         contentId: '32423',
         type: BookType.ElectronicBook,
-        allEpisodesMoney: 0,
         metadata: {
           id: 'somebook',
           name: 'Book Name',
           description: 'Book Description',
           cover: '/assets/empty.png',
           author: 'Hero',
-          words: '5 万字',
           isbm: '342-23432454-34232',
         },
         category: {
@@ -53,10 +49,10 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       },
     }
   }
-  let json: APIResponse<EpisodeJSON> = {
+  let result: APIResponse<LastUpdateJSON> = {
     code: 200,
     message: 'success',
     data: data
   }
-  response.status(200).json(json)
+  response.status(200).json(result);
 }
