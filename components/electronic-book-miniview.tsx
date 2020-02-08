@@ -3,32 +3,32 @@ import { ElectronicBook } from '../types/electronic-book';
 import { Tag, Button, Rate, message } from 'antd';
 import DirectLink from './direct-link';
 import Link from 'next/link';
-import { API } from '../configs/api-config';
 import { fetchMessageByPost } from '../util/network-util';
+import { API } from '../configs/api-config';
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
-export interface ElectronicBookViewProps {
+export interface ElectronicBookMiniViewProps {
   id?: string,
   book?: ElectronicBook
 };
-export interface ElectronicBookViewState {
+export interface ElectronicBookMiniViewState {
   book: ElectronicBook,
   joining: boolean,
   joined: boolean
 };
 
-export default class ElectronicBookView extends React.Component<ElectronicBookViewProps, ElectronicBookViewState> {
-  constructor(props: ElectronicBookViewProps) {
+export default class ElectronicBookMiniView extends React.Component<ElectronicBookMiniViewProps, ElectronicBookMiniViewState> {
+  constructor(props: ElectronicBookMiniViewProps) {
     super(props);
     this.state = {
-      joining: false,
-      book: null,
-      joined: false
-    }
+      book: props.book,
+      joined: false,
+      joining: false
+    };
   }
   private onJoinShelfClick() {
-    let book = this.props.book || this.state.book;
+    const { book } = this.props;
     this.setState({ joining: true });
     fetchMessageByPost(API.UserShelfJoin, {
       book_id: book.id
@@ -53,11 +53,12 @@ export default class ElectronicBookView extends React.Component<ElectronicBookVi
           <img src={renderringBook.metadata.cover || EMPTY_IMAGE} />
         </div>
         <div className="body">
-          <div><strong><Link href="/bookshop/electronic-books/[book_id]" as={`/bookshop/electronic-books/${renderringBook.id}`}><a>{renderringBook.metadata.name}</a></Link></strong> <Tag>{renderringBook.status}</Tag> <span className="author">{renderringBook.metadata.author}</span></div>
-          <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
+          <div><strong><Link href="/bookshop/electronic-books/[book_id]" as={`/bookshop/electronic-books/${renderringBook.id}`}><a>{renderringBook.metadata.name}</a></Link></strong> <Tag>{renderringBook.status}</Tag></div>
+          <div><span className="author">{renderringBook.metadata.author}</span></div>
+          <div><Rate defaultValue={2.5} disabled style={{ fontSize: '1em' }} /></div>
           <p className="description">{renderringBook.metadata.description}</p>
           <div className="actions">
-            <DirectLink href="/reader/[book_id]" as={`/reader/${renderringBook.id}`}><Button>在线阅读</Button></DirectLink> <Button loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
+            <Button loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
           </div>
         </div>
         <style jsx>{`

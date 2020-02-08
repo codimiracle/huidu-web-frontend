@@ -1,11 +1,10 @@
-import React from 'react';
-import { AudioBook } from '../types/audio-book';
-import { Tag, Button, Rate, message } from 'antd';
-import RetryView from './retry-view';
-import DirectLink from './direct-link';
+import { Button, message, Rate, Tag } from 'antd';
 import Link from 'next/link';
-import { fetchMessageByPost } from '../util/network-util';
+import React from 'react';
 import { API } from '../configs/api-config';
+import { AudioBook } from '../types/audio-book';
+import { fetchMessageByPost } from '../util/network-util';
+import RetryView from './retry-view';
 
 const EMPTY_IMAGE = '/assets/empty-audio.png';
 
@@ -27,9 +26,9 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
     this.state = {
       book: props.book,
       loading: !!props.id,
+      retry: false,
       joined: false,
-      joining: false,
-      retry: false
+      joining: false
     }
   }
   private onJoinShelfClick() {
@@ -66,10 +65,10 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
           </div>
           <div className="body">
             <div><strong><Link href="/bookshop/audio-books/[book_id]" as={`/bookshop/audio-books/${book.id}`}><a>{book.title || book.metadata.name}</a></Link></strong> <Tag>{book.status}</Tag> <span className="author">{book.teller}</span></div>
-            <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
+            <div><Rate defaultValue={2.5} disabled style={{ fontSize: '1em' }} /></div>
             <p className="description">{book.description || book.metadata.description}</p>
             <div className="actions">
-              <DirectLink href={`/player/[book_id]`} as={`/player/${book.id}`}><Button>在线听书</Button></DirectLink> <Button loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
+              <Button loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
             </div>
           </div>
         </div>
