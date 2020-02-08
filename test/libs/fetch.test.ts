@@ -1,7 +1,7 @@
-import fetch, { placeholderReplacer, retriveApiDefinition } from '../../libs/fetch';
+import fetch, { queryPlaceholderReplacer, bodyPlaceholderReplacer, retriveApiDefinition } from '../../libs/fetch';
 import { API, APIDefinitionData } from '../../configs/api-config';
 import { fetchData } from '../../util/network-util';
-import { BookCommodity } from '../../types/book';
+import { BookBase } from '../../types/book';
 
 test('should API BookEntity retrive should be a url', () => {
   expect(API.BookEntity).toBe('book.entity');
@@ -13,11 +13,18 @@ test('api definition retrive should be success', () => {
 
 test('placeholder replace should be success', () => {
   let apiDefinition = retriveApiDefinition(APIDefinitionData, API.BookEntity);
-  expect(placeholderReplacer(apiDefinition, { 'book_id': '2432' })).not.toBe(apiDefinition);
+  expect(queryPlaceholderReplacer(apiDefinition, { 'book_id': '2432' })).not.toBe(apiDefinition);
+})
+test('api definition body parser should be success', () => {
+  let apiDefinition = retriveApiDefinition(APIDefinitionData, API.BookJoinCart);
+  expect(bodyPlaceholderReplacer(apiDefinition, {
+    
+  }))
 })
 
+
 test('fetch API should return but error', () => {
-  fetchData<BookCommodity>(API.BookEntity).then((data: BookCommodity) => {
+  fetchData<BookBase>(API.BookEntity).then((data: BookBase) => {
     console.log(data);
     expect(data).not.toBeNull();
   }).catch((err) => {
