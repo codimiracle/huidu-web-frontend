@@ -2,6 +2,22 @@ import { message } from 'antd'
 import fetch from "../libs/fetch";
 import { API } from "../configs/api-config";
 
+export const fetchRaw = async function <T>(api: API, init?: RequestInit): Promise<T> {
+  let response = await fetch(api, init);
+  if (response.status != 200) {
+    let reasons = {
+      404: 'not implemented',
+      500: 'server internal error',
+    }
+    throw new Error(`\`${api}\` invoking failed: ${reasons[response.status] || 'unknown'} \n\tfor api: ${JSON.stringify(api)} \n\tfor request: ${JSON.stringify(init)}`);
+  }
+  let result = await response.json();
+  if (!result) {
+    throw new Error(`data format invalid. \nfor ${api}`);
+  }
+  return result;
+}
+
 /**
  * fetch data from response.
  * 
@@ -14,19 +30,40 @@ import { API } from "../configs/api-config";
  * @param init request options
  */
 export const fetchData = async function <T>(api: API, init?: RequestInit): Promise<T> {
-  let response = await fetch(api, init);
-  if (response.status != 200) {
-    let reasons = {
-      404: 'api is not implemented',
-      500: 'api has internal error',
+  let response: any = await fetchRaw(api, init);
+  if (!response || !response.data) {
+    throw new Error(`errocode: ${response.code}: ${response.message}`);
+  }
+  return response.data;
+}
+
+export interface APIMessage {
+  code: number,
+  message: string
+}
+
+export const fetchMessage = async function (api: API, init?: RequestInit): Promise<APIMessage> {
+  let response: any = await fetchRaw(api, init);
+  return { code: response.code, message: response.message };
+}
+
+async function fetcMessageWithMethod(api: API, method: "get" | "post" | "delete" | "put", data?: any): Promise<APIMessage> {
+  let init: RequestInit = undefined;
+  if (data) {
+    init = {
+      method: method,
+      body: JSON.stringify(data)
     }
-    throw new Error(`api \`${api}\` invoking failed: ${reasons[response.status] || 'unknown'}`);
   }
-  let result = await response.json();
-  if (!result || !result.data) {
-    throw new Error('data format returned by server is invalid');
-  }
-  return result.data;
+  return await fetchMessage(api, init);
+}
+
+export const fetchMessageByPost = async function (api: API, data?: any): Promise<APIMessage> {
+  return await fetcMessageWithMethod(api, "post", data);
+}
+
+export const fetchMessageByDelete = async function (api: API, data?: any): Promise<APIMessage> {
+  return await fetcMessageWithMethod(api, "delete", data);
 }
 
 async function fetcDataWithMethod<T>(api: API, method: "get" | "post" | "delete" | "put", data?: any): Promise<T> {
