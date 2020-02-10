@@ -10,6 +10,7 @@ import DirectLink from "../components/direct-link";
 import SubMenu from "antd/lib/menu/SubMenu";
 import { UserJSON } from "../pages/api/user/logged";
 import SearchView from "../components/search-view";
+import NotificationView from "../components/notification-view";
 
 const { Header, Footer, Content } = Layout;
 const { Option } = Select;
@@ -85,6 +86,13 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
             </Menu>
             <div className="user-tools">
               <SearchView />
+              <Popover
+                content={<NotificationView user={userdata}/>}
+              >
+                <span className="notification-btn">
+                  <Icon type="notification" style={{ color: 'inherit', fontSize: 'inherit' }} />
+                </span>
+              </Popover>
               <Menu
                 mode="horizontal"
                 theme="dark"
@@ -105,10 +113,10 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
             <Row>
               <Col
                 xs={{ span: 24 }}
-                sm={{ span: 24 }}
-                md={{ span: 14, push: 5 }}
-                lg={{ span: 16, push: 4 }}
-                xl={{ span: 18, push: 3 }}
+                sm={{ span: 22, push: 1 }}
+                md={{ span: 20, push: 2 }}
+                lg={{ span: 20, push: 2 }}
+                xl={{ span: 16, push: 4 }}
                 xxl={{ span: 16, push: 4 }}
                 style={{ backgroundColor: '#fff', padding: '32px' }}
               >
@@ -131,6 +139,13 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
           .user-tools {
             display: flex;
             align-items: center;
+          }
+          .notification-btn {
+            color: white;
+            padding: 0 1.5em;
+          }
+          .notification-btn:hover {
+            color: darkgray;
           }
         `}</style>
       </>

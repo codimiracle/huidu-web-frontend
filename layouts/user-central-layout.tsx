@@ -7,6 +7,7 @@ import { UNKNOW_USER, User } from '../types/user';
 import { fetchDataByGet } from '../util/network-util';
 import { API } from '../configs/api-config';
 import Link from 'next/link';
+import UserIdView from '../components/user-id-view';
 
 const { Sider, Content } = Layout;
 const { TabPane } = Tabs;
@@ -51,58 +52,23 @@ class UserCentralLayout extends React.Component<UserCentralLayoutProps, UserCent
       <>
         <BasicLayout>
           <Layout>
-            <Sider theme="light">
-              <div className="central-aside">
-                <div className="user-info">
-                  <Skeleton loading={loading} active avatar={{ size: 128 }} paragraph={false} title={false}>
-                    <AvatarView size={128} user={user} />
-                  </Skeleton>
-                  <Skeleton loading={loading} active>
-                    <div><strong>昵称：{user.nickname}</strong></div>
-                    <div><strong>UID：{user.id}</strong></div>
-                    <div style={{ paddingTop: '8px' }}><Button>退出登录</Button></div>
-                  </Skeleton>
-                </div>
-              </div>
-              <div className="central-aside">
-                <Menu mode="vertical-left" selectedKeys={[this.getCurrentKey()]} style={{textAlign: 'center'}}>
-                  <Menu.Item key="profile"><Link href="/user-central/profile"><a>个人资料</a></Link></Menu.Item>
-                  <Menu.Item key="wallet"><Link href="/user-central/wallet"><a>钱包</a></Link></Menu.Item>
-                  <Menu.Item key="orders"><Link href="/user-central/orders"><a>订单</a></Link></Menu.Item>
-                  <Menu.Item key="address"><Link href="/user-central/address"><a>收货地址</a></Link>} </Menu.Item>
-                  <Menu.Item key="subscribes"><Link href="/user-central/subscribes"><a>订阅</a></Link></Menu.Item>
-                  <Menu.Item key="bookshelf"><Link href="/user-central/bookshelf"><a>书架</a></Link></Menu.Item>
-                  <Menu.Item key="notes"><Link href="/user-central/notes"><a>笔记</a></Link>}</Menu.Item>
-                </Menu>
-              </div>
+            <Sider theme="light" style={{ borderRight: '1px solid #e8e8e8' }}>
+              <UserIdView />
+              <Menu mode="inline" theme="light" selectedKeys={[this.getCurrentKey()]} style={{ textAlign: 'center', borderRight: 'none' }}>
+                <Menu.Item key="profile"><Link href="/user-central/profile"><a>个人资料</a></Link></Menu.Item>
+                <Menu.Item key="wallet"><Link href="/user-central/wallet"><a>钱包</a></Link></Menu.Item>
+                <Menu.Item key="orders"><Link href="/user-central/orders"><a>订单</a></Link></Menu.Item>
+                <Menu.Item key="address"><Link href="/user-central/address"><a>收货地址</a></Link>} </Menu.Item>
+                <Menu.Item key="subscribes"><Link href="/user-central/subscribes"><a>订阅</a></Link></Menu.Item>
+                <Menu.Item key="bookshelf"><Link href="/user-central/bookshelf"><a>书架</a></Link></Menu.Item>
+                <Menu.Item key="notes"><Link href="/user-central/notes"><a>笔记</a></Link>}</Menu.Item>
+              </Menu>
             </Sider>
-            <Content style={{ backgroundColor: '#fff' }}>
+            <Content style={{ backgroundColor: '#fff', padding: '32px' }}>
               {children}
             </Content>
           </Layout>
         </BasicLayout>
-        <style jsx>{`
-          .central-aside {
-            margin-right: 32px;
-          }
-          .user-info {
-            padding: 32px 16px;
-            border-right: 1px solid #e8e8e8;
-            text-align: center;
-          }
-          a {
-            display: block;
-            color: inherit;
-          }
-        `}</style>
-        <style jsx global>{`
-          .central-aside .ant-tabs-bar.ant-tabs-left-bar {
-            width: 100%;
-          }
-          .central-aside .ant-tabs-nav-container .ant-tabs-tab {
-            text-align: center;
-          }
-        `}</style>
       </>
     )
   }
