@@ -32,8 +32,8 @@ function BookPreviewView(props: BookPreviewViewProps) {
           flex: 1;
         }
         img {
-          width: 68px;
-          height: 92px;
+          width: 7em;
+          height: 9.4em;
         }
       `}</style>
     </div>
@@ -41,8 +41,9 @@ function BookPreviewView(props: BookPreviewViewProps) {
 }
 
 export interface PreviewableRankProps {
+  loading: boolean,
   dataSource: Array<Book>,
-  itemRender: (data: Book) => ReactNode
+  renderItem: (data: Book) => ReactNode
 };
 export interface PreviewableRankState {
   selectedIndex: number
@@ -59,7 +60,7 @@ export default class PreviewableRank extends React.Component<PreviewableRankProp
     this.setState({ selectedIndex: index });
   }
   render() {
-    const { dataSource, itemRender } = this.props;
+    const { dataSource, renderItem: itemRender } = this.props;
     const { selectedIndex } = this.state;
     let selectedRank = selectedIndex < dataSource.length ? dataSource[selectedIndex] : null;
     return (

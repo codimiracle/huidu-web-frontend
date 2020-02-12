@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row, Col, Carousel, List } from 'antd';
 import { Activity } from '../types/activity';
+import Link from 'next/link';
 
 interface PreviewImageViewProps {
   selectedIndex: number,
@@ -11,7 +12,7 @@ function PreviewImageView(props: PreviewImageViewProps) {
   const { selectedIndex, index, activity } = props;
   return (
     <>
-      <img className={index === selectedIndex ? 'selected' : ''} width="96px" height="129px" src={activity.book.cover || activity.book.metadata.cover || '/assets/empty.png'} />
+      <img className={index === selectedIndex ? 'selected' : ''} width="100%" src={activity.book.cover || activity.book.metadata.cover || '/assets/empty.png'} />
       <style jsx>{`
         img.selected {
           outline: 0.1em solid grey;
@@ -20,8 +21,6 @@ function PreviewImageView(props: PreviewImageViewProps) {
     </>
   );
 }
-
-const NO_SELECTED_ACTIVITY = { book: { metadata: { name: '', description: '' } } };
 
 export interface PreviewableCarouselProps {
   activities: Array<Activity>
@@ -42,7 +41,9 @@ export class PreviewableCarousel extends React.Component<PreviewableCarouselProp
   render() {
     const { activities } = this.props;
     const { selectedIndex } = this.state;
-    let selectedActivity = (selectedIndex < activities.length && activities[selectedIndex]) || NO_SELECTED_ACTIVITY;
+    let selectedActivity = (selectedIndex < activities.length && activities[selectedIndex]);
+    let referBook = selectedActivity.book;
+
     return (
       <>
         <Row gutter={8}>
@@ -51,7 +52,7 @@ export class PreviewableCarousel extends React.Component<PreviewableCarouselProp
               {
                 activities.map((activity: Activity) => (
                   <div className="activity-content" key={activity.id}>
-                    <img src={activity.banner} width="100%" height="396px" />
+                    <img src={activity.banner} width="100%" />
                   </div>)
                 )
               }
@@ -74,10 +75,12 @@ export class PreviewableCarousel extends React.Component<PreviewableCarouselProp
                 dataSource={activities}
               />
             </Row>
-            <Row>
-              <h2>{selectedActivity && selectedActivity.book.metadata.name}</h2>
-              <p>{selectedActivity && selectedActivity.book.metadata.description}</p>
-            </Row>
+            {referBook &&
+              <Row>
+                <h2><Link href={`/bookshop/${referBook.type}s/[book_id]`} as={`/bookshop/${referBook.type}s/${referBook.id}`}><a>{selectedActivity && selectedActivity.book.metadata.name}</a></Link></h2>
+                <p>{selectedActivity && selectedActivity.book.metadata.description}</p>
+              </Row>
+            }
           </Col>
         </Row>
         <style jsx>{`
