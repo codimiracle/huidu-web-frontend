@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { Skeleton, Button, message } from 'antd';
 import AvatarView from './avatar-view';
 import { UserJSON } from '../pages/api/user/logged';
@@ -6,10 +6,12 @@ import { fetchDataByGet } from '../util/network-util';
 import { API } from '../configs/api-config';
 import { User } from '../types/user';
 
-export interface UserIdViewProps { };
+export interface UserIdViewProps {
+  style?: CSSProperties
+};
 export interface UserIdViewState {
   user: User,
-  loading: boolean
+  loading: boolean,
 };
 
 export default class UserIdView extends React.Component<UserIdViewProps, UserIdViewState> {
@@ -34,9 +36,10 @@ export default class UserIdView extends React.Component<UserIdViewProps, UserIdV
     this.fetchUser();
   }
   render() {
+    const { style } = this.props;
     const { user, loading } = this.state;
     return (
-      <div className="user-info">
+      <div className="user-info" style={style}>
         <Skeleton loading={loading} active avatar={{ size: 128 }} paragraph={false} title={false}>
           <AvatarView size={128} user={user} />
         </Skeleton>
@@ -48,6 +51,7 @@ export default class UserIdView extends React.Component<UserIdViewProps, UserIdV
         <style jsx>{`
           .user-info {
             text-align: center;
+            padding-bottom: 16px;
           }
         `}</style>
       </div>

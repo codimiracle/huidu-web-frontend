@@ -64,7 +64,7 @@ class UserCentralLayout extends React.Component<UserCentralLayoutProps, UserCent
                 <Menu.Item key="notes"><Link href="/user-central/notes"><a>笔记</a></Link>}</Menu.Item>
               </Menu>
             </Sider>
-            <Content style={{ backgroundColor: '#fff', padding: '32px' }}>
+            <Content style={{ backgroundColor: '#fff', paddingLeft: '32px' }}>
               {children}
             </Content>
           </Layout>
