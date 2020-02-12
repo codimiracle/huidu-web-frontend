@@ -32,7 +32,12 @@ export function queryPlaceholderReplacer(apiDefinition: APIDefinition, data: any
   let url = apiDefinition.url;
   let args = {...apiDefinition.query, ...data }
   for (let key in args) {
-    url = url.replace(`@{${key}}`, encodeURI(args[key]));
+    let obj = args[key];
+    let value = obj;
+    if (typeof obj == 'object') {
+      value = JSON.stringify(obj);
+    }
+    url = url.replace(`@{${key}}`, encodeURI(value));
   }
   if (url.includes('@')) {
     let urlObj = new URL(url);

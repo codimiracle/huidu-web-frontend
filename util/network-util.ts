@@ -2,6 +2,11 @@ import { message } from 'antd'
 import fetch from "../libs/fetch";
 import { API } from "../configs/api-config";
 
+export interface APIMessage {
+  code: number,
+  message: string
+}
+
 export const fetchRaw = async function <T>(api: API, init?: RequestInit): Promise<T> {
   let response = await fetch(api, init);
   if (response.status != 200) {
@@ -37,11 +42,6 @@ export const fetchData = async function <T>(api: API, init?: RequestInit): Promi
   return response.data;
 }
 
-export interface APIMessage {
-  code: number,
-  message: string
-}
-
 export const fetchMessage = async function (api: API, init?: RequestInit): Promise<APIMessage> {
   let response: any = await fetchRaw(api, init);
   return { code: response.code, message: response.message };
@@ -56,6 +56,14 @@ async function fetcMessageWithMethod(api: API, method: "get" | "post" | "delete"
     }
   }
   return await fetchMessage(api, init);
+}
+
+export const fetchMessageByGet = async function (api: API, data?: any): Promise<APIMessage> {
+  return await fetcMessageWithMethod(api, "get", data);
+}
+
+export const fetchMessageByPut = async function (api: API, data?: any): Promise<APIMessage> {
+  return await fetcMessageWithMethod(api, "put", data);
 }
 
 export const fetchMessageByPost = async function (api: API, data?: any): Promise<APIMessage> {
