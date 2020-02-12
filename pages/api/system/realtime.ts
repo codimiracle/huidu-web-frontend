@@ -208,14 +208,20 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       categories: [],
       sections: [{
         id: '342354543',
-        name: '阅读有温度榜单',
+        name: '阅读有温度',
         description: '',
         tags: [{ id: '342', name: '养生' }],
+        extra: {
+          asideTitle: '悦读榜'
+        }
       }, {
         id: '342354543',
-        name: '阅读有声榜单',
+        name: '阅读有声',
         description: '',
         tags: [{ id: '342', name: '养生' }],
+        extra: {
+          asideTitle: '动听榜'
+        }
       }, {
         id: '342354543',
         name: '值得一购榜单',

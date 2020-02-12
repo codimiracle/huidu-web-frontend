@@ -1,14 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Topic } from '../../../types/topic';
-import { Review } from '../../../types/review';
-import { UNKNOW_USER } from '../../../types/user';
-import { ContentType, ReferenceType } from '../../../types/content';
-import { APIResponse } from '../../../types/api';
-import { BookType } from '../../../types/book';
+import { APIResponse } from '../../../../../types/api';
+import { BookType } from '../../../../../types/book';
+import { ContentType, ReferenceType } from '../../../../../types/content';
+import { Review } from '../../../../../types/review';
+import { Topic } from '../../../../../types/topic';
+import { UNKNOW_USER } from '../../../../../types/user';
 
 declare type Content = Topic | Review;
 
-interface DynamicListJSON {
+export interface DynamicListJSON {
   page: number,
   limit: number,
   list: Array<Content>
@@ -29,9 +29,9 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
   let limitInt = parseInt(limit.toString());
   let pageInt = parseInt(page.toString());
   let data: Array<Content> = [];
-  let reverse = false
+  let type = 0
   for (let index = 0; index < limitInt; index++) {
-    if (reverse) {
+    if (type == 0) {
       let topic: Topic = {
         contentId: `topic-${pageInt * limitInt + index}`,
         type: ContentType.Topic,
@@ -84,7 +84,8 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         updateTime: '2020-01-22T05:04:50.567Z',
       }
       data.push(topic);
-    } else {
+    } 
+    if (type == 2) {
       let review: Review = {
         contentId: `review-${index + pageInt}`,
         type: ContentType.Review,
@@ -165,7 +166,13 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       }
       data.push(review);
     }
-    reverse = !reverse;
+    if (type == 2) {
+      let comment: Comment = {
+        contentId: '324234',
+      }
+      data.push(comment);
+    }
+    type = (type + 1) % 3;
   }
   let result: APIResponse<DynamicListJSON> = {
     code: 200,

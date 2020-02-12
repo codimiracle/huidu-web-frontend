@@ -45,16 +45,16 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       notes: [
         {
           ref: `示例章节`,
-          episodeId: '32423',
+          episodeId: '342',
           content: {
             type: 'plaintext',
             source: '这是一条笔记'
           },
           domMark: {
-            startDom: '#1',
-            startOffset: 0,
-            endDom: '#1',
-            endOffset: 100,
+            startDom: 'div[2]/p[6]/text()',
+            startOffset: 4,
+            endDom: 'div[2]/p[6]/text()',
+            endOffset: 61,
           }
         }
       ]
