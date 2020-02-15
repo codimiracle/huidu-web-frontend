@@ -1,16 +1,16 @@
-import React from "react";
-import Link from 'next/link';
-import { withRouter, Router } from 'next/router';
-import { User, UNKNOW_USER } from '../types/user';
-import { Layout, Menu, Avatar, Icon, message, BackTop, Select, Form, Input, Dropdown, Popover, List, Col, Row } from 'antd';
-import { } from 'react-responsive';
-import { API } from "../configs/api-config";
-import { fetchDataByGet } from "../util/network-util";
-import DirectLink from "../components/direct-link";
+import { Avatar, BackTop, Col, Layout, Menu, message, Row, Select } from 'antd';
 import SubMenu from "antd/lib/menu/SubMenu";
-import { UserJSON } from "../pages/api/user/logged";
+import Link from 'next/link';
+import { Router, withRouter } from 'next/router';
+import React from "react";
+import { } from 'react-responsive';
+import DirectLink from "../components/direct-link";
 import SearchView from "../components/search-view";
-import NotificationView from "../components/notification-view";
+import { API } from "../configs/api-config";
+import { UserJSON } from "../pages/api/user/logged";
+import { User } from '../types/user';
+import { fetchDataByGet } from "../util/network-util";
+import NotificationView from '../components/notification-view';
 
 const { Header, Footer, Content } = Layout;
 const { Option } = Select;
@@ -55,14 +55,6 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
   render() {
     const { children } = this.props;
     const { userdata } = this.state;
-
-    const addonBefore = (
-      <Select key="bookType" defaultValue="electronic-books">
-        <Option value="electronic-books">电子书</Option>
-        <Option value="audio-books">有声书</Option>
-        <Option value="paper-books">纸质书</Option>
-      </Select>
-    );
     return (
       <>
         <BackTop />
@@ -86,13 +78,7 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
             </Menu>
             <div className="user-tools">
               <SearchView />
-              <Popover
-                content={<NotificationView user={userdata}/>}
-              >
-                <span className="notification-btn">
-                  <Icon type="notification" style={{ color: 'inherit', fontSize: 'inherit' }} />
-                </span>
-              </Popover>
+              <NotificationView userdata={userdata} />
               <Menu
                 mode="horizontal"
                 theme="dark"
@@ -139,13 +125,6 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
           .user-tools {
             display: flex;
             align-items: center;
-          }
-          .notification-btn {
-            color: white;
-            padding: 0 1.5em;
-          }
-          .notification-btn:hover {
-            color: darkgray;
           }
         `}</style>
       </>
