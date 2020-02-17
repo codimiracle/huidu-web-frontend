@@ -108,6 +108,7 @@ export default class BackendLayout extends React.Component<BackendLayoutProps, B
             </Header>
             <Content
               style={{
+                position: 'relative',
                 margin: '24px 16px',
                 padding: 24,
                 background: '#fff',
