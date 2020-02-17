@@ -12,7 +12,7 @@ import { Catalogs } from '../../../types/electronic-book';
 import { Episode } from '../../../types/episode';
 import { DEAULT_THEME, PROTECT_EYE_THEME, Theme } from '../../../types/theme';
 import { fetchDataByGet } from '../../../util/network-util';
-import { BookJSON } from '../../api/audio-books/[book_id]';
+import { AudioBookJSON } from '../../api/audio-books/[book_id]';
 import { EpisodeJSON } from '../../api/electronic-books/[book_id]/episodes/[episode_id]';
 import { BookNotesJSON } from "../../api/user/book-notes/[book_id]";
 import { BookNotes } from "../../../types/notes";
@@ -45,7 +45,7 @@ enum DrawerKey {
 class Reader extends React.Component<ReaderProps, ReaderState> {
   static async getInitialProps(context: NextPageContext) {
     const { book_id, episode_id } = context.query;
-    let bookData = await fetchDataByGet<BookJSON>(API.ElectronicBookEntity, {
+    let bookData = await fetchDataByGet<AudioBookJSON>(API.ElectronicBookEntity, {
       book_id: book_id
     });
     let data: any = {
@@ -166,6 +166,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   item => (
                     <ListItem style={{ borderBottom: 'none', padding: '0' }}>
                       <ReaderEpisodeView
+                        notable
                         bookNotes={bookNotes}
                         episode={item}
                         theme={theme} />

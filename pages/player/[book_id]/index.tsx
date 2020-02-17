@@ -12,7 +12,7 @@ import { AudioCatalogs, AudioEpisode } from '../../../types/audio-book';
 import { Book } from '../../../types/book';
 import { DEAULT_THEME, PROTECT_EYE_THEME, Theme } from '../../../types/theme';
 import { fetchDataByGet } from '../../../util/network-util';
-import { BookJSON } from '../../api/audio-books/[book_id]';
+import { AudioBookJSON } from '../../api/audio-books/[book_id]';
 import { AudioEpisodeJSON } from '../../api/audio-books/[book_id]/episodes/[episode_id]';
 import { BookNotesJSON } from "../../api/user/book-notes/[book_id]";
 import { BookNotes } from "../../../types/notes";
@@ -42,7 +42,7 @@ enum DrawerKey {
 class Reader extends React.Component<ReaderProps, ReaderState> {
   static async getInitialProps(context: NextPageContext) {
     const { book_id, episode_id } = context.query;
-    let bookData = await fetchDataByGet<BookJSON>(API.AudioBookEntity, {
+    let bookData = await fetchDataByGet<AudioBookJSON>(API.AudioBookEntity, {
       book_id: book_id
     });
     let data: any = {
@@ -159,7 +159,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               </Affix>
             </div>
             <div className="episode-list">
-              <ReaderEpisodeView bookNotes={bookNotes} episode={episode.episode} theme={theme} />
+              <ReaderEpisodeView notable bookNotes={bookNotes} episode={episode.episode} theme={theme} />
             </div>
           </div>
           <div className="reader-actions">
