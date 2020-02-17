@@ -3,7 +3,10 @@ export interface Category {
   name: string,
   description: string,
   tags: Array<Tag>,
-  extra?: null | any
+  extra?: {
+    url: string,
+    asideTitle: string
+  }
 }
 
 export interface Tag {

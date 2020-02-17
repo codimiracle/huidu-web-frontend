@@ -1,7 +1,7 @@
 import { ElectronicBook } from "./electronic-book";
 import { AudioBook } from "./audio-book";
 import { PaperBook } from "./paper-book";
-import { Category } from "./category";
+import { Category, Tag } from "./category";
 
 export interface BookMetadata {
   id: string,
@@ -23,6 +23,7 @@ export interface BookBase {
   id: string,
   metadata: BookMetadata,
   category: Category,
+  tags: Array<Tag>,
   type: BookType
 }
 

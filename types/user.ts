@@ -1,3 +1,5 @@
+import { Role } from "./role";
+
 export interface UserInfo {
   gender: string,
   age: number,
@@ -13,7 +15,7 @@ export interface User {
   username: string,
   nickname: string,
   avatar: string,
-  roles: Array<string>
+  role: Role,
   extra: UserInfo
 }
 
