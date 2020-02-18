@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react';
+import React, { RefObject, CSSProperties } from 'react';
 import { Icon, Progress, Slider, Button } from 'antd';
 
 export enum PlayerStatus {
@@ -7,14 +7,16 @@ export enum PlayerStatus {
 }
 
 export interface AudioPlayerViewProps {
-  src: string,
+  src: string;
+  onLoaded?: (src: string, duration: number) => void;
+  style?: CSSProperties;
 };
 export interface AudioPlayerViewState {
-  status: PlayerStatus,
-  duration: number,
-  played: number,
-  selecting: boolean,
-  selectedPos: number,
+  status: PlayerStatus;
+  duration: number;
+  played: number;
+  selecting: boolean;
+  selectedPos: number;
 };
 
 export default class AudioPlayerView extends React.Component<AudioPlayerViewProps, AudioPlayerViewState> {
@@ -24,13 +26,15 @@ export default class AudioPlayerView extends React.Component<AudioPlayerViewProp
     super(props);
     this.state = {
       status: PlayerStatus.paused,
-      duration: NaN,
+      duration: 0,
       played: 0,
       selecting: false,
       selectedPos: 0
-
     }
     this.audioElementRef = React.createRef<HTMLAudioElement>();
+    this.onPlaying = this.onPlaying.bind(this);
+    this.onLoaded = this.onLoaded.bind(this);
+    this.onPaused = this.onPaused.bind(this);
   }
   play() {
     this.audioElementRef.current.play();
@@ -40,28 +44,32 @@ export default class AudioPlayerView extends React.Component<AudioPlayerViewProp
     this.audioElementRef.current.pause();
     this.setState({ status: PlayerStatus.paused });
   }
+
+  onPlaying() {
+    this.setState({ played: this.audioElementRef.current.currentTime, duration: this.audioElementRef.current.duration });
+  }
+  onPaused() {
+    this.setState({ status: PlayerStatus.paused });
+  }
+  onLoaded() {
+    this.setState({ duration: this.audioElementRef.current.duration }, () => {
+      this.props.onLoaded && this.props.onLoaded(this.props.src, this.state.duration);
+    });
+  }
   componentWillUnmount() {
+    this.audioElementRef.current.removeEventListener('load', this.onLoaded);
+    this.audioElementRef.current.removeEventListener('loaddata', this.onLoaded);
+    this.audioElementRef.current.removeEventListener('play', this.onLoaded);
+    this.audioElementRef.current.removeEventListener('paused', this.onLoaded);
+    this.audioElementRef.current.removeEventListener('timeupdate', this.onLoaded);
     clearTimeout(this.timer);
   }
   componentDidMount() {
-    this.audioElementRef.current.addEventListener('loadstart', () => {
-      this.setState({ status: PlayerStatus.paused });
-    })
-    this.audioElementRef.current.addEventListener('loadeddata', () => {
-      this.setState({ duration: this.audioElementRef.current.duration });
-    });
-    this.audioElementRef.current.addEventListener('play', () => {
-      this.setState({ duration: this.audioElementRef.current.duration });
-    });
-    this.audioElementRef.current.addEventListener('pause', () => {
-      this.setState({ status: PlayerStatus.paused });
-    });
-    this.audioElementRef.current.addEventListener('play', () => {
-      this.setState({ status: PlayerStatus.playing });
-    });
-    this.audioElementRef.current.addEventListener('timeupdate', () => {
-      this.setState({ played: this.audioElementRef.current.currentTime });
-    })
+    this.audioElementRef.current.addEventListener('load', this.onLoaded)
+    this.audioElementRef.current.addEventListener('loadeddata', this.onLoaded);
+    this.audioElementRef.current.addEventListener('play', this.onPlaying);
+    this.audioElementRef.current.addEventListener('pause', this.onPaused);
+    this.audioElementRef.current.addEventListener('timeupdate', this.onPlaying);
   }
   onPositionChange() {
     this.setState({ selecting: false });
@@ -82,7 +90,7 @@ export default class AudioPlayerView extends React.Component<AudioPlayerViewProp
     const { status, played, duration, selectedPos, selecting } = this.state;
     let pos = selecting ? selectedPos : played;
     return (
-      <div className="audio-player-view">
+      <div className="audio-player-view" style={this.props.style}>
         <div className="action">
           {
             status == PlayerStatus.paused &&
@@ -102,6 +110,7 @@ export default class AudioPlayerView extends React.Component<AudioPlayerViewProp
             max={duration}
             onChange={(value) => this.setState({ selecting: true, selectedPos: parseInt(value.toString()) })}
             onAfterChange={(value) => this.onPositionChange()}
+            style={{ margin: '0' }}
           />
         </div>
         <audio ref={this.audioElementRef} src={src} />
@@ -122,7 +131,8 @@ export default class AudioPlayerView extends React.Component<AudioPlayerViewProp
             font-size: 2.5em;
           }
           .progress {
-            padding-left: 0.5em;
+            flex: 1;
+            padding-left: 1em;
             display: block;
           }
         `}</style>
