@@ -16,6 +16,7 @@ export interface Config<T> {
   getCreateRequestData?: (form: WrappedFormUtils) => any;
   renderCreateForm?: (form: WrappedFormUtils) => ReactNode;
   list: API;
+  getListingRequestExtraData?: () => object,
   searchableColumns?: Array<SearchableColumn<T>>;
   getDeleteRequestData?: (entity: T) => any;
   delete?: API;
@@ -31,6 +32,7 @@ export interface EntityManagerProps<T> {
     y?: boolean | number | string;
     scrollToFirstRowOnChange?: boolean;
   };
+  actionOptionWidth?: string | number;
   toolsBarExtra?: ReactNode;
   actionOptionsExtra?: (entity: T, index: number) => ReactNode;
   rowKey: string | ((record: T, index: number) => string);
@@ -76,11 +78,13 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
   }
   fetchList(filter: Partial<Record<keyof T, string[]>>, sorter: SorterResult<T>, page: number, limit: number) {
     this.setState({ loading: true });
+    let extraData = this.props.config.getListingRequestExtraData && this.props.config.getListingRequestExtraData() || {};
     fetchDataByGet<ListJSON<T>>(this.props.config.list, {
       filter: { ...filter },
       sorter: { field: sorter.field, order: sorter.order },
       page: page,
-      limit: limit
+      limit: limit,
+      ...extraData
     }).then((data) => {
       this.setState({
         dataSource: data.list,
@@ -114,6 +118,7 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
     let defaultActions: ColumnProps<T> = {
       title: '操作',
       key: 'operations',
+      width: this.props.actionOptionWidth,
       fixed: 'right',
       render: (text, record: T, index: number) => (
         <EntityAction
