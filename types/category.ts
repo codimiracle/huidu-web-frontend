@@ -11,5 +11,7 @@ export interface Category {
 
 export interface Tag {
   id: string,
-  name: string
+  name: string,
+  categoryId: string,
+  category?: Category
 }

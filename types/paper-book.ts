@@ -6,5 +6,6 @@ export interface PaperBook extends Content, BookBase {
   type: BookType.PaperBook,
   contentId: string,
   episodes: number,
+  publishYear: string,
   commodity: Commodity<any>,
 }

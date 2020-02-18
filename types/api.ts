@@ -12,3 +12,10 @@ export interface ListJSON<T> {
   limit: number,
   total: number
 }
+
+export const LIST_INITIAL_PARAMETERS = {
+  filter: null,
+  sorter: null,
+  page: 1,
+  limit: 10
+}
