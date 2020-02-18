@@ -85,7 +85,7 @@ export default class ElectronicBookManager extends React.Component<ElectronicBoo
             renderUpdateForm: (form, entity) => <ElectronicBookFrom form={form} book={entity} />,
             delete: API.BackendElectronicBookDelete,
           }}
-          actionOptionsExtra={(entity, index) => <Link href="/backend/contents/electronic-books/[book_id]" as={`/backend/contents/electronic-books/${entity.id}`}><a>章节管理</a></Link>}
+          actionOptionsExtra={(entity, index) => <Link href="./electronic-books/[book_id]" as={`./electronic-books/${entity.id}`}><a>章节管理</a></Link>}
           rowKey={(electronicBook) => electronicBook.id}
           columns={this.getColumns}
           initialDataSource={this.props.list}

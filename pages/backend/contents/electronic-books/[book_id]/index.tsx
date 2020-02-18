@@ -88,15 +88,15 @@ export default class EpisodeManager extends React.Component<EpisodeManagerProps,
           }}
           toolsBarExtra={
             <Link
-              href={`/backend/contents/electronic-books/episode-writer/[book_id]`}
-              as={`/backend/contents/electronic-books/episode-writer/${this.props.book.id}`}
+              href={`./episode-writer/[book_id]`}
+              as={`./episode-writer/${this.props.book.id}`}
             >
               <a>
                 <Button type="primary" icon="plus">添加章节</Button>
               </a>
             </Link>
           }
-          actionOptionsExtra={(entity, index) => <Link href={`/backend/contents/electronic-books/episode-writer/[book_id]?episode_id=${entity.id}`} as={`/backend/contents/electronic-books/episode-writer/${this.props.book.id}?episode_id=${entity.id}`}><a>编辑</a></Link>}
+          actionOptionsExtra={(entity, index) => <Link href={`./episode-writer/[book_id]?episode_id=${entity.id}`} as={`./episode-writer/${this.props.book.id}?episode_id=${entity.id}`}><a>编辑</a></Link>}
           columns={this.getColumns}
           rowKey={(episode) => episode.id}
           initialDataSource={this.props.list}
