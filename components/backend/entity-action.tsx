@@ -51,12 +51,9 @@ export class EntityAction<T> extends React.Component<EntityActionProps<T>, Entit
     return (
       <span>
         {
-          this.props.extra &&
-          <>
-            {this.props.extra(this.props.entity, this.props.index)}
-            <Divider type="vertical" />
-          </>
+          this.props.extra && this.props.extra(this.props.entity, this.props.index)
         }
+        {this.props.extra && (this.props.updateApi || this.props.deleteApi) && <Divider type="vertical" />}
         {
           this.props.updateApi &&
           <>
@@ -72,10 +69,10 @@ export class EntityAction<T> extends React.Component<EntityActionProps<T>, Entit
             />
           </>
         }
+        {this.props.updateApi && this.props.deleteApi && <Divider type="vertical" />}
         {
           this.props.deleteApi &&
           <>
-            <Divider type="vertical" />
             <Popconfirm
               title="您真的要删除吗？"
               onConfirm={() => this.onEntityDelete(this.props.entity)}
