@@ -1,18 +1,24 @@
 import React from 'react';
-import { Theme } from '../../../types/theme';
+import { Theme, DEAULT_THEME } from '../../../types/theme';
 import { Episode } from '../../../types/episode';
 import Dommark from '../../../util/dommark-util';
-import { Tooltip, Form, Button } from 'antd';
+import { Tooltip, Form, Button, Popover } from 'antd';
 import CreateNotesDialog, { CreateNotesDialogProps } from '../../dialogs/create-notes-dialog';
-import { BookNotes } from '../../../types/notes';
+import { BookNotes, Note } from '../../../types/notes';
 import DommarkUtil from '../../../util/dommark-util';
+
+export interface DommarkedNote {
+  range: Range;
+  note: Note;
+}
 
 const WrappedCreateNotesDialog = Form.create<CreateNotesDialogProps>({ name: 'create-notes-form' })(CreateNotesDialog);
 
 export interface ReaderEpisodeViewProps {
   episode: Episode,
-  bookNotes: BookNotes,
-  theme: Theme
+  notable?: boolean,
+  bookNotes?: BookNotes,
+  theme?: Theme
 }
 
 export interface ReaderEpisodeViewState {
@@ -23,11 +29,11 @@ export interface ReaderEpisodeViewState {
   markVisible: boolean,
   dommark: Dommark,
   createNotesVisible: boolean,
+  dommarkedNotes: Array<DommarkedNote>,
 }
 
 export default class ReaderEpisodeView extends React.Component<ReaderEpisodeViewProps, ReaderEpisodeViewState> {
-  private pageBodyRef: React.RefObject<HTMLDivElement>;
-
+  private pageViewRef: React.RefObject<HTMLDivElement>;
   constructor(props: ReaderEpisodeViewProps) {
     super(props);
     this.state = {
@@ -38,18 +44,47 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
       markVisible: false,
       dommark: null,
       createNotesVisible: false,
+      dommarkedNotes: []
     }
-    this.pageBodyRef = React.createRef();
+    this.pageViewRef = React.createRef();
     this.onSelectionChange = this.onSelectionChange.bind(this);
   }
+  showMarkedNotes() {
+    if (!this.props.bookNotes) {
+      return;
+    }
+    let relativeNotes = this.props.bookNotes.notes.filter((notes) => notes.episodeId == this.props.episode.id);
+    console.log(relativeNotes);
+    let ranges = relativeNotes.map((note) => {
+      let container = this.pageViewRef.current;
+      let range = DommarkUtil.getRange(note.domMark, container);
+      let selection = window.getSelection();
+      selection.addRange(range);
+      selection.removeAllRanges();
+      let node = document.createElement('strong');
+      node.style.textDecoration = 'underline #fb617c 0.3em';
+      node.appendChild(range.extractContents());
+      range.insertNode(node);
+      return { note: note, range: range };
+    });
+    this.setState({ dommarkedNotes: ranges.filter((r) => r) });
+  }
   onSelectionChange() {
-    let container = this.pageBodyRef.current;
+    if (!this.props.notable) {
+      return;
+    }
+    let container = this.pageViewRef.current;
     let range = this.getRange();
     if (range) {
       let containerRect = container.getBoundingClientRect();
       let rangeRect = range.getBoundingClientRect();
       let left = rangeRect.left - containerRect.left + (rangeRect.width / 2);
       let top = rangeRect.top - containerRect.top;
+      // 不标记自己范围的节点
+      if (left < 0 || top < 0) {
+        console.debug("drop dommark: l:%d, t:%d", left, top);
+        return;
+      }
       let dommark = DommarkUtil.getDommark(range, container);
       this.setState({ markLeft: left, markTop: top, markHeight: rangeRect.height, markVisible: true, markRange: range, dommark: dommark });
     } else {
@@ -58,18 +93,10 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
   }
   componentDidMount() {
     document.addEventListener('selectionchange', this.onSelectionChange);
-    let relativeNotes = this.props.bookNotes.notes.filter((notes) => notes.episodeId == this.props.episode.id);
-    console.log(relativeNotes);
-    relativeNotes.map((notes) => {
-      let container = this.pageBodyRef.current;
-      let range = DommarkUtil.getRange(notes.domMark, container);
-      if (range) {
-        getSelection().addRange(range);
-      }
-    })
+    this.showMarkedNotes();
   }
   componentWillUnmount() {
-    document.removeEventListener(this.onSelectionChange);
+    document.removeEventListener("selectionchange", this.onSelectionChange);
   }
   private getRange() {
     let selection = window.getSelection();
@@ -79,11 +106,27 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
     }
     return null;
   }
+  renderMarkedNotes() {
+    const { dommarkedNotes } = this.state;
+    return (<>
+      {
+        dommarkedNotes.map((dommarkedNote: DommarkedNote) => {
+          let rangeRect = dommarkedNote.range.getBoundingClientRect();
+          let containerRect = this.pageViewRef.current.getBoundingClientRect();
+          let left = rangeRect.left - containerRect.left;
+          let top = rangeRect.top - containerRect.top;
+          return (<Tooltip key={dommarkedNote.note.id} getPopupContainer={() => this.pageViewRef.current} placement="top" trigger="hover" title={dommarkedNote.note.content.source}>
+            <span style={{ position: 'absolute', left: `${left}px`, top: `${top}px`, width: `${rangeRect.width}px`, height: `${rangeRect.height}px` }}></span>
+          </Tooltip>)
+        })
+      }
+    </>)
+  }
   renderMarker() {
     return (
       <div className="marker-actions">
         <span className="action">
-          <Button type="link" onClick={() => this.setState({ createNotesVisible: true })} style={{color: 'inherit'}}>笔记</Button>
+          <Button type="link" onClick={() => this.setState({ createNotesVisible: true })} style={{ color: 'inherit' }}>笔记</Button>
         </span>
         <style jsx>{`
           .action {
@@ -97,12 +140,13 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
     );
   }
   render() {
-    const { episode, theme } = this.props;
     const { markLeft, markTop, markVisible, markHeight, markRange, dommark, createNotesVisible } = this.state;
+    const { episode } = this.props;
+    let theme = this.props.theme || DEAULT_THEME;
     return (
       <>
-        <div id={`episode-${episode.id}`} ref={this.pageBodyRef} className="page-body">
-          <Tooltip getPopupContainer={() => this.pageBodyRef.current} visible={markVisible} overlay={this.renderMarker()} placement="top">
+        <div id={`episode-${episode.id}`} ref={this.pageViewRef} className="page-view">
+          <Tooltip getPopupContainer={() => this.pageViewRef.current} visible={markVisible} overlay={this.renderMarker()} placement="top">
             <span style={{ position: 'absolute', left: `${markLeft}px`, top: `${markTop}px`, height: `${markHeight}px` }}></span>
           </Tooltip>
           <div className="page-header">
@@ -112,6 +156,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
           <div className="page-footer">
             {/* {episode.book.episodes / episode.number} */}
           </div>
+          {this.renderMarkedNotes()}
         </div>
         <WrappedCreateNotesDialog
           episode={episode}
@@ -137,7 +182,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
           .page-content {
             padding: 8px 0;
           }
-          .page-body {
+          .page-view {
             position: relative;
             width: 744px;
             min-height: 1056px;
@@ -145,7 +190,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
             padding: 1em 1.5em;
             box-shadow: 0 4px 12px 2px darkgrey;
           }
-          .page-body h1 {
+          .page-view h1 {
             margin: 0;
           }
           .read-progress {
@@ -156,20 +201,19 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
           }
         `}</style>
         <style jsx>{`
-          .page-body h1 {
+          .page-view h1 {
             color: ${theme.color.title};
           }
-          .page-body {
+          .page-view {
             background-color: ${theme.color.background};
           }
         `}</style>
         <style jsx global>{`
-          .page-body *::selection {
+          .page-view *::selection {
             background-color: #009955!important;
           }
         `}</style>
       </>
     )
   }
-
 }

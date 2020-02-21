@@ -7,15 +7,15 @@ import ReaderEpisodeView from '../../../components/page/reader/reader-episode-vi
 import ReaderNotesView from '../../../components/page/reader/reader-notes-view';
 import ThemingSettingsView from '../../../components/page/reader/theming-settings-view';
 import { API } from '../../../configs/api-config';
+import { EntityJSON } from "../../../types/api";
+import { AudioBook } from "../../../types/audio-book";
 import { Book } from '../../../types/book';
 import { Catalogs } from '../../../types/electronic-book';
 import { Episode } from '../../../types/episode';
+import { BookNotes } from "../../../types/notes";
 import { DEAULT_THEME, PROTECT_EYE_THEME, Theme } from '../../../types/theme';
 import { fetchDataByGet } from '../../../util/network-util';
-import { AudioBookJSON } from '../../api/audio-books/[book_id]';
-import { EpisodeJSON } from '../../api/electronic-books/[book_id]/episodes/[episode_id]';
 import { BookNotesJSON } from "../../api/user/book-notes/[book_id]";
-import { BookNotes } from "../../../types/notes";
 
 
 const ListItem = List.Item;
@@ -45,7 +45,7 @@ enum DrawerKey {
 class Reader extends React.Component<ReaderProps, ReaderState> {
   static async getInitialProps(context: NextPageContext) {
     const { book_id, episode_id } = context.query;
-    let bookData = await fetchDataByGet<AudioBookJSON>(API.ElectronicBookEntity, {
+    let bookData = await fetchDataByGet<EntityJSON<AudioBook>>(API.ElectronicBookEntity, {
       book_id: book_id
     });
     let data: any = {
@@ -56,14 +56,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       data.episode_id = episode_id;
       api = API.ElectronicBookEpisodeEntity;
     }
-    let episodeData = await fetchDataByGet<EpisodeJSON>(api, data);
+    let episodeData = await fetchDataByGet<EntityJSON<Episode>>(api, data);
     let bookNotesData = await fetchDataByGet<BookNotesJSON>(API.UserBookNotesEntity, {
       book_id: book_id
     });
 
     return {
-      book: bookData.book,
-      episode: episodeData.episode,
+      book: bookData.entity,
+      episode: episodeData.entity,
       bookNotes: bookNotesData.bookNotes
     }
   }
@@ -71,7 +71,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     super(props);
     this.state = {
       theme: DEAULT_THEME,
-      episodes: [].concat(props.episode),
+      episodes: props.episode ? [props.episode] : [],
       bookNotes: props.bookNotes,
       drawer: null,
       backup: DEAULT_THEME,
@@ -124,13 +124,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     let lastEpisode = episodes.length > 0 ? episodes[episodes.length - 1] : null;
     if (lastEpisode) {
       this.setState({ loadingNextEpisode: true });
-      fetchDataByGet<EpisodeJSON>(API.ElectronicBookEpisodeEntity, {
+      fetchDataByGet<EntityJSON<Episode>>(API.ElectronicBookEpisodeEntity, {
         book_id: book.id,
         episode_id: lastEpisode.next
       }).then((data) => {
         this.setState((state) => {
           return {
-            episodes: state.episodes.concat(data.episode)
+            episodes: state.episodes.concat(data.entity)
           }
         });
       }).catch((err) => {

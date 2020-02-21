@@ -46,7 +46,7 @@ export default class ThemingSettingsView extends React.Component<ThemingSettings
               <div className="color-preview"><span style={{ backgroundColor: theme.color.background, color: theme.color.font }}>Abc 文字</span></div>
             </Popover>
           </div>
-          <div>字体大小：<Slider value={theme.font.size} min={10} step={1} max={100} onChange={(value) => onFontSizeChange(parseInt(value.toString()))} /> <span style={{ fontSize: `${theme.font.size / 10.0}em` }}>Aa文字</span></div>
+          <div>字体大小：<Slider value={theme.font.size} min={10} step={1} max={30} onChange={(value) => onFontSizeChange(parseInt(value.toString()))} /> <span style={{ fontSize: `${theme.font.size / 10.0}em` }}>Aa文字</span></div>
         </Drawer>
         <style jsx>{`
           .color-preview {

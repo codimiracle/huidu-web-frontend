@@ -1,21 +1,20 @@
 import { Affix, Button, message } from "antd";
 import { NextPageContext } from 'next';
-import { withRouter, Router } from 'next/router';
+import { Router, withRouter } from 'next/router';
 import React from 'react';
-import AudioPlayerView, { PlayerStatus } from "../../../components/audio-player-view";
+import AudioPlayerView from "../../../components/audio-player-view";
 import AudioBookCatalogsView from '../../../components/page/reader/audio-book-catalogs-view';
 import ReaderEpisodeView from '../../../components/page/reader/reader-episode-view';
 import ReaderNotesView from '../../../components/page/reader/reader-notes-view';
 import ThemingSettingsView from '../../../components/page/reader/theming-settings-view';
 import { API } from '../../../configs/api-config';
-import { AudioCatalogs, AudioEpisode } from '../../../types/audio-book';
+import { EntityJSON } from "../../../types/api";
+import { AudioBook, AudioCatalogs, AudioEpisode } from '../../../types/audio-book';
 import { Book } from '../../../types/book';
+import { BookNotes } from "../../../types/notes";
 import { DEAULT_THEME, PROTECT_EYE_THEME, Theme } from '../../../types/theme';
 import { fetchDataByGet } from '../../../util/network-util';
-import { AudioBookJSON } from '../../api/audio-books/[book_id]';
-import { AudioEpisodeJSON } from '../../api/audio-books/[book_id]/episodes/[episode_id]';
 import { BookNotesJSON } from "../../api/user/book-notes/[book_id]";
-import { BookNotes } from "../../../types/notes";
 
 export interface ReaderProps {
   episode: AudioEpisode,
@@ -42,7 +41,7 @@ enum DrawerKey {
 class Reader extends React.Component<ReaderProps, ReaderState> {
   static async getInitialProps(context: NextPageContext) {
     const { book_id, episode_id } = context.query;
-    let bookData = await fetchDataByGet<AudioBookJSON>(API.AudioBookEntity, {
+    let bookData = await fetchDataByGet<EntityJSON<AudioBook>>(API.AudioBookEntity, {
       book_id: book_id
     });
     let data: any = {
@@ -53,13 +52,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       data.episode_id = episode_id;
       api = API.AudioBookEpisodeEntity;
     }
-    let episodeData = await fetchDataByGet<AudioEpisodeJSON>(api, data);
+    let episodeData = await fetchDataByGet<EntityJSON<AudioEpisode>>(api, data);
     let bookNotesData = await fetchDataByGet<BookNotesJSON>(API.UserBookNotesEntity, {
       book_id: book_id
     });
     return {
-      book: bookData.book,
-      episode: episodeData.episode,
+      book: bookData.entity,
+      episode: episodeData.entity,
       bookNotes: bookNotesData.bookNotes
     }
   }
@@ -119,13 +118,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     const { episode } = this.state;
     if (episode) {
       this.setState({ loadingNextEpisode: true });
-      fetchDataByGet<AudioEpisodeJSON>(API.AudioBookEpisodeEntity, {
+      fetchDataByGet<EntityJSON<AudioEpisode>>(API.AudioBookEpisodeEntity, {
         book_id: book.id,
         episode_id: episode.next
       }).then((data) => {
         this.setState((state) => {
           return {
-            episode: data.episode
+            episode: data.entity
           }
         });
       }).catch((err) => {
