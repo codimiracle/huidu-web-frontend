@@ -16,11 +16,14 @@ export default class EditorView extends React.Component<EditorViewProps, EditorV
     super(props);
     this.ckeditorRef = React.createRef();
   }
+  private calculateWords(text: string) {
+    return text.replace(/\s/g, '').length;
+  }
   focus() {
     this.ckeditorRef.current.editor.focus();
   }
   getWordCount() {
-    return this.ckeditorRef.current.editor.container.$.innerText.replace(/\s/g).length;
+    return this.calculateWords(this.ckeditorRef.current.editor.document.getBody().$.innerText);
   }
   render() {
     const { value, onChange } = this.props;
@@ -30,7 +33,7 @@ export default class EditorView extends React.Component<EditorViewProps, EditorV
           ref={this.ckeditorRef}
           type={this.props.type || 'classic'}
           data={value}
-          onChange={(event) => onChange && onChange(event.editor.getData(), event.editor.container.$.innerText.trim().length)}
+          onChange={(event) => onChange && onChange(event.editor.getData(), this.calculateWords(event.editor.document.getBody().$.innerText))}
         />
       </>
     )
