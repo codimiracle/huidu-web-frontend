@@ -1,23 +1,23 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { APIResponse } from '../../../../types/api';
-import { OrderJSON } from './[order_number]';
-import { OrderType, OrderDetails, OrderStatus } from '../../../../types/order';
+import { APIResponse, EntityJSON } from '../../../../types/api';
+import { OrderType, OrderDetails, OrderStatus, Order } from '../../../../types/order';
 export default function (request: NextApiRequest, response: NextApiResponse) {
   if (request.method.toLowerCase() == 'post') {
     const { addressId, items } = JSON.parse(request.body);
     let details: Array<OrderDetails> = [];
-    let json: APIResponse<OrderJSON> = {
+    let json: APIResponse<EntityJSON<Order>> = {
       code: 200,
       message: 'success',
       data: {
-        order: {
+        entity: {
           orderNumber: Math.round(Math.random() * 10000000000000000) + '',
           type: OrderType.PaperBook,
           payType: null,
           payTime: null,
           address: {
             id: '3243',
-            address: '广东省 汕头市 龙湖区 练江路24号',
+            region: '广东省 汕头市 龙湖区',
+            address: '练江路24号',
             postcode: '43003',
             receiver: {
               name: '欧阳少',

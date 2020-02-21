@@ -1,16 +1,12 @@
 import next, { NextApiRequest, NextApiResponse } from 'next';
-import { APIResponse } from '../../../../../types/api';
+import { APIResponse, EntityJSON } from '../../../../../types/api';
 import { AudioEpisode } from '../../../../../types/audio-book';
 import { BookType } from '../../../../../types/book';
 
-export interface AudioEpisodeJSON {
-  episode: AudioEpisode
-}
-
 export default function (request: NextApiRequest, response: NextApiResponse) {
   const { book_id, episode_id } = request.query;
-  let data: AudioEpisodeJSON = {
-    episode: {
+  let data: EntityJSON<AudioEpisode> = {
+    entity: {
       id: `${episode_id}`,
       episode: {
         id: `453`,
@@ -88,7 +84,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       next: '6354',
     }
   }
-  let json: APIResponse<AudioEpisodeJSON> = {
+  let json: APIResponse<EntityJSON<AudioEpisode>> = {
     code: 200,
     message: 'success',
     data: data

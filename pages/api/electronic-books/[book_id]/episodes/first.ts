@@ -1,15 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { APIResponse } from '../../../../../types/api';
-import { EpisodeJSON } from './[episode_id]';
+import { APIResponse, EntityJSON } from '../../../../../types/api';
 import { BookType } from '../../../../../types/book';
+import { Episode } from '../../../../../types/episode';
 
 export default function (request: NextApiRequest, response: NextApiResponse) {
   const { book_id } = request.query;
-  let json: APIResponse<EpisodeJSON> = {
+  let json: APIResponse<EntityJSON<Episode>> = {
     code: 200,
     message: 'success',
     data: {
-      episode: {
+      entity: {
         id: `342`,
         title: '《红楼梦》第一回',
         content: {

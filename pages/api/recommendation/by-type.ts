@@ -1,26 +1,27 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { AudioBook, AudioBookStatus } from '../../../../types/audio-book';
-import { BookType } from '../../../../types/book';
-import { APIResponse, EntityJSON } from '../../../../types/api';
-
+import { APIResponse, ListJSON } from '../../../types/api';
+import { Book } from '../../../types/book';
 export default function (request: NextApiRequest, response: NextApiResponse) {
-  const { book_id } = request.query;
-  let data: EntityJSON<AudioBook> = {
-    entity: {
-      id: `${book_id}`,
+  const { type, filter, soter, page, limit } = request.query;
+  let pageInt = parseInt(page.toString());
+  let limitInt = parseInt(limit.toString());
+  let data: Array<Book> = [];
+  for (let index = 0; index < limitInt; index++) {
+    data.push({
+      id: `${limitInt * pageInt + index}`,
       contentId: '32423',
-      type: BookType.AudioBook,
+      type: type,
       metadata: {
         id: 'somebook',
         name: 'Book Name',
         description: 'Book Description',
-        cover: '/assets/empty-audio.png',
-        words: '10 万字',
+        cover: '/assets/empty.png',
+        words: '4 万字',
         author: 'Hero',
         isbm: '342-23432454-34232',
       },
       category: {
-        id: '54634',
+        id: `3424`,
         name: '电子书',
         description: '在线读物',
         tags: [],
@@ -29,18 +30,23 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       episodes: 34,
       episodeList: null,
       allEpisodesMoney: 0,
-      status: AudioBookStatus.Serializing,
+      status: 'status',
       comments: 342,
       rate: 0.5,
       commentList: [],
       createTime: '2020-01-29T14:16:58.269Z',
       updateTime: '2020-01-29T14:16:58.269Z'
-    }
+    });
   }
-  let json: APIResponse<EntityJSON<AudioBook>> = {
+  let json: APIResponse<ListJSON<Book>> = {
     code: 200,
     message: 'success',
-    data: data
+    data: {
+      page: pageInt,
+      limit: limitInt,
+      list: data,
+      total: 100,
+    }
   }
   response.status(200).json(json);
 }

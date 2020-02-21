@@ -2,6 +2,12 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { APIResponse } from '../../../../types/api';
 import { ElectronicBook } from '../../../../types/electronic-book';
 import { BookType } from '../../../../types/book';
+import { ContentStatus, ContentType } from '../../../../types/content';
+
+function toBase64(encodeString) {
+  let buffer = new Buffer(encodeString);
+  return buffer.toString('base64');
+}
 
 export interface ElectronicBookListJSON {
   page: number,
@@ -43,7 +49,33 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       status: 'status',
       comments: 342,
       rate: 0.5,
-      commentList: [],
+      commentList: [{
+        title: 'user-comment',
+        content: {
+          type: "plaintext",
+          source: `comment ${toBase64("" + Math.random() * 1003432)}`
+        },
+        owner: {
+          id: `${Math.trunc(Math.random() * 12900)}`,
+          username: toBase64("" + Math.random() * 100),
+          nickname: toBase64("" + Math.random() * 100),
+          avatar: '/assets/avatar.png'
+        },
+        target: `dsfsdf`.toString(),
+        contentId: `comment-${pageInt * limitInt + index}`,
+        type: ContentType.Comment,
+        references: [],
+        status: ContentStatus.Publish,
+        likes: 100,
+        comments: 0,
+        reposts: 0,
+        reads: 0,
+        rate: 0,
+        mentions: [],
+        commentList: [],
+        createTime: '2020-01-28T13:59:54.925Z',
+        updateTime: '2020-01-28T13:59:54.925Z'
+      }],
       createTime: '2020-01-29T14:16:58.269Z',
       updateTime: '2020-01-29T14:16:58.269Z'
     });

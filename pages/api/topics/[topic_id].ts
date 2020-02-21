@@ -1,19 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Topic } from '../../../types/topic';
 import { UNKNOW_USER } from '../../../types/user';
-import { APIResponse } from '../../../types/api';
-import { ContentType } from '../../../types/content';
+import { APIResponse, EntityJSON } from '../../../types/api';
+import { ContentType, ContentStatus } from '../../../types/content';
 
-export interface TopicJSON {
-  topic: Topic
-}
 export default function (request: NextApiRequest, response: NextApiResponse) {
   const { topic_id } = request.query;
-  let json: APIResponse<TopicJSON> = {
+  let json: APIResponse<EntityJSON<Topic>> = {
     code: 200,
     message: 'success',
     data: {
-      topic: {
+      entity: {
         contentId: `${topic_id}`,
         type: ContentType.Topic,
         title: '大家有没什么好书推荐？',
@@ -54,7 +51,9 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         },
         owner: UNKNOW_USER,
         participants: [UNKNOW_USER],
-        reference: null,
+        references: [],
+        reads: 324,
+        status: ContentStatus.Publish,
         likes: 100,
         comments: 100,
         reposts: 100,

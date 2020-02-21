@@ -1,23 +1,22 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { APIResponse } from '../../../../../types/api';
-import { Episode } from '../../../../../types/episode';
+import { APIResponse, EntityJSON } from '../../../../../types/api';
+import { Episode, EpisodeStatus } from '../../../../../types/episode';
 import { BookType } from '../../../../../types/book';
-
-export interface EpisodeJSON {
-  episode: Episode
-}
+import { ElectronicBookStatus } from '../../../../../types/electronic-book';
 
 export default function (request: NextApiRequest, response: NextApiResponse) {
   const { book_id, episode_id } = request.query;
-  let data: EpisodeJSON = {
-    episode: {
+  let data: EntityJSON<Episode> = {
+    entity: {
       id: `${episode_id}`,
       title: '示例章节',
       content: {
         type: 'html',
         source: `<strong>示例内容 ${episode_id} </strong>`
       },
+      words: Math.trunc(Math.random() * 100),
       next: null,
+      status: EpisodeStatus.Publish,
       commodity: null,
       createTime: "2020-01-28T08:13:18.596Z",
       updateTime: "2020-01-28T08:13:18.596Z",
@@ -26,6 +25,10 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         contentId: '32423',
         type: BookType.ElectronicBook,
         allEpisodesMoney: 0,
+        likes: 200,
+        reposts: 332,
+        tags: [],
+        publishYear: '2032',
         metadata: {
           id: 'somebook',
           name: 'Book Name',
@@ -44,7 +47,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         },
         episodes: 34,
         episodeList: null,
-        status: 'status',
+        status: ElectronicBookStatus.Serializing,
         comments: 342,
         rate: 0.5,
         commentList: [],
@@ -53,7 +56,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       },
     }
   }
-  let json: APIResponse<EpisodeJSON> = {
+  let json: APIResponse<EntityJSON<Episode>> = {
     code: 200,
     message: 'success',
     data: data

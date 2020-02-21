@@ -51,6 +51,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       },
       notes: [
         {
+          id: `${Math.trunc(Math.random() * 100)}`,
           ref: `示例章节`,
           episodeId: '32423',
           content: {
@@ -65,6 +66,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
           }
         },
         {
+          id: `${Math.trunc(Math.random() * 100)}`,
           ref: `示例章节`,
           episodeId: '32423',
           content: {
@@ -79,6 +81,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
           }
         },
         {
+          id: `${Math.trunc(Math.random() * 100)}`,
           ref: `示例章节`,
           episodeId: '32423',
           content: {

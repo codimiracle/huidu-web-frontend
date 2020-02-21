@@ -1,17 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ElectronicBook } from '../../../../types/electronic-book';
 import { BookType } from '../../../../types/book';
-import { APIResponse } from '../../../../types/api';
+import { APIResponse, EntityJSON } from '../../../../types/api';
 import { PaperBook } from '../../../../types/paper-book';
 import { CommodityStatus } from '../../../../types/commodity';
 
-export interface BookJSON {
-  book: PaperBook
-}
 export default function (request: NextApiRequest, response: NextApiResponse) {
   const { book_id } = request.query;
-  let data: BookJSON = {
-    book: {
+  let data: EntityJSON<PaperBook> = {
+    entity: {
       id: `${book_id}`,
       contentId: '32423',
       type: BookType.PaperBook,
@@ -51,7 +47,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       updateTime: '2020-01-29T14:16:58.269Z'
     }
   }
-  let json: APIResponse<BookJSON> = {
+  let json: APIResponse<EntityJSON<PaperBook>> = {
     code: 200,
     message: 'success',
     data: data

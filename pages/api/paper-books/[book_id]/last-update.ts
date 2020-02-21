@@ -1,15 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { APIResponse } from '../../../../types/api';
+import { APIResponse, EntityJSON } from '../../../../types/api';
 import { Episode } from '../../../../types/episode';
 import { BookType } from '../../../../types/book';
 
-interface LastUpdateJSON {
-  episode: Episode
-}
 export default function (request: NextApiRequest, response: NextApiResponse) {
   const { book_id } = request.query;
-  let data: LastUpdateJSON = {
-    episode: {
+  let data: EntityJSON<Episode> = {
+    entity: {
       id: '32432',
       title: '示例章节',
       content: {
@@ -49,7 +46,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       },
     }
   }
-  let result: APIResponse<LastUpdateJSON> = {
+  let result: APIResponse<EntityJSON<Episode>> = {
     code: 200,
     message: 'success',
     data: data

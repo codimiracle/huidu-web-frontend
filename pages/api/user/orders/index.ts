@@ -39,10 +39,13 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       prices: 100
     })
   }
-  const statuses = [OrderStatus.AwaitingDelivery, OrderStatus.AwaitingEvaluation, OrderStatus.AwaitingPayment, OrderStatus.AwaitingShipment, OrderStatus.Cancel, OrderStatus.Finish];
+  const statuses = [OrderStatus.AwaitingDelivery, OrderStatus.AwaitingEvaluation, OrderStatus.AwaitingPayment, OrderStatus.AwaitingShipment, OrderStatus.Canceled, OrderStatus.Completed];
   for (let index = 0; index < limitInt; index++) {
     orders.push({
       orderNumber: `8000034234002034${index}`,
+      owner: {
+        id
+      },
       type: OrderType.PaperBook,
       payType: PayType.Wechat,
       payTime: '2020-01-31T10:51:30.657Z',

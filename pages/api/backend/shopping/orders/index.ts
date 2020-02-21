@@ -1,11 +1,26 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Order, PayType, OrderStatus, OrderType, OrderDetails } from '../../../../../types/order';
-import { APIResponse, EntityJSON } from '../../../../../types/api';
+import { Order, PayType, OrderStatus, OrderDetails, OrderType } from '../../../../../types/order';
+import { APIResponse } from '../../../../../types/api';
 import { PassingPointStatus } from '../../../../../types/logistics-information';
-import { CommodityStatus, CommodityType } from '../../../../../types/commodity';
+import { CommodityStatus } from '../../../../../types/commodity';
+
+export interface OrderFilter {
+  status: OrderStatus
+}
+
+export interface OrderListJSON {
+  list: Array<Order>,
+  page: number,
+  limit: number,
+  total: number,
+}
 
 export default function (request: NextApiRequest, response: NextApiResponse) {
-  const { order_number } = request.query;
+  const { filter, page, limit } = request.query;
+  let filterObj = JSON.parse(filter.toString());
+  let pageInt = parseInt(page.toString());
+  let limitInt = parseInt(limit.toString());
+  let orders: Array<Order> = [];
   let details: Array<OrderDetails> = [];
   for (let index = 0; index < 5; index++) {
     details.push({
@@ -16,39 +31,27 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         picture: '/assets/huidu.png',
         rate: 3.5,
         extra: null,
-        stock: 10,
-        availableStock: 342,
-        weight: 423,
-        shipment: 10,
         prices: 100,
-        sales: 300,
         status: CommodityStatus.PutOnSale,
-        type: CommodityType.MaterialObject
+        type: 'electronic-book',
       },
       quantity: 1,
       prices: 100
     })
   }
-  let data: EntityJSON<Order> = {
-    entity: {
-      orderNumber: order_number.toString(),
+  const statuses = [OrderStatus.AwaitingDelivery, OrderStatus.AwaitingEvaluation, OrderStatus.AwaitingPayment, OrderStatus.AwaitingShipment, OrderStatus.Canceled, OrderStatus.Completed];
+  for (let index = 0; index < limitInt; index++) {
+    orders.push({
+      orderNumber: `8000034234002034${pageInt * limitInt + index}`,
       type: OrderType.PaperBook,
       payType: PayType.Wechat,
-      owner: {
-        id: `32423`,
-        username: 'codimiracle',
-        nickname: 'CDMRC',
-        avatar: '/assets/avatar.png',
-        role: {
-          id: '232',
-          name: '用户',
-          authorities: [],
-        },
-        extra: null
-      },
       payTime: '2020-01-31T10:51:30.657Z',
-      address: {
+      owner: {
         id: '324',
+        username: 'codimiracle',
+        nickname: '秋风扫落叶',
+      },
+      address: {
         region: '广东省 汕头市 龙湖区',
         address: '练江路24号',
         postcode: '43003',
@@ -58,7 +61,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         }
       },
       detailsList: details,
-      status: OrderStatus.AwaitingPayment,
+      status: filterObj && filterObj.status || statuses[index % statuses.length],
       shipmentMoney: 10,
       totalMoney: 10,
       deliverTime: '2020-01-31T10:51:30.657Z',
@@ -70,22 +73,23 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         passingPointList: [
           {
             name: '快递准备发货',
-            status: PassingPointStatus.Done,
-            updateTime: '2020-01-31T10:51:30.657Z'
-          },
-          {
-            name: '快递从 某市 发出，前往 某省某市',
             status: PassingPointStatus.Doing,
-            updateTime: '2020-01-31T10:59:00.657Z'
+            updateTime: '2020-01-31T10:51:30.657Z'
           }
         ]
       }
-    }
+    })
   }
-  let json: APIResponse<EntityJSON<Order>> = {
+  let data: OrderListJSON = {
+    list: orders,
+    page: pageInt,
+    limit: limitInt,
+    total: 100,
+  }
+  let json: APIResponse<OrderListJSON> = {
     code: 200,
     message: 'success',
     data: data
   }
-  response.status(200).json(json);
+  response.status(200).json(json)
 }

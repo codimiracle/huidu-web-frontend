@@ -22,13 +22,17 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       email: '123@qq.com',
       region: '广东省 广州市',
     },
-    roles: ['user']
+    role: {
+      id: '23423',
+      name: 'user',
+      authorities: ['user-service']
+    }
   }
   let json: APIResponse<UserJSON> = {
     code: 200,
     message: 'success',
     data: {
-      user: user
+      user: Math.ceil(Math.random()) > 0.5 ? user : null
     }
   }
   response.status(200).json(json);
