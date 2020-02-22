@@ -36,6 +36,7 @@ export interface Reference<T> {
 }
 export interface Article extends Content {
   title: string,
+  words: number,
   content: {
     type: 'plaintext' | 'html' | 'markdown',
     source: string
@@ -43,12 +44,12 @@ export interface Article extends Content {
   status: ContentStatus,
   type: ContentType,
   references: Array<Reference<any>>
-  owner: User,
   reads: number,
 }
 
 export interface Content {
   contentId: string,
+  owner: User,
   comments: number,
   rate: number,
   likes: number,

@@ -1,7 +1,7 @@
-import { Episode } from '../types/episode';
 import { ElectronicBook } from './electronic-book';
 
 export interface Note {
+  id: string,
   episodeId: string,
   ref: string,
   content: {

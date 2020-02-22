@@ -14,6 +14,7 @@ export enum OperationLevel {
 export interface Operation {
   id: string,
   type: OperationType,
+  describe: string,
   target: {
     contentId: string,
     type: ContentType
@@ -26,6 +27,7 @@ export interface Operation {
 export const EMPTY_OPERATION: Operation = {
   id: '233423',
   type: OperationType.Create,
+  describe: string,
   target: {
     contentId: '4342',
     type: ContentType.Comment,

@@ -3,7 +3,7 @@ import { Content, ContentType, Article } from "./content";
 
 export interface Comment extends Article {
   title: 'user-comment',
-  rate: number,
   target: string,
+  mentions: Array<string>,
   type: ContentType.Comment,
 }
