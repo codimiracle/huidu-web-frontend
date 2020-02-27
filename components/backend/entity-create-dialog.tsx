@@ -3,6 +3,7 @@ import { WrappedFormUtils } from "antd/lib/form/Form";
 import React, { ReactNode } from "react";
 import { Modal, message } from "antd";
 import { fetchDataByPost } from "../../util/network-util";
+import { EntityJSON } from "../../types/api";
 
 export interface EntityCreateDialogProps<T> {
   api: API,
@@ -30,11 +31,9 @@ export class EntityCreateDialog<T> extends React.Component<EntityCreateDialogPro
     form.validateFields((errors) => {
       if (!errors) {
         this.setState({ creating: true });
-        fetchDataByPost<any>(this.props.api, this.props.getArguments(form)).then((data) => {
-          let values: T[] = Object.values(data);
-          let entity: T = values[0];
-          if (entity) {
-            this.props.onCreated(entity);
+        fetchDataByPost<EntityJSON<T>>(this.props.api, this.props.getArguments(form)).then((data) => {
+          if (data.entity) {
+            this.props.onCreated(data.entity);
             this.props.onCancel();
             form.resetFields();
           } else {

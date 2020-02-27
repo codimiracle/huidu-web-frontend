@@ -3,6 +3,7 @@ import { WrappedFormUtils } from "antd/lib/form/Form";
 import React, { ReactNode } from "react";
 import { fetchDataByPut } from "../../util/network-util";
 import { message, Modal } from "antd";
+import { EntityJSON } from "../../types/api";
 
 export interface EntityUpdateDialogProps<T> {
   api: API,
@@ -31,10 +32,10 @@ export class EntityUpdateDialog<T> extends React.Component<EntityUpdateDialogPro
     form.validateFields((errors, values) => {
       if (!errors) {
         this.setState({ updating: true });
-        fetchDataByPut<any>(this.props.api, this.props.getArguments(form)).then((data) => {
-          let entity: Array<T> = Object.values(data);
-          if (entity.length > 0) {
-            this.props.onUpdated(entity[0]);
+        fetchDataByPut<EntityJSON<T>>(this.props.api, this.props.getArguments(form)).then((data) => {
+          if (data.entity) {
+            message.success("更新成功！");
+            this.props.onUpdated(data.entity);
             form.resetFields();
             this.props.onCancel();
           } else {

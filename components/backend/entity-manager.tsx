@@ -5,7 +5,7 @@ import React, { ReactNode } from 'react';
 import { API } from '../../configs/api-config';
 import { ListJSON } from '../../types/api';
 import { fetchDataByGet } from '../../util/network-util';
-import { EntityAction } from './entity-action';
+import { EntityUdAction } from './entity-ud-action';
 import { EntityCreateDialog, EntityCreateDialogProps } from './entity-create-dialog';
 import EntitySearch, { SearchableColumn } from './entity-search';
 
@@ -63,12 +63,7 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
       loading: true,
       createDialogVisible: false,
       filter: {},
-      sorter: {
-        column: null,
-        columnKey: '',
-        field: '',
-        order: 'ascend'
-      },
+      sorter: {},
       keyword: '',
       total: 0,
       page: 1,
@@ -121,7 +116,7 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
       width: this.props.actionOptionWidth,
       fixed: 'right',
       render: (text, record: T, index: number) => (
-        <EntityAction
+        <EntityUdAction
           entity={record}
           index={index}
           extra={this.props.actionOptionsExtra}
@@ -162,8 +157,12 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
                 onSearch={(keyword, field) => {
                   this.setState((state) => {
                     let filter = { ...state.filter };
-                    // 赋值为 undefined ，JSON#stringify 将会忽略
-                    filter[field] = undefined;
+                    if (keyword) {
+                      filter[field] = [keyword];
+                    } else {
+                      // 赋值为 undefined ，JSON#stringify 将会忽略
+                      filter[field] = undefined;
+                    }
                     return { filter: filter };
                   }, () => {
                     this.fetchList(this.state.filter, this.state.sorter, 1, 10);
