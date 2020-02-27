@@ -5,6 +5,7 @@ import { Input } from 'antd';
 
 export interface PasswordFormProps {
   form: WrappedFormUtils,
+  resetPassword?: boolean,
   changePassword?: boolean
 };
 export interface PasswordFormState { };
