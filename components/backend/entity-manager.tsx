@@ -34,7 +34,7 @@ export interface EntityManagerProps<T> {
   };
   actionOptionWidth?: string | number;
   toolsBarExtra?: ReactNode;
-  actionOptionsExtra?: (entity: T, index: number) => ReactNode;
+  actionOptionsExtra?: (entity: T, index: number, updater: (entity: T) => void) => ReactNode;
   rowKey: string | ((record: T, index: number) => string);
   rowSelection?: TableRowSelection<T>;
   expandedRowRender?: (record: T, index: number, indent: number, expanded: boolean) => React.ReactNode;
@@ -110,6 +110,13 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
       current: this.state.page,
       pageSize: this.state.limit
     }
+    let entityUpdater = (entity, index) => {
+      this.setState((state) => {
+        let list = [].concat(state.dataSource);
+        list[index] = entity;
+        return { dataSource: list };
+      })
+    }
     let defaultActions: ColumnProps<T> = {
       title: '操作',
       key: 'operations',
@@ -119,14 +126,8 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
         <EntityUdAction
           entity={record}
           index={index}
-          extra={this.props.actionOptionsExtra}
-          onUpdated={(entity, index) => {
-            this.setState((state) => {
-              let list = state.dataSource;
-              list[index] = entity;
-              return { dataSource: list };
-            })
-          }}
+          extra={(entity, index) => this.props.actionOptionsExtra && this.props.actionOptionsExtra(entity, index, (entity) => entityUpdater(entity, index))}
+          onUpdated={entityUpdater}
           getUpdateRequestData={this.props.config.getUpdateRequestData}
           renderUpdateForm={this.props.config.renderUpdateForm}
           updateApi={this.props.config.update}
