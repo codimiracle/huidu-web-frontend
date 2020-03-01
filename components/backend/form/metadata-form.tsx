@@ -20,10 +20,10 @@ export default class MetadataForm extends React.Component<MetadataFormProps, Met
         <Col span={8}>
           <FormItem label="封面">
             {
-              form.getFieldDecorator('cover', {
+              form.getFieldDecorator('metadata.cover', {
                 initialValue: metadata && metadata.cover || undefined,
                 rules: [{ required: true, message: '封面要上传哟' }]
-              })(<ImageUpload onChange={(value) => form.setFieldsValue({ picture: value })} />)
+              })(<ImageUpload />)
             }
           </FormItem>
         </Col>
@@ -32,7 +32,7 @@ export default class MetadataForm extends React.Component<MetadataFormProps, Met
             <Col>
               <FormItem label="书名">
                 {
-                  form.getFieldDecorator('name', {
+                  form.getFieldDecorator('metadata.name', {
                     initialValue: metadata && metadata.name || undefined,
                     rules: [{ required: true, message: '书名不能留空呀' }]
                   })(
@@ -44,7 +44,7 @@ export default class MetadataForm extends React.Component<MetadataFormProps, Met
             <Col>
               <FormItem label="作者">
                 {
-                  form.getFieldDecorator('author', {
+                  form.getFieldDecorator('metadata.author', {
                     initialValue: metadata && metadata.author || undefined,
                     rules: [{ required: true, message: '作者是要填的' }]
                   })(
@@ -58,7 +58,7 @@ export default class MetadataForm extends React.Component<MetadataFormProps, Met
             <Col>
               <FormItem label="描述">
                 {
-                  form.getFieldDecorator('description', {
+                  form.getFieldDecorator('metadata.description', {
                     initialValue: metadata && metadata.description || undefined,
                     rules: [{ required: true, message: '请填写书籍描述' }]
                   })(

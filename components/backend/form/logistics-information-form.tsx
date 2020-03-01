@@ -3,6 +3,7 @@ import { LogisticsInformation, PassingPoint, PassingPointStatus } from '../../..
 import { Row, Col, Input, Select, AutoComplete, Icon, Button, Divider } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
+import TextArea from 'antd/lib/input/TextArea';
 
 export interface LogisticsInformationFormProps {
   form: WrappedFormUtils,
@@ -16,7 +17,7 @@ export default class LogisticsInformationForm extends React.Component<LogisticsI
   constructor(props: LogisticsInformationFormProps) {
     super(props);
     this.state = {
-      passingPoints: props.logisticsInformation && props.logisticsInformation.passingPointList || [{ name: undefined, status: 'doing' }],
+      passingPoints: [],
     };
   }
   private onPassingPointDelete(index: number) {
@@ -26,8 +27,9 @@ export default class LogisticsInformationForm extends React.Component<LogisticsI
     this.setState({ passingPoints: this.state.passingPoints.concat({ name: undefined, status: 'doing' }) });
   }
   render() {
-    const { form } = this.props;
+    const { form, logisticsInformation } = this.props;
     const { passingPoints } = this.state;
+    let renderringPassingPoints = (logisticsInformation.passingPoints || []).concat(passingPoints)
     return (
       <>
         <Row type="flex" gutter={16}>
@@ -35,8 +37,9 @@ export default class LogisticsInformationForm extends React.Component<LogisticsI
             <FormItem label="快递单号">
               {
                 form.getFieldDecorator('expressNumber', {
+                  initialValue: logisticsInformation && logisticsInformation.expressNumber || undefined,
                   rules: [{ required: true, message: '请输入快递单号' }]
-                })(<Input placeholder="快递单号" />)
+                })(<Input placeholder="快递单号" disabled={!!logisticsInformation} />)
               }
             </FormItem>
           </Col>
@@ -44,12 +47,14 @@ export default class LogisticsInformationForm extends React.Component<LogisticsI
             <FormItem label="快递公司">
               {
                 form.getFieldDecorator('expressCompany', {
+                  initialValue: logisticsInformation && logisticsInformation.expressCompany || undefined,
                   rules: [{ required: true, message: '请选择相应的快递公司' }]
                 })(
                   <AutoComplete
                     placeholder="快递公司"
+                    disabled={!!logisticsInformation}
                   >
-                    {["中通", "圆通", "顺风", "天天"].map((value) => <AutoComplete.Option key={value} value={value}>{value}</AutoComplete.Option>)}
+                    {["中通", "圆通", "顺丰", "天天"].map((value) => <AutoComplete.Option key={value} value={value}>{value}</AutoComplete.Option>)}
                   </AutoComplete>
                 )
               }
@@ -58,9 +63,9 @@ export default class LogisticsInformationForm extends React.Component<LogisticsI
         </Row>
         <Divider type="horizontal" />
         {
-          passingPoints.map((passingPoint, index) =>
+          renderringPassingPoints.map((passingPoint, index) =>
             <Row type="flex" gutter={16} key={index}>
-              {form.getFieldDecorator(`passingPoints[${index}].id`, {initialValue: passingPoint.id})(<span></span>)}
+              {form.getFieldDecorator(`passingPoints[${index}].id`, { initialValue: passingPoint.id })(<span></span>)}
               <Col>
                 <FormItem label="途经点描述">
                   {
@@ -68,7 +73,7 @@ export default class LogisticsInformationForm extends React.Component<LogisticsI
                       initialValue: passingPoint.name || undefined,
                       rules: [{ required: true, message: '请描述这个途经' }]
                     })(
-                      <Input placeholder="途经描述" disabled={!!passingPoint.id} />
+                      <TextArea placeholder="途经描述" disabled={!!passingPoint.id} />
                     )
                   }
                 </FormItem>
@@ -95,7 +100,7 @@ export default class LogisticsInformationForm extends React.Component<LogisticsI
                       shape="circle"
                       type="dashed"
                       icon="minus"
-                      onClick={() => this.onPassingPointDelete(index)}
+                      onClick={() => this.onPassingPointDelete(index - logisticsInformation.passingPoints.length)}
                       style={{ marginLeft: '8px' }}
                     />
                   }

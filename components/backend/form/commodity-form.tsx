@@ -16,43 +16,51 @@ export interface CommodityFormState { };
 export default class CommodityForm extends React.Component<CommodityFormProps, CommodityFormState> {
   render() {
     const { form, commodity, linked } = this.props;
+    if (linked) {
+      form.getFieldDecorator('commodity.picture', { initialValue: form.getFieldValue('metadata.cover') });
+      form.getFieldDecorator('commodity.name', { initialValue: form.getFieldValue('metadata.name') });
+      form.getFieldDecorator('commodity.introduction', { initialValue: form.getFieldValue('metadata.description') });
+    }
     return (
       <>
-        <Row style={{ display: linked ? 'none' : 'block' }}>
-          <Col span={8}>
-            <FormItem label="商品封面">
-              {
-                form.getFieldDecorator('picture', {
-                  initialValue: commodity && commodity.picture || undefined,
-                  rules: [{ required: true, message: '请上传商品封面' }]
-                })(<ImageUpload />)
-              }
-            </FormItem>
-          </Col>
-          <Col span={16}>
-            <FormItem label="商品名称">
-              {
-                form.getFieldDecorator('name', {
-                  initialValue: commodity && commodity.name || undefined,
-                  rules: [{ required: true, message: '请输入商品名称' }]
-                })(<Input placeholder="商品名称" />)
-              }
-            </FormItem>
-            <FormItem label="商品介绍">
-              {
-                form.getFieldDecorator('introduction', {
-                  initialValue: commodity && commodity.introduction || undefined,
-                  rules: [{ required: true, message: '请输入商品介绍' }]
-                })(<TextArea placeholder="商品介绍" />)
-              }
-            </FormItem>
-          </Col>
-        </Row>
+        {
+          !linked &&
+          <Row>
+            <Col span={8}>
+              <FormItem label="商品封面">
+                {
+                  form.getFieldDecorator('commodity.picture', {
+                    initialValue: commodity && commodity.picture || undefined,
+                    rules: [{ required: true, message: '请上传商品封面' }]
+                  })(<ImageUpload />)
+                }
+              </FormItem>
+            </Col>
+            <Col span={16}>
+              <FormItem label="商品名称">
+                {
+                  form.getFieldDecorator('commodity.name', {
+                    initialValue: commodity && commodity.name || undefined,
+                    rules: [{ required: true, message: '请输入商品名称' }]
+                  })(<Input placeholder="商品名称" />)
+                }
+              </FormItem>
+              <FormItem label="商品介绍">
+                {
+                  form.getFieldDecorator('commodity.introduction', {
+                    initialValue: commodity && commodity.introduction || undefined,
+                    rules: [{ required: true, message: '请输入商品介绍' }]
+                  })(<TextArea placeholder="商品介绍" />)
+                }
+              </FormItem>
+            </Col>
+          </Row>
+        }
         <Row>
           <Col span={8}>
             <FormItem label="商品类型">
               {
-                form.getFieldDecorator('type', {
+                form.getFieldDecorator('commodity.type', {
                   initialValue: commodity && commodity.type || CommodityType.MaterialObject,
                   rules: [{ required: true, message: '请选择商品类型' }]
                 })(<Radio.Group disabled={linked}>
@@ -64,7 +72,7 @@ export default class CommodityForm extends React.Component<CommodityFormProps, C
           <Col span={16}>
             <FormItem label="商品状态">
               {
-                form.getFieldDecorator('status', {
+                form.getFieldDecorator('commodity.status', {
                   initialValue: commodity && commodity.status || CommodityStatus.PutOnSale,
                   rules: [{ required: true, message: '请选择商品状态' }]
                 })(
@@ -84,7 +92,7 @@ export default class CommodityForm extends React.Component<CommodityFormProps, C
           <Col span={8}>
             <FormItem label="初始库存">
               {
-                form.getFieldDecorator('stock', {
+                form.getFieldDecorator('commodity.stock', {
                   initialValue: commodity && commodity.stock || 100,
                   rules: [{ required: true, message: '请输入初始库存' }]
                 })(
@@ -98,7 +106,7 @@ export default class CommodityForm extends React.Component<CommodityFormProps, C
               <Col span={12}>
                 <FormItem label="单价">
                   {
-                    form.getFieldDecorator('prices', {
+                    form.getFieldDecorator('commodity.prices', {
                       initialValue: commodity && commodity.prices || 0,
                       rules: [{ required: true, message: '请输入单价' }]
                     })(
@@ -109,13 +117,13 @@ export default class CommodityForm extends React.Component<CommodityFormProps, C
                       />
                     )
                   }
-                  {form.getFieldValue('prices') == 0 && <span style={{ paddingLeft: '8px' }}>(免费)</span>}
+                  {form.getFieldValue('commodity.prices') == 0 && <span style={{ paddingLeft: '8px' }}>(免费)</span>}
                 </FormItem>
               </Col>
               <Col span={12}>
                 <FormItem label="运费">
                   {
-                    form.getFieldDecorator('shipment', {
+                    form.getFieldDecorator('commodity.shipment', {
                       initialValue: commodity && commodity.shipment || 0,
                       rules: [{ required: true, message: '请设定运费' }]
                     })(
@@ -126,7 +134,7 @@ export default class CommodityForm extends React.Component<CommodityFormProps, C
                       />
                     )
                   }
-                  {form.getFieldValue('shipment') == 0 && <span style={{ paddingLeft: '8px' }}>(包邮)</span>}
+                  {form.getFieldValue('commodity.shipment') == 0 && <span style={{ paddingLeft: '8px' }}>(包邮)</span>}
                 </FormItem>
               </Col>
             </Row>
@@ -136,7 +144,7 @@ export default class CommodityForm extends React.Component<CommodityFormProps, C
           <Col span={8}>
             <FormItem label="净重量(g)">
               {
-                form.getFieldDecorator('weight', {
+                form.getFieldDecorator('commodity.weight', {
                   initialValue: commodity && commodity.weight || 500,
                   rules: [{ required: true, message: '请输入商品净重量' }]
                 })(
@@ -150,7 +158,7 @@ export default class CommodityForm extends React.Component<CommodityFormProps, C
           <Col span={16}>
             <FormItem label="商品规格">
               {
-                form.getFieldDecorator('specification', {
+                form.getFieldDecorator('commodity.specification', {
                   initialValue: commodity && commodity.extra || '',
                 })(
                   <TextArea rows={4} placeholder={`例如：\n开本：16k\n长：160mm\n宽：200mm`} />
