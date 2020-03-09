@@ -47,7 +47,7 @@ export default class FilterCard extends React.Component<FilterCardProps, FilterC
   }
   private onYearChange(year: string) {
     this.setState({ selectedYear: year });
-    this.fireFilterChange({ selectedYear: year });
+    this.fireFilterChange({ year: year });
   }
   private onCategoryChange(category: Category) {
     this.setState({ selectedCategory: category, selectedTag: null });
@@ -68,7 +68,7 @@ export default class FilterCard extends React.Component<FilterCardProps, FilterC
       <>
         <Card>
           <h3>年份</h3>
-          <CheckableTag checked={selectedYear == 'all'}>全部</CheckableTag>
+          <CheckableTag checked={selectedYear == 'all'} onChange={() => this.onYearChange('all')}>全部</CheckableTag>
           {
             years.map((year: string) => (
               <CheckableTag key={year} checked={selectedYear == year} onChange={() => this.onYearChange(year)}>{year}</CheckableTag>

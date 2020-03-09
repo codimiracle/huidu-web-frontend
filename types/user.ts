@@ -10,6 +10,12 @@ export interface UserInfo {
   email: string,
   region: string
 }
+export interface SocialUser {
+  id: string,
+  username: string,
+  nickname: string,
+  avatar: string,
+}
 export interface User {
   id: string,
   username: string,
@@ -24,7 +30,11 @@ export const UNKNOW_USER : User = {
   username: 'anonymous',
   avatar: '#unknow-avatar',
   nickname: 'unknow',
-  roles: ["user"],
+  role: {
+    id: '342',
+    name: '角色',
+    authorities: []
+  },
   extra: {
     gender: 'man',
     age: 16,

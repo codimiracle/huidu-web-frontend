@@ -12,6 +12,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       data: {
         entity: {
           id: `${book_id}`,
+          owner: null,
           contentId: '32423',
           metadata: {
             id: '23423',
@@ -41,7 +42,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
             description: '现代的文学著作',
             tags: [],
           },
-          tags: [{ id: '342', name: '推荐标注|23423423' }]
+          tags: [{ id: '342', name: '推荐标注|23423423', categoryId: null }]
         }
       }
     }

@@ -14,6 +14,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         contentId: `${topic_id}`,
         type: ContentType.Topic,
         title: '大家有没什么好书推荐？',
+        words: 324,
         content: {
           type: 'html',
           source: `

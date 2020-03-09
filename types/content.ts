@@ -1,5 +1,6 @@
-import { User } from "./user";
+import { User, SocialUser } from "./user";
 import { Comment } from './comment';
+import { BookType } from "./book";
 
 export enum ContentStatus {
   Draft = 'draft',
@@ -10,7 +11,7 @@ export enum ContentStatus {
 
 export const CONTENT_STATUS_TEXTS = {};
 CONTENT_STATUS_TEXTS[ContentStatus.Draft] = "草稿";
-CONTENT_STATUS_TEXTS[ContentStatus.Examining] = "审查中";
+CONTENT_STATUS_TEXTS[ContentStatus.Examining] = "待审";
 CONTENT_STATUS_TEXTS[ContentStatus.Rejected] = "驳回";
 CONTENT_STATUS_TEXTS[ContentStatus.Publish] = "发布";
 
@@ -24,17 +25,18 @@ export enum ContentType {
   Topic = 'topic',
   Comment = 'comment',
   Review = 'review',
-  Book = 'book',
-}
-export enum ReferenceType {
-  Content = 'content',
   Book = 'book'
 }
+
+
 export interface Reference<T> {
-  type: ReferenceType
-  ref: T
+  id: string;
+  contentId: string;
+  type: ContentType;
+  ref: T;
 }
 export interface Article extends Content {
+  type: ContentType,
   title: string,
   words: number,
   content: {
@@ -42,14 +44,13 @@ export interface Article extends Content {
     source: string
   },
   status: ContentStatus,
-  type: ContentType,
   references: Array<Reference<any>>
   reads: number,
 }
 
 export interface Content {
   contentId: string,
-  owner: User,
+  owner: SocialUser,
   comments: number,
   rate: number,
   likes: number,

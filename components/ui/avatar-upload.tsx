@@ -1,5 +1,6 @@
 import { Upload, Icon, message } from 'antd';
 import React from 'react';
+import { API } from '../../configs/api-config';
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -19,25 +20,36 @@ function beforeUpload(file) {
   return isJpgOrPng && isLt2M;
 }
 
-export default class AvatarUpload extends React.Component {
+export interface AvatarUploadProps {
+  disabled?: boolean;
+  value?: string;
+  onChange?: (value: string) => void;
+}
+
+export default class AvatarUpload extends React.Component<AvatarUploadProps> {
   state = {
-    imageUrl: null,
+    image: null,
+    uploadedUrl: null,
     loading: false,
   };
 
   handleChange = info => {
+    const { onChange } = this.props;
     if (info.file.status === 'uploading') {
       this.setState({ loading: true });
       return;
     }
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageUrl =>
+      let uploadedUrl = API.AvatarSource.toString() + "/" + info.file.response.data.referenceId;
+      getBase64(info.file.originFileObj, image =>
         this.setState({
-          imageUrl,
+          image,
+          uploadedUrl,
           loading: false,
-        }),
+        })
       );
+      onChange && onChange(uploadedUrl);
     }
   };
 
@@ -48,19 +60,20 @@ export default class AvatarUpload extends React.Component {
         <div className="ant-upload-text">Upload</div>
       </div>
     );
-    const { imageUrl } = this.state;
+    const { image } = this.state;
     return (
       <Upload
-        name="avatar"
+        name="file"
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={false}
-        action="/api/user/avatar-upload"
+        accept=".jpg,.png"
+        action={API.Upload}
         disabled={this.props.disabled}
         beforeUpload={beforeUpload}
         onChange={this.handleChange}
       >
-        {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+        {image ? <img src={image} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
       </Upload>
     );
   }

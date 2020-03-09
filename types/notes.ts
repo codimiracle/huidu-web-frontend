@@ -7,8 +7,8 @@ export interface Note {
   content: {
     type: 'plaintext',
     source: string,
-  }
-  domMark: {
+  },
+  dommark: {
     startDom: string,
     startOffset: number,
     endDom: string,

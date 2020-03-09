@@ -29,6 +29,7 @@ export interface Episode {
   },
   words: number,
   status: EpisodeStatus,
+  episodeNumber: number;
   next: string,
   book: ElectronicBook,
   createTime: string,

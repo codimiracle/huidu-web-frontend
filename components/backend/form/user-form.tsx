@@ -17,7 +17,9 @@ export interface UserFormState { };
 export default class UserForm extends React.Component<UserFormProps, UserFormState> {
   render() {
     const { form, user } = this.props;
-    let isAuthor = AuthorityUtil.checkAuthority(user, Authority.AuthorServices);
+    let isAuthor = AuthorityUtil.checkAuthority(user, Authority.AuthorDataServices);
+    isAuthor = isAuthor || AuthorityUtil.checkAuthority(user, Authority.AuthorAudioBooksService);
+    isAuthor = isAuthor || AuthorityUtil.checkAuthority(user, Authority.AuthorElectronicsBooksService);
     return (
       <>
         <h3>权限设定</h3>

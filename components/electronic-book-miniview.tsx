@@ -5,6 +5,7 @@ import DirectLink from './direct-link';
 import Link from 'next/link';
 import { fetchMessageByPost } from '../util/network-util';
 import { API } from '../configs/api-config';
+import ElectronicBookStatusView from './electronic-book-status-view';
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
@@ -53,9 +54,9 @@ export default class ElectronicBookMiniView extends React.Component<ElectronicBo
           <img src={renderringBook.metadata.cover || EMPTY_IMAGE} />
         </div>
         <div className="body">
-          <div><strong><Link href="/bookshop/electronic-books/[book_id]" as={`/bookshop/electronic-books/${renderringBook.id}`}><a>{renderringBook.metadata.name}</a></Link></strong> <Tag>{renderringBook.status}</Tag></div>
+          <div><strong><Link href="/bookshop/electronic-books/[book_id]" as={`/bookshop/electronic-books/${renderringBook.id}`}><a>{renderringBook.metadata.name}</a></Link></strong> <ElectronicBookStatusView status={renderringBook.status} /></div>
           <div><span className="author">{renderringBook.metadata.author}</span></div>
-          <div><Rate defaultValue={2.5} disabled style={{ fontSize: '1em' }} /></div>
+          <div><Rate defaultValue={renderringBook.rate} disabled style={{ fontSize: '1em' }} /></div>
           <p className="description">{renderringBook.metadata.description}</p>
           <div className="actions">
             <Button loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
@@ -79,6 +80,10 @@ export default class ElectronicBookMiniView extends React.Component<ElectronicBo
           }
           .description {
             flex: 1;
+            
+            max-height: 3em;
+            word-break: break-all;
+            overflow: hidden;
           }
         `}</style>
       </div>

@@ -21,7 +21,6 @@ export interface AudioPlayerViewState {
 
 export default class AudioPlayerView extends React.Component<AudioPlayerViewProps, AudioPlayerViewState> {
   private audioElementRef: RefObject<HTMLAudioElement>;
-  private timer: any;
   constructor(props: AudioPlayerViewProps) {
     super(props);
     this.state = {
@@ -52,17 +51,16 @@ export default class AudioPlayerView extends React.Component<AudioPlayerViewProp
     this.setState({ status: PlayerStatus.paused });
   }
   onLoaded() {
-    this.setState({ duration: this.audioElementRef.current.duration }, () => {
+    this.setState({ status: this.audioElementRef.current.paused ? PlayerStatus.paused : PlayerStatus.playing, duration: this.audioElementRef.current.duration }, () => {
       this.props.onLoaded && this.props.onLoaded(this.props.src, this.state.duration);
     });
   }
   componentWillUnmount() {
     this.audioElementRef.current.removeEventListener('load', this.onLoaded);
     this.audioElementRef.current.removeEventListener('loaddata', this.onLoaded);
-    this.audioElementRef.current.removeEventListener('play', this.onLoaded);
-    this.audioElementRef.current.removeEventListener('paused', this.onLoaded);
-    this.audioElementRef.current.removeEventListener('timeupdate', this.onLoaded);
-    clearTimeout(this.timer);
+    this.audioElementRef.current.removeEventListener('play', this.onPlaying);
+    this.audioElementRef.current.removeEventListener('paused', this.onPaused);
+    this.audioElementRef.current.removeEventListener('timeupdate', this.onPlaying);
   }
   componentDidMount() {
     this.audioElementRef.current.addEventListener('load', this.onLoaded)

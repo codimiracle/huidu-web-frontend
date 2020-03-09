@@ -51,7 +51,7 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
         electronic_book_id: this.props.book.id
       }).then((lastEpisodeNumber) => {
         this.setState((state) => {
-          let episode = state.episode || { episodeNumber: 0 };
+          let episode: any = state.episode || { episodeNumber: 0 };
           episode.episodeNumber = lastEpisodeNumber + 1;
           return { episode: episode };
         });
@@ -137,7 +137,7 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
                 <p>审核后，在工作人员确认后将会发布</p>
               }
               <div>章节号：<InputNumber size="small" min={1} value={episode && episode.episodeNumber || undefined} placeholder="章节号" onChange={(value) => this.setState((state) => {
-                let episode = state.episode || { episodeNumber: 0 };
+                let episode: any = state.episode || { episodeNumber: 0 };
                 episode.episodeNumber = value;
                 return { episode: episode }
               })} /></div>

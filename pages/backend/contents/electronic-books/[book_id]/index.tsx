@@ -42,14 +42,14 @@ export default class EpisodeManager extends React.Component<EpisodeManagerProps,
   getColumns(filter: Partial<Record<keyof Episode, string[]>>, sorter: SorterResult<Episode>): Array<ColumnProps<Episode>> {
     return [
       {
+        title: '章节号',
+        key: 'episodeNumber',
+        dataIndex: 'episodeNumber'
+      },
+      {
         title: '章节标题',
         key: 'title',
         dataIndex: 'title',
-      }, {
-        title: '下一章节',
-        key: 'next',
-        dataIndex: 'next',
-        render: (nextEpisodeId) => <span>{nextEpisodeId}</span>
       }, {
         title: '字数',
         key: 'words',
@@ -58,7 +58,7 @@ export default class EpisodeManager extends React.Component<EpisodeManagerProps,
         title: '状态',
         key: 'status',
         filters: Object.values(EpisodeStatus).map((status) => ({ text: EPISODE_STATUS_TEXTS[status], value: status })),
-        filteredValue: filter.status && filter.status,
+        filteredValue: filter && filter.status || null,
         dataIndex: 'status',
         render: (status) => <Tag color={EPISODE_STATUS_COLORS[status]}>{EPISODE_STATUS_TEXTS[status] || '未知'}</Tag>
       }, {
@@ -70,33 +70,34 @@ export default class EpisodeManager extends React.Component<EpisodeManagerProps,
     ];
   }
   render() {
+    const { book } = this.props
     return (
       <>
         <HeaderBar
           title="章节管理"
           hint="管理电子书的章节"
           extra={
-            <BookPreviewView book={this.props.book} />
+            <BookPreviewView book={book} />
           }
         />
         <EntityManager
           config={{
             list: API.BackendElectronicBookEpisodeCollection,
             searchableColumns: [{ name: '章节标题', field: 'title' }],
-            getListingRequestExtraData: () => ({ book_id: this.props.book.id }),
+            getListingRequestExtraData: () => ({ book_id: book.id }),
             delete: API.BackendElectronicBookEpisodeDelete
           }}
           toolsBarExtra={
             <Link
               href={`./episode-writer/[book_id]`}
-              as={`./episode-writer/${this.props.book.id}`}
+              as={`./episode-writer/${book.id}`}
             >
               <a>
                 <Button type="primary" icon="plus">添加章节</Button>
               </a>
             </Link>
           }
-          actionOptionsExtra={(entity, index) => <Link href={`./episode-writer/[book_id]?episode_id=${entity.id}`} as={`./episode-writer/${this.props.book.id}?episode_id=${entity.id}`}><a>编辑</a></Link>}
+          actionOptionsExtra={(entity, index) => <Link href={`./episode-writer/[book_id]?episode_id=${entity.id}`} as={`./episode-writer/${book.id}?episode_id=${entity.id}`}><a>编辑</a></Link>}
           columns={this.getColumns}
           rowKey={(episode) => episode.id}
           initialDataSource={this.props.list}

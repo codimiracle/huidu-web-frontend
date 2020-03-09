@@ -8,6 +8,8 @@ import LoadingView from "./loading-view";
 const EMTPY_IMAGE = "/assets/empty.png";
 
 export interface ImageUploadProps {
+  width?: number | string,
+  height?: number | string,
   value?: string,
   onChange?: (value: string) => void
 }
@@ -47,7 +49,7 @@ export class ImageUpload extends React.Component<ImageUploadProps, ImageUploadSt
       this.setState({ loading: false });
     }
     if (info.file.status == 'done') {
-      let uploadedUrl = API.UploadSource.toString() + "/" + info.file.response.data.fileName;
+      let uploadedUrl = API.UploadSource.toString() + "/" + info.file.response.data.referenceId;
       message.info("上传成功！");
       console.log(info);
       console.log('uploadedUrl: %s', uploadedUrl);
@@ -61,17 +63,20 @@ export class ImageUpload extends React.Component<ImageUploadProps, ImageUploadSt
     const { value } = this.props;
     const { loading, uploadedUrl } = this.state;
     let imageUrl = value || uploadedUrl;
+    let width = this.props.width || '7em';
+    let height = this.props.height || '9.4em';
     return (
       <>
         <Upload
           name="file"
+          accept=".png,.jpg"
           listType="picture-card"
           beforeUpload={this.beforeUpload}
           action={API.Upload}
           onChange={(info) => this.onChange(info)}
           showUploadList={false}
         >
-          <div className="upload-button" style={{ backgroundImage: imageUrl ? `url(${imageUrl})` : 'none' }}>
+          <div className="upload-button" style={{ width: width, height: height, paddingTop: `calc((${height} - 41px) / 2)`, backgroundImage: imageUrl ? `url(${imageUrl})` : 'none' }}>
             {!imageUrl && <>
               <Icon type={loading ? 'loading' : 'plus'} />
               <div className="ant-upload-text">上传</div>
@@ -80,9 +85,6 @@ export class ImageUpload extends React.Component<ImageUploadProps, ImageUploadSt
         </Upload>
         <style jsx>{`
         .upload-button {
-          padding-top: 3em;
-          width: 7em;
-          height: 9.4em;
           background-size: cover;
         }
       `}</style>

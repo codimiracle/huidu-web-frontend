@@ -1,19 +1,21 @@
-import { Button, Col, List, Row, message } from 'antd';
+import { Button, Col, List, message, Row } from 'antd';
+import { ListGridType } from 'antd/lib/list';
 import CheckableTag from 'antd/lib/tag/CheckableTag';
-import React from 'react';
-import { Book } from '../types/book';
-import { Category, Tag } from '../types/category';
 import Link from 'next/link';
-import { ListJSON } from '../types/api';
+import React from 'react';
 import { API } from '../configs/api-config';
+import { ListJSON } from '../types/api';
+import { Category, Tag } from '../types/category';
 import { fetchDataByGet } from '../util/network-util';
 
 export interface ExhibitionViewProps<T> {
-  category: Category,
-  renderItem?: (item: T, index: number) => React.ReactNode,
-  title?: string,
-  asideTitle?: string,
-  aside: React.ReactNode,
+  category: Category;
+  count?: number;
+  grid?: ListGridType;
+  renderItem?: (item: T, index: number) => React.ReactNode;
+  title?: string;
+  asideTitle?: string;
+  aside: React.ReactNode;
 };
 export interface ExhibitionViewState<T> {
   loading: boolean,
@@ -30,17 +32,17 @@ export default class ExhibitionView<T> extends React.Component<ExhibitionViewPro
     this.state = {
       loading: false,
       page: 1,
-      limit: 6,
+      limit: this.props.count || 6,
       list: [],
       total: 0,
-      selectedTag: props.category.tags[0]
+      selectedTag: props.category && props.category.tags[0]
     }
   }
   fetchList(page: number, limit: number) {
     const { category } = this.props;
     const { selectedTag } = this.state;
     this.setState({ loading: true });
-    fetchDataByGet<ListJSON<T>>(API.CategoryItems, {
+    fetchDataByGet<ListJSON<T>>(API.CategoryItemsCollection, {
       category_id: category.id,
       filter: {
         tagId: selectedTag.id
@@ -90,7 +92,7 @@ export default class ExhibitionView<T> extends React.Component<ExhibitionViewPro
               </div>
             </div>
             <List
-              grid={{ column: 2 }}
+              grid={this.props.grid || { column: 2 }}
               loading={loading}
               renderItem={this.props.renderItem}
               dataSource={list}

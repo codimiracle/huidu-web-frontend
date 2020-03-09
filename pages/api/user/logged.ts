@@ -1,10 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { User } from "../../../types/user";
-import { APIResponse } from "../../../types/api";
-
-export interface UserJSON {
-  user: User
-}
+import { APIResponse, EntityJSON } from "../../../types/api";
+import { Authority } from "../../../configs/backend-config";
 
 export default function (request: NextApiRequest, response: NextApiResponse) {
   let user : User = {
@@ -25,14 +22,14 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
     role: {
       id: '23423',
       name: 'user',
-      authorities: ['user-service']
+      authorities: [Authority.FrontendServices, Authority.AuthorDataServices, Authority.AuthorAudioBooksService, Authority.AuthorElectronicsBooksService]
     }
   }
-  let json: APIResponse<UserJSON> = {
+  let json: APIResponse<EntityJSON<User>> = {
     code: 200,
     message: 'success',
     data: {
-      user: Math.ceil(Math.random()) > 0.5 ? user : null
+      entity: Math.ceil(Math.random()) > 0.5 ? user : null
     }
   }
   response.status(200).json(json);

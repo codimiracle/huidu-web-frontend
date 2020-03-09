@@ -69,7 +69,7 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
             <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
             <p className="description">{book.description || book.metadata.description}</p>
             <div className="actions">
-              <DirectLink href={`/player/[book_id]`} as={`/player/${book.id}`}><Button>在线听书</Button></DirectLink> <Button loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
+              <DirectLink href={`/player/[book_id]`} as={`/player/${book.id}`}><Button size="small">在线听书</Button></DirectLink> <Button size="small" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
             </div>
           </div>
         </div>
@@ -91,6 +91,10 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
           }
           .description {
             flex: 1;
+
+            max-height: 3em;
+            word-break: break-all;
+            overflow: hidden;
           }
           `}</style>
       </RetryView>

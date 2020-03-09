@@ -13,6 +13,7 @@ import BulkBar from '../../../components/backend/bulk-bar';
 import { SearchableColumn } from '../../../components/backend/entity-search';
 import EntityAction from '../../../components/backend/entity-action';
 import WrappedLogisticsInfomationDialog from '../../../components/dialogs/logistics-infomation-dialog';
+import OrderDetailsDialog from '../../../components/dialogs/order-details-dialog';
 
 function moneyFormat(m: number): string {
   let s = m + "";
@@ -42,7 +43,7 @@ const getColumns = (filter: Partial<Record<keyof Order, string[]>>, sorter: Sort
       dataIndex: 'type',
       filters: Object.values(OrderType).map((orderType) => ({ text: ORDER_TYPE_TEXTS[orderType], value: orderType })),
       onFilter: (value, record) => record.status == value,
-      filteredValue: filter.type || null,
+      filteredValue: filter && filter.type || null,
       render: (text) => (ORDER_TYPE_TEXTS[text] || '未知')
     },
     {
@@ -71,7 +72,7 @@ const getColumns = (filter: Partial<Record<keyof Order, string[]>>, sorter: Sort
       fixed: 'right',
       filters: Object.values(OrderStatus).map((status) => ({ text: ORDER_STATUS_TEXTS[status], value: status })),
       onFilter: (value, record) => record.status == value,
-      filteredValue: filter.status || null,
+      filteredValue: filter && filter.status || null,
       render: (value) => <Tag color={ORDER_STATUS_COLORS[value]}>{ORDER_STATUS_TEXTS[value]}</Tag>
     },
     {
@@ -80,7 +81,7 @@ const getColumns = (filter: Partial<Record<keyof Order, string[]>>, sorter: Sort
       width: '108px',
       dataIndex: 'totalMoney',
       fixed: 'right',
-      sorter: (a, b) => a.totalMoney - b.totalMoney,
+      sorter: (a, b) => a.totalMoney.amount - b.totalMoney.amount,
       sortOrder: sorter.columnKey === 'totalMoney' && sorter.order || false,
       render: (value) => (<span style={{ color: 'red' }}>{value.currencyUnit.symbol}{value.amountMajor}.{value.minorPart}</span>)
     }
@@ -157,13 +158,13 @@ export default class ShoppingOrders extends React.Component<ShoppingOrdersProps,
               总金额：<span className="money">{moneyFormat(this.state.selectedRows.map((o) => o.totalMoney.amountMinorLong).reduce((a, b) => a + b, 0))}</span> 元
             </BulkBar>
           }
-          actionOptionsExtra={(entity, index) =>
+          actionOptionsExtra={(entity, index, updater) =>
             <>
               <EntityAction
                 entity={entity}
-                actionName="查看"
+                name="查看"
                 renderDialog={(entity: Order, visible: boolean, cancelor) =>
-                  <></>
+                  <OrderDetailsDialog order={entity} visible={visible} onCancel={cancelor} />
                 }
               />
               {
@@ -172,13 +173,15 @@ export default class ShoppingOrders extends React.Component<ShoppingOrdersProps,
                   <Divider type="vertical" />
                   <EntityAction
                     entity={entity}
-                    actionName="更新物流"
+                    name="更新物流"
                     renderDialog={(entity: Order, visible, cancelor) =>
                       <WrappedLogisticsInfomationDialog
                         orderNumber={entity.orderNumber}
                         logisticsInformation={entity.logisticsInformation}
                         onUpdated={(updatedLogisticsInformation) => {
+                          debugger;
                           entity.logisticsInformation = updatedLogisticsInformation;
+                          updater(entity);
                         }}
                         visible={visible}
                         onCancel={cancelor}
@@ -193,7 +196,7 @@ export default class ShoppingOrders extends React.Component<ShoppingOrdersProps,
                   <Divider type="vertical" />
                   <EntityAction
                     entity={entity}
-                    actionName="退单"
+                    name="退单"
                     renderDialog={(entity, visible, cancelor) => <></>}
                   />
                 </>

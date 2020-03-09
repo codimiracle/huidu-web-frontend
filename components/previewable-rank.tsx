@@ -1,7 +1,9 @@
 import React, { ReactNode } from 'react';
-import { Book } from '../types/book';
+import { Book, BookPreview } from '../types/book';
 import DirectLink from './direct-link';
 import { Tag } from 'antd';
+import LoadingView from './loading-view';
+import BookStatusView from './book-status-view';
 
 interface BookPreviewViewProps {
   book: Book,
@@ -11,14 +13,15 @@ const EMPTY_IMAGE = "/assets/empty.png";
 
 function BookPreviewView(props: BookPreviewViewProps) {
   const { book } = props;
+  const bookPreview = BookPreview.valueOf(book);
   return (
     <div className="book-preview-view">
-      <img src={book.cover || book.metadata.cover || EMPTY_IMAGE} />
+      <img src={bookPreview.cover || EMPTY_IMAGE} />
       <div className="body">
         <div>
-          <DirectLink href={`/bookshop/${book.type}/${book.id}`}><strong>{book.metadata.name}</strong></DirectLink> <Tag>{book.status}</Tag>
+          <DirectLink href={`/bookshop/${book.type}/${book.id}`}><strong>{bookPreview.name}</strong></DirectLink> <BookStatusView book={book} />
         </div>
-        <p>{book.description || book.metadata.description}</p>
+        <p>{bookPreview.description}</p>
       </div>
       <style jsx>{`
         .book-preview-view {
@@ -27,12 +30,15 @@ function BookPreviewView(props: BookPreviewViewProps) {
         .body {
           display: flex;
           flex-direction: column;
+          padding-left: 0.5em;
         }
         p {
-          flex: 1;
+          max-height: 6em;
+          word-break: break-all;
+          overflow: hidden;
         }
         img {
-          width: 7em;
+          min-width: 7em;
           height: 9.4em;
         }
       `}</style>
@@ -64,11 +70,11 @@ export default class PreviewableRank extends React.Component<PreviewableRankProp
     const { selectedIndex } = this.state;
     let selectedRank = selectedIndex < dataSource.length ? dataSource[selectedIndex] : null;
     return (
-      <>
-      {
-        selectedRank && 
-        <BookPreviewView book={selectedRank} />
-      }
+      <LoadingView loading={this.props.loading}>
+        {
+          selectedRank &&
+          <BookPreviewView book={selectedRank} />
+        }
         <ul>
           {
             dataSource.map(
@@ -80,6 +86,7 @@ export default class PreviewableRank extends React.Component<PreviewableRankProp
         <style jsx>{`
           ul {
             margin: 0;
+            padding-top: 1em;
             padding-left: 0;
             list-style-type: none;
             display: flex
@@ -97,7 +104,7 @@ export default class PreviewableRank extends React.Component<PreviewableRankProp
             box-shadow: 0 0 2px 0 grey;
           }
         `}</style>
-      </>
+      </LoadingView>
     )
   }
 }

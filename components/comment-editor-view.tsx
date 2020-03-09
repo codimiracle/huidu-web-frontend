@@ -1,20 +1,18 @@
-import React from 'react';
-import { Form, Input, Button, message, Col, Row, Rate, Mentions } from 'antd';
-import FormItem from 'antd/lib/form/FormItem';
+import { Button, Col, Form, Mentions, message, Rate, Row } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
-import { fetchDataByPost } from '../util/network-util';
+import FormItem from 'antd/lib/form/FormItem';
+import React from 'react';
 import { API } from '../configs/api-config';
+import { SocialUser, User } from '../types/user';
+import { fetchMessageByPost } from '../util/network-util';
 import AvatarView from './avatar-view';
-import { User } from '../types/user';
 import WrappedUserSigninDialog from './dialogs/user-signin-dialog';
-
-const { TextArea } = Input;
 
 export interface CommentEditorProps {
   form: WrappedFormUtils,
   user: User,
   contentId: string,
-  mention?: User,
+  mention?: SocialUser,
   replay?: boolean
   rate?: boolean
 };
@@ -32,20 +30,23 @@ class CommentEditor extends React.Component<CommentEditorProps, CommentEditorSta
     }
   }
   onPostComment() {
-    const { form, contentId, mention } = this.props;
+    const { form, contentId, replay, mention } = this.props;
+    let opstr = replay ? '回复' : '评论';
     form.validateFields((errors, values) => {
       if (!errors) {
         this.setState({ loading: true });
-        fetchDataByPost(API.ContentCommentCreate, {
+        fetchMessageByPost(API.ContentCommentCreate, {
           content_id: contentId,
-          content: form.getFieldValue('content'),
-          mentions: mention ? [mention.id] : [],
-          rate: form.getFieldValue('rate') || 0
-        }).then((data) => {
-          message.info(`评论成功！`);
-          form.resetFields();
+          ...values
+        }).then((msg) => {
+          if (msg.code == 200) {
+            message.success(`${opstr}成功！`);
+            form.resetFields();
+          } else {
+            message.error(msg.message);
+          }
         }).catch((err) => {
-          message.error(`评论失败：${err}`)
+          message.error(`${opstr}失败：${err}`)
         }).finally(() => {
           this.setState({ loading: false });
         })
@@ -56,6 +57,8 @@ class CommentEditor extends React.Component<CommentEditorProps, CommentEditorSta
     const { form, user, rate, replay, mention } = this.props;
     const { loading } = this.state;
     let isLogged = !!user;
+    form.getFieldDecorator('content.type', { initialValue: 'html' });
+    form.getFieldDecorator('metions[0]', { initialValue: mention ? [mention.id] : [] });
     return (
       <div className="comment-editor">
         <div className="comment-editor-user">
@@ -90,9 +93,9 @@ class CommentEditor extends React.Component<CommentEditorProps, CommentEditorSta
               <Col style={{ flex: 1 }}>
                 <FormItem>
                   {
-                    form.getFieldDecorator('content', {
+                    form.getFieldDecorator('content.source', {
                       rules: [
-                        { required: true, message: `${replay ? '评论' : '回复'}内容不能为空！` }
+                        { required: true, message: `${replay ? '回复' : '评论'}内容不能为空！` }
                       ]
                     })(
                       <Mentions placeholder={replay ? `回复 @${mention.nickname}` : '评论内容'} disabled={!isLogged} rows={replay ? 2 : 3} >

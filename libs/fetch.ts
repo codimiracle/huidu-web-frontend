@@ -40,8 +40,7 @@ export function queryPlaceholderReplacer(apiDefinition: APIDefinition, data: any
     url = url.replace(`@{${key}}`, encodeURI(value));
   }
   if (url.includes('@')) {
-    let urlObj = new URL(url);
-    throw new Error(`given arguments is not enough query parameters\n\tfor \`${urlObj}\`\n\tgiven ${JSON.stringify(data)}`)
+    throw new Error(`given arguments is not enough query parameters\n\tfor \`${url}\`\n\tgiven ${JSON.stringify(data)}`)
   }
   return url;
 }
@@ -62,6 +61,7 @@ export default async function (api: API, init?: RequestInit): Promise<Response> 
   if (!apiDefinition) {
     throw new Error(`API definition not found: \`${api}\``);
   }
+  console.debug(`API definition: ${JSON.stringify(apiDefinition)}`)
   const { body, ...other } = init || { method: 'get'};
   let url = apiDefinition.url;
   let data = {};
@@ -75,6 +75,7 @@ export default async function (api: API, init?: RequestInit): Promise<Response> 
   }
   // for post or similar request
   if (apiDefinition.body) {
+    init.headers = init.headers || {'Content-Type': 'application/json;charset=utf-8'};
     init.body = JSON.stringify(bodyPlaceholderReplacer(apiDefinition, data));
   }
   // will normally call fetch if not satisfied conditions. 

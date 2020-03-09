@@ -1,4 +1,4 @@
-import { Book } from "./book";
+import { Book, BookMetadata } from "./book";
 
 export interface ArrivedData {
   reads: Array<Book>,

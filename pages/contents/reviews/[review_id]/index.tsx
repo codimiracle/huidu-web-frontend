@@ -1,17 +1,16 @@
+import { Divider, Rate, Typography } from 'antd';
 import { NextPageContext } from 'next';
 import React from 'react';
 import AvatarView from '../../../../components/avatar-view';
 import CommentModularView from '../../../../components/comment-modular-view';
+import ReferenceView from '../../../../components/reference-view';
 import ContentSection from '../../../../components/section-view';
 import { API } from '../../../../configs/api-config';
 import { Review } from '../../../../types/review';
 import { User } from '../../../../types/user';
 import DatetimeUtil from '../../../../util/datetime-util';
 import { fetchDataByGet } from '../../../../util/network-util';
-import { ReviewJSON } from '../../../api/reviews/[review_id]';
-import { UserJSON } from '../../../api/user/logged';
-import ReferenceView from '../../../../components/reference-view';
-import { Typography, Divider, Rate } from 'antd';
+import { EntityJSON } from '../../../../types/api';
 
 export interface ReviewPostProps {
   review: Review,
@@ -22,13 +21,13 @@ export interface ReviewPostState { };
 export default class ReviewPost extends React.Component<ReviewPostProps, ReviewPostState> {
   static async getInitialProps(context: NextPageContext) {
     const { review_id } = context.query;
-    let userdata = await fetchDataByGet<UserJSON>(API.LoggedUserData);
-    let reviewData = await fetchDataByGet<ReviewJSON>(API.ReviewEntity, {
+    let userData = await fetchDataByGet<EntityJSON<User>>(API.LoggedUserData);
+    let reviewData = await fetchDataByGet<EntityJSON<Review>>(API.ReviewEntity, {
       review_id: review_id
     });
     return {
-      review: reviewData.review,
-      user: userdata.user
+      review: reviewData.entity,
+      user: userData.entity
     }
   }
   constructor(props: ReviewPostProps) {

@@ -30,8 +30,7 @@ export default class UserSigninForm extends React.Component<UserSigninFormProps,
               initialValue: false
             })(<Checkbox>记住我</Checkbox>)}
             <span className="extra-actions">
-              <Link href="/forgot"><a className="forgot-password">忘记密码</a></Link> 或 
-              <Link href="/signup"><a className="register-account">注册账号</a></Link>
+              <Link href="/forgot"><a className="forgot-password">忘记密码</a></Link> 或 <Link href="/signup"><a className="register-account">注册账号</a></Link>
             </span>
           </FormItem>
         </Form>

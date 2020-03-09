@@ -73,7 +73,7 @@ export class ComprehensivePageDesign extends React.Component<ComprehensivePageDe
         <Divider type="horizontal" />
         <div>
           <h3>可预览式幻灯片</h3>
-          <p>设定首页显示的幻灯片，您最多可以显示 <span style={{ color: 'red' }}>6</span> 个幻灯片</p>
+          <p>设定首页显示的幻灯片，您最多可以显示 <span style={{ color: 'red' }}>6</span> 个已激活幻灯片</p>
           <div>
             <ActivityManager initialDataSource={this.props.activityList} initialTotal={this.props.activityTotal} />
           </div>
@@ -97,6 +97,7 @@ export class ComprehensivePageDesign extends React.Component<ComprehensivePageDe
                 )
               }
             </FormItem>
+            <CategoryBar categories={this.props.categories} />
           </div>
           <Divider type="horizontal" />
 

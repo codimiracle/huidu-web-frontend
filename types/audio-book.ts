@@ -23,8 +23,10 @@ AUDIO_BOOK_STATUS_COLORS[AudioBookStatus.Paused] = 'cyan';
 AUDIO_BOOK_STATUS_COLORS[AudioBookStatus.Ended] = 'geekblue';
 
 export interface AudioCatalogs {
-  title: string,
-  episodeId: string
+  mediaNumber: number;
+  title: string;
+  bookId: string;
+  audioEpisodeId: string;
 }
 
 export enum AudioEpisodeStatus {
@@ -68,6 +70,5 @@ export interface AudioBook extends Content, BookBase {
   episodes: number,
   publishYear: string,
   allEpisodesMoney: number,
-  collection: Array<AudioEpisode>,
   status: AudioBookStatus
 }

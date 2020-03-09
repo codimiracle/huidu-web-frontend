@@ -1,16 +1,19 @@
 import moment from 'moment';
 
-export default {
-  format(date: string) {
+export default class DatetimeUtil {
+  static now() {
+    return moment();
+  }
+  static format(date: string) {
     return moment(date).format('YYYY-MM-DD HH:mm:ss');
-  },
-  formatNow() {
+  }
+  static formatNow() {
     return moment().format('YYYY-MM-DD HH:mm:ss');
-  },
-  fromNow(date: string) {
+  }
+  static fromNow(date: string) {
     return moment(date).fromNow();
-  },
-  formatDate(date: string) {
+  }
+  static formatDate(date: string) {
     return moment(date).format('YYYY-MM-DD');
   }
 }

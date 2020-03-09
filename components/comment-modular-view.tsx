@@ -53,7 +53,7 @@ class CommentItem extends React.Component<CommentItemProps, CommentItemState> {
         {
           replay &&
           <div className="replay-comment-editor" style={{ display: visible ? 'block' : 'none' }}>
-            <CommentEditorView user={user} mention={replay ? comment.owner : undefined} contentId={comment.target} replay={replay} />
+            <CommentEditorView user={user} mention={replay ? comment.owner : undefined} contentId={comment.targetContentId} replay={replay} />
           </div>
         }
         <style jsx>{`
@@ -120,30 +120,40 @@ export default class CommentModularView extends React.Component<CommentModularVi
     const { content, user, rate, replay } = this.props;
     const { hasMoreComments, page, limit, total, list, loading } = this.state;
     const loadMore = (hasMoreComments ? <div style={{ textAlign: 'center', padding: '1em' }}><Button type={replay ? 'link' : 'default'} loading={loading} onClick={() => this.fetchCommentList(page + 1, limit)}>加载更多...</Button></div> : null)
-
+    const hasComments = list && list.length > 0;
     return (
       <div className="comment-modular-view">
         <CommentEditorView replay={replay} mention={replay ? content.owner : undefined} rate={rate} contentId={content.contentId} user={user} />
-        <List
-          itemLayout="vertical"
-          renderItem={(comment) => (
-            <List.Item key={comment.contentId}>
-              <CommentItem
-                replay={replay}
-                rate={rate}
-                comment={comment}
-                user={user}
-              />
-            </List.Item>
-          )}
-          loadMore={loadMore}
-          dataSource={list}
-        />
         {
-          list.length > 20 &&
+          hasComments &&
+          <List
+            itemLayout="vertical"
+            renderItem={(comment) => (
+              <List.Item key={comment.contentId}>
+                <CommentItem
+                  replay={replay}
+                  rate={rate}
+                  comment={comment}
+                  user={user}
+                />
+              </List.Item>
+            )}
+            loadMore={loadMore}
+            dataSource={list}
+          />
+        }
+        {
+          !hasComments &&
+          <p className="empty-comments">暂无评论</p>
+        }
+        {
+          hasComments && list.length > 20 &&
           <CommentEditorView replay={replay} mention={replay ? content.owner : undefined} rate={rate} contentId={content.contentId} user={user} />
         }
         <style jsx>{`
+          .empty-comments {
+            text-align: center;
+          }
           .comments-pagination {
             text-align: right;
             margin-bottom: 1.5em;

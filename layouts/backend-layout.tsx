@@ -5,10 +5,11 @@ import SubMenu from 'antd/lib/menu/SubMenu';
 import DirectLink from '../components/direct-link';
 import { User } from '../types/user';
 import { fetchDataByGet } from '../util/network-util';
-import { UserJSON } from '../pages/api/user/logged';
 import { API } from '../configs/api-config';
 import AvatarView from '../components/avatar-view';
 import NotificationView from '../components/notification-view';
+import AuthorityUtil from '../util/authority-util';
+import { EntityJSON } from '../types/api';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -27,9 +28,12 @@ export default class BackendLayout extends React.Component<BackendLayoutProps, B
     }
     this.toggle = this.toggle.bind(this);
   }
+  componentDidMount() {
+    this.refreshUserData();
+  }
   refreshUserData() {
-    fetchDataByGet<UserJSON>(API.LoggedUserData).then((data) => {
-      this.setState({ userdata: data.user });
+    fetchDataByGet<EntityJSON<User>>(API.LoggedUserData).then((data) => {
+      this.setState({ userdata: data.entity });
     }).catch((err) => {
       message.warn(`获取用户数据失败：${err}`);
     });
@@ -88,7 +92,7 @@ export default class BackendLayout extends React.Component<BackendLayoutProps, B
             </div>
             <Menu theme="dark" mode="inline" defaultSelectedKeys={[]}>
               {
-                this.renderMenuItem(getNavigationMenus(ALL_AUTHORITIES))
+                this.renderMenuItem(getNavigationMenus(AuthorityUtil.getAuthorities(this.state.userdata)))
               }
             </Menu>
           </Sider>

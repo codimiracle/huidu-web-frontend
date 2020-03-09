@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { APIResponse } from '../../../../types/api';
 import { Comment } from '../../../../types/comment';
-import { ContentType } from '../../../../types/content';
+import { ContentType, ContentStatus } from '../../../../types/content';
 import { UNKNOW_USER } from '../../../../types/user';
 
 export interface CommentListJSON {
@@ -23,10 +23,16 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         type: "plaintext",
         source: "Hello, this is a comment"
       },
+      targetContentId: '342',
+      mentions: [],
+      liked: false,
+      words: 234,
+      status: ContentStatus.Publish,
+      reads: 3242,
       owner: UNKNOW_USER,
       contentId: 'comment-sfa',
       type: ContentType.Comment,
-      reference: null,
+      references: [],
       likes: 100,
       comments: 0,
       reposts: 0,

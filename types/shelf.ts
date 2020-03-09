@@ -1,10 +1,9 @@
 import { Book } from './book';
-import { Episode} from './episode';
-import { AudioEpisode } from './audio-book';
+import { History } from './history';
 
 export interface Cell {
-  id: string,
-  book: Book,
-  lastReadEpisode: Episode & AudioEpisode
-  progress: number
+  id: string;
+  book: Book;
+  history: History;
+  progress: number;
 }

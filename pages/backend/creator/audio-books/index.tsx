@@ -74,8 +74,8 @@ export default class MyBooks extends React.Component<MyBooksProps, MyBooksState>
         </div>
         <div>
           <PaginationList
-            searchAPI={API.AuthorAudioBookSearch}
-            listAPI={API.AuthorAudioBookCollection}
+            searchAPI={API.CreatorAudioBookSearch}
+            listAPI={API.CreatorAudioBookCollection}
             renderItem={(item) => <List.Item><MyBookView book={item} /></List.Item>}
             initialTotal={total}
             initialDataSource={books}

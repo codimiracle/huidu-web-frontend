@@ -14,6 +14,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       data: {
         entity: {
           id: `${episode_id}`,
+          episodeNumber: 1,
           title: `章节 ${episode_id}`,
           content: {
             type: 'html',
@@ -23,6 +24,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
           book: {
             id: `${book_id}`,
             contentId: '32423',
+            owner: null,
             metadata: {
               id: '23423',
               name: `Book ${book_id}`,
@@ -51,11 +53,11 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
               description: '现代的文学著作',
               tags: [],
             },
-            tags: [{ id: '342', name: '推荐标注|23423423' }]
+            tags: [{ id: '342', name: '推荐标注|23423423', categoryId: null }]
           },
           status: EpisodeStatus.Draft,
           commodity: null,
-          next: `${episode_id + 1}`,
+          next: `${parseInt(episode_id as string) + 1}`,
           createTime: (new Date).toISOString(),
           updateTime: (new Date).toISOString()
         }

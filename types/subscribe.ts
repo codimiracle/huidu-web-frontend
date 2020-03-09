@@ -1,15 +1,12 @@
-import { BookType, Book } from "./book";
+import { ContentType } from "./content";
+import { Book } from "./book";
 import { Topic } from "./topic";
-import { Episode } from "./episode";
-import { AudioEpisode } from "./audio-book";
+import { Review } from "./review";
 
-export enum SubscribeType {
-
-}
+declare type Content = Topic | Review | Book;
 
 export interface Subscribe {
   id: string,
-  type: SubscribeType,
-  book: Book,
-  lastUpdate: Episode & AudioEpisode
+  type: ContentType,
+  content: Content,
 }

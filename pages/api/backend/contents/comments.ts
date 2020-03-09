@@ -14,13 +14,16 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
     for (let index = 0; index < limitInt; index++) {
       list.push({
         title: 'user-comment',
+        mentions: [],
+        liked: false,
+        words: 32423,
         content: {
           type: "plaintext",
           source: "hello this is a comments"
         },
         status: [ContentStatus.Draft, ContentStatus.Examining, ContentStatus.Publish][index % 3],
         owner: UNKNOW_USER,
-        target: `content-${index}`,
+        targetContentId: `content-${index}`,
         contentId: `comment-${pageInt * limitInt + index}`,
         type: ContentType.Comment,
         references: [],

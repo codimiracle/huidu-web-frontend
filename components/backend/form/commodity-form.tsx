@@ -16,6 +16,9 @@ export interface CommodityFormState { };
 export default class CommodityForm extends React.Component<CommodityFormProps, CommodityFormState> {
   render() {
     const { form, commodity, linked } = this.props;
+    if (commodity) {
+      form.getFieldDecorator('commodityId', {initialValue: commodity.id});
+    }
     if (linked) {
       form.getFieldDecorator('commodity.picture', { initialValue: form.getFieldValue('metadata.cover') });
       form.getFieldDecorator('commodity.name', { initialValue: form.getFieldValue('metadata.name') });

@@ -1,10 +1,11 @@
+import { Icon, List, message, Popover, Tabs } from 'antd';
 import React from 'react';
-import { Icon, Popover, List, message, Tabs } from 'antd';
 import { API } from '../configs/api-config';
-import { fetchDataByPost } from '../util/network-util';
 import { SearchJSON } from '../pages/api/search';
-import ContentView from './content-view';
+import { Article } from '../types/content';
+import { fetchDataByPost } from '../util/network-util';
 import BookView from './book-view';
+import ContentView from './content-view';
 
 const { TabPane } = Tabs;
 
@@ -81,7 +82,7 @@ export default class SearchView extends React.Component<SearchViewProps, SearchV
               <TabPane tab="社区" key="community">
                 <List
                   loading={searching}
-                  renderItem={(item) => <ContentView content={item} />}
+                  renderItem={(item) => <ContentView content={item as Article} />}
                   dataSource={result && result.community || []}
                 />
               </TabPane>

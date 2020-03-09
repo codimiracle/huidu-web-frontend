@@ -2,8 +2,8 @@ import { Commodity } from "./commodity";
 import { Book } from "./book";
 
 export enum ActivityStatus {
-  Deactivated = 'deactivated',
   Activated = 'activated',
+  Deactivated = 'deactivated',
 }
 
 export const ACTIVITY_STATUS_TEXTS = {};

@@ -1,11 +1,10 @@
-import React from 'react';
+import { Button, Col, Divider, message, Row } from 'antd';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
+import { Router, withRouter } from 'next/router';
+import React from 'react';
 import UserSigninForm from '../components/form/user-signin-from';
-import { Row, Col, message, Button, Divider } from 'antd';
-import { withRouter, Router } from 'next/router';
-import { UserJSON } from './api/user/logged';
 import { API } from '../configs/api-config';
-import { fetchDataByPost, fetchMessageByPost } from '../util/network-util';
+import { fetchMessageByPost } from '../util/network-util';
 
 export interface SignInProps {
   form: WrappedFormUtils,
@@ -52,7 +51,7 @@ export class SignIn extends React.Component<SignInProps, SignInState> {
     return (
       <>
         <div>
-          <h1><img className="logo" src="/assets/huidu.png" />登录绘读</h1>
+          <h1><img className="logo" src="/assets/huidu.png" />登录荟读</h1>
           <Divider type="horizontal" />
         </div>
         <Row type="flex" justify="space-between">

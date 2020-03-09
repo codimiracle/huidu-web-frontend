@@ -3,8 +3,14 @@ import { Book, BookType } from '../types/book';
 import ElectronicBookView, { ElectronicBookViewProps } from './electronic-book-view';
 import AudioBookView, { AudioBookViewProps } from './audio-book-view';
 import PaperBookView, { PaperBookViewProps } from './paper-book-view';
+import { ElectronicBook } from '../types/electronic-book';
+import { AudioBook } from '../types/audio-book';
+import { PaperBook } from '../types/paper-book';
 
-export declare type BookViewProps = ElectronicBookViewProps & AudioBookViewProps & PaperBookViewProps;
+export interface BookViewProps {
+  id?: string;
+  book?: Book;
+}
 
 export interface BookViewState { };
 
@@ -15,15 +21,15 @@ export default class BookView extends React.Component<BookViewProps, BookViewSta
       <div className="book-view">
         {
           book.type == BookType.ElectronicBook &&
-          <ElectronicBookView {...this.props} />
+          <ElectronicBookView id={this.props.id} book={book as ElectronicBook} />
         }
         {
           book.type == BookType.AudioBook &&
-          <AudioBookView {...this.props} />
+          <AudioBookView id={this.props.id} book={book as AudioBook} />
         }
         {
           book.type == BookType.PaperBook &&
-          <PaperBookView {...this.props} />
+          <PaperBookView id={this.props.id} book={book as PaperBook} />
         }
       </div>
     )

@@ -46,7 +46,7 @@ export interface MyBooksState {
 
 export default class MyBooks extends React.Component<MyBooksProps, MyBooksState> {
   static async getInitialProps() {
-    let data = await fetchDataByGet<ListJSON<ElectronicBook>>(API.AuthorElectronicBookCollection, {
+    let data = await fetchDataByGet<ListJSON<ElectronicBook>>(API.CreatorElectronicBookCollection, {
       page: 1,
       limit: 10,
     });
@@ -74,8 +74,8 @@ export default class MyBooks extends React.Component<MyBooksProps, MyBooksState>
         </div>
         <div>
           <PaginationList
-            searchAPI={API.AuthorElectronicBookSearch}
-            listAPI={API.AuthorElectronicBookCollection}
+            searchAPI={API.CreatorElectronicBookSearch}
+            listAPI={API.CreatorElectronicBookCollection}
             renderItem={(item) => <List.Item><MyBookView book={item} /></List.Item>}
             initialTotal={total}
             initialDataSource={books}

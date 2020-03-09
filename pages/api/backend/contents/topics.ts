@@ -13,6 +13,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
     data.push({
       contentId: `topic-${limitInt * pageInt + index}`,
       type: ContentType.Topic,
+      words: 3242,
       title: '大家有没什么好书推荐？',
       content: {
         type: 'html',

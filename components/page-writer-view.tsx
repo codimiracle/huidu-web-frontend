@@ -1,12 +1,11 @@
+import { Input } from 'antd';
 import React, { RefObject } from 'react';
 import { Theme } from '../types/theme';
 import EditorView from './editor-view';
-import { Input } from 'antd';
-import { Episode } from '../types/episode';
 
 export interface Content {
   title: string,
-  count: number,
+  count?: number,
   content: {
     type: 'html',
     source: string
@@ -16,6 +15,7 @@ export interface Content {
 export interface PageWriterViewProps {
   theme: Theme,
   value?: Content,
+  defaultValue?: Content,
   onChange?: (value: Content) => void
 };
 export interface PageWriterViewState {
@@ -29,8 +29,8 @@ export default class PageWriterView extends React.Component<PageWriterViewProps,
   constructor(props: PageWriterViewProps) {
     super(props);
     this.state = {
-      title: props.value && props.value.title,
-      source: props.value && props.value.content.source,
+      title: props.defaultValue && props.defaultValue.title,
+      source: props.defaultValue && props.defaultValue.content.source,
       count: 0
     }
     this.editorRef = React.createRef();
@@ -62,13 +62,14 @@ export default class PageWriterView extends React.Component<PageWriterViewProps,
   }
   render() {
     const { theme } = this.props;
+    let renderringContent = this.props.value || { title: this.state.title, content: { type: 'html', source: this.state.source } };
     return (
       <>
         <div className="page-view">
           <div className="page-header">
             <h1><Input
               placeholder="请输入标题"
-              value={this.props.value.title}
+              value={renderringContent.title}
               onChange={(e) => this.onTitleChange(e.target.value)}
               style={{ color: 'inherit', fontSize: '1em', backgroundColor: 'inherit' }}
             /></h1>
@@ -77,7 +78,7 @@ export default class PageWriterView extends React.Component<PageWriterViewProps,
             <EditorView
               ref={this.editorRef}
               type="inline"
-              value={this.props.value.content.source}
+              value={renderringContent.content.source}
               onChange={this.onContentChange}
             />
           </div>

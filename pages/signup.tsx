@@ -1,7 +1,7 @@
-import { Button, Col, Divider, Form, Icon, message, Row } from 'antd';
+import { Button, Col, Divider, Form, Icon, message, Result, Row } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
-import { withRouter, Router } from 'next/router';
+import { Router, withRouter } from 'next/router';
 import React from 'react';
 import AuthorProfileForm from '../components/form/author-profile-form';
 import PasswordForm from '../components/form/password-form';
@@ -46,7 +46,7 @@ export interface SignUpProps {
 export interface SignUpState {
   step: number,
   accountType: 'user' | 'author',
-  userdata: User,
+  userdata: Partial<User>,
   password: string,
   submiting: boolean
 };
@@ -80,23 +80,23 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
           });
         }
         if (step == 1) {
-          this.setState((state) => {
-            return {
-              step: state.step + 1, userdata: {
-                username: form.getFieldValue('username'),
-                nickname: form.getFieldValue('nickname'),
-                extra: {
-                  gender: form.getFieldValue('gender'),
-                  slogan: form.getFieldValue('slogan'),
-                  introduction: form.getFieldValue('introduction'),
-                  birthdate: form.getFieldValue('birthdate'),
-                  email: form.getFieldValue('email'),
-                  phone: form.getFieldValue('phone'),
-                  region: form.getFieldValue('region').join(' '),
-                }
+          this.setState((state) => ({
+            step: state.step + 1,
+            userdata: {
+              username: form.getFieldValue('username'),
+              nickname: form.getFieldValue('nickname'),
+              extra: {
+                gender: form.getFieldValue('gender'),
+                slogan: form.getFieldValue('slogan'),
+                age: null,
+                introduction: form.getFieldValue('introduction'),
+                birthdate: form.getFieldValue('birthdate'),
+                email: form.getFieldValue('email'),
+                phone: form.getFieldValue('phone'),
+                region: form.getFieldValue('region').join(' '),
               }
-            };
-          });
+            }
+          }));
         }
         if (step == 2) {
           this.setState({ submiting: true });
@@ -156,7 +156,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
               <div>
                 <p>步骤 {step + 1}：设置用户个人信息</p>
                 <p>请填写用户个人信息表单，并点击 “下一步” 继续</p>
-                <ProfileForm form={form} userdata={userdata} />
+                <ProfileForm form={form} userdata={userdata as any as User} />
               </div>
             }
             {
@@ -164,7 +164,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
               <div>
                 <p>步骤 {step + 1}：设置作者个人信息</p>
                 <p>请填写作者个人信息表单，并点击 “下一步” 继续</p>
-                <AuthorProfileForm form={form} userdata={userdata} />
+                <AuthorProfileForm form={form} userdata={userdata as any as User} />
               </div>
             }
             {
@@ -186,7 +186,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 <Result
                   status="success"
                   title="注册成功！"
-                  subtitle={`用户名：${this.state.userdata.username},密码：${this.state.password}`}
+                  subTitle={`用户名：${this.state.userdata.username},密码：${this.state.password}`}
                 >
                   点击 “完成” 转到登录页面
                 </Result>

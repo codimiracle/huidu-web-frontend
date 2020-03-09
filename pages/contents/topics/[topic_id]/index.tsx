@@ -1,17 +1,16 @@
+import { Divider, Typography } from 'antd';
 import { NextPageContext } from 'next';
 import React from 'react';
 import AvatarView from '../../../../components/avatar-view';
 import CommentModularView from '../../../../components/comment-modular-view';
+import ReferenceView from '../../../../components/reference-view';
 import ContentSection from '../../../../components/section-view';
 import { API } from '../../../../configs/api-config';
+import { EntityJSON } from '../../../../types/api';
 import { Topic } from '../../../../types/topic';
 import { User } from '../../../../types/user';
 import DatetimeUtil from '../../../../util/datetime-util';
 import { fetchDataByGet } from '../../../../util/network-util';
-import { UserJSON } from '../../../api/user/logged';
-import ReferenceView from '../../../../components/reference-view';
-import { Typography, Divider } from 'antd';
-import { EntityJSON } from '../../../../types/api';
 
 export interface TopicPostProps {
   topic: Topic,
@@ -22,13 +21,13 @@ export interface TopicPostState { };
 export default class TopicPost extends React.Component<TopicPostProps, TopicPostState> {
   static async getInitialProps(context: NextPageContext) {
     const { topic_id } = context.query;
-    let userdata = await fetchDataByGet<UserJSON>(API.LoggedUserData);
+    let userData = await fetchDataByGet<EntityJSON<User>>(API.LoggedUserData);
     let topicData = await fetchDataByGet<EntityJSON<Topic>>(API.TopicEntity, {
       topic_id: topic_id
     });
     return {
       topic: topicData.entity,
-      user: userdata.user
+      user: userData.entity
     }
   }
   constructor(props: TopicPostProps) {

@@ -5,16 +5,12 @@ import { API } from '../configs/api-config';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
 
-export interface AudioData {
-
-}
-
 export interface AudioUploadProps {
   value?: string,
   onChange?: (value: string) => void,
 };
 export interface AudioUploadState {
-  uploadedUrl: string;
+  value: string;
   loading: boolean;
 };
 
@@ -22,11 +18,11 @@ export default class AudioUpload extends React.Component<AudioUploadProps, Audio
   constructor(props: AudioUploadProps) {
     super(props);
     this.state = {
-      uploadedUrl: null,
+      value: null,
       loading: false
     }
   }
-  fireChange(src, duration) {
+  fireChange(src) {
     this.props.onChange && this.props.onChange(src);
   }
   render() {
@@ -36,8 +32,9 @@ export default class AudioUpload extends React.Component<AudioUploadProps, Audio
       }
       if (info.file.status === 'done') {
         message.success('上传成功，可以使用播放控件播放哟。');
-        let path = API.UploadSource.toString() + "/" + info.file.response.data.fileName;
-        this.setState({ loading: false, uploadedUrl: path });
+        let path = API.UploadSource.toString() + "/" + info.file.response.data.referenceId;
+        this.setState({ loading: false, value: path });
+        this.fireChange(path);
       }
       if (info.file.status === 'error') {
         message.error('上传失败！');
@@ -53,7 +50,7 @@ export default class AudioUpload extends React.Component<AudioUploadProps, Audio
         return false;
       }
     }
-    let audioUrl = this.props.value || this.state.uploadedUrl;
+    let value = this.props.value || this.state.value;
     return (
       <>
         <Upload
@@ -67,8 +64,8 @@ export default class AudioUpload extends React.Component<AudioUploadProps, Audio
           <Button loading={this.state.loading} icon="upload">上传音频文件</Button>
         </Upload>
         {
-          audioUrl &&
-          <AudioPlayerView onLoaded={(src, duration) => this.fireChange(src, duration)} src={audioUrl} style={{ borderRadius: '0', border: '1px solid #dcdcdc' }} />
+          value &&
+          <AudioPlayerView src={value} style={{ borderRadius: '0', border: '1px solid #dcdcdc' }} />
         }
       </>
     )

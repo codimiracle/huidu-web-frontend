@@ -1,7 +1,7 @@
 export interface LogisticsInformation {
   expressNumber: string,
   expressCompany: string,
-  passingPointList: Array<PassingPoint>
+  passingPoints: Array<PassingPoint>
 }
 
 export enum PassingPointStatus {
@@ -10,6 +10,7 @@ export enum PassingPointStatus {
 }
 
 export interface PassingPoint {
+  id: string,
   name: string,
   updateTime: string,
   status: PassingPointStatus

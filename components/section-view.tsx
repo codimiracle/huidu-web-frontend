@@ -1,12 +1,12 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, CSSProperties } from 'react';
 import { Row, Col, Card } from 'antd';
-import { } from 'antd';
 
 interface ContentSectionProps {
-  title: ReactNode,
-  asideTitle: ReactNode
+  title?: ReactNode,
+  asideTitle?: ReactNode
   aside: ReactNode,
-  content: ReactNode,
+  content?: ReactNode,
+  style?: CSSProperties,
   shortcutRender?: () => ReactNode,
   optionRender?: () => ReactNode
 }
@@ -14,22 +14,25 @@ interface ContentSectionState { }
 
 export default class ContentSection extends React.Component<ContentSectionProps, ContentSectionState> {
   render() {
-    const { title, asideTitle, aside, content, shortcutRender, optionRender } = this.props;
+    const { title, asideTitle, aside, content, children, style, shortcutRender, optionRender } = this.props;
     return (
-      <>
+      <div className="content-section" style={style}>
         <Row gutter={32}>
           <Col span={17}>
-            <h2>{title}<span>{shortcutRender && shortcutRender()}</span> <span className="section-options">{optionRender && optionRender()}</span></h2>
-            {content}
+            {title && <h2>{title}<span>{shortcutRender && shortcutRender()}</span> <span className="section-options">{optionRender && optionRender()}</span></h2>}
+            {content || children}
           </Col>
           <Col span={7}>
-            <h2>{asideTitle}</h2>
-            <Card>
-              {aside}
-            </Card>
+            {asideTitle && <h2>{asideTitle}</h2>}
+            {aside}
           </Col>
         </Row>
-      </>
+        <style jsx global>{`
+          .content-section .ant-card + .ant-card {
+            margin-top: 16px;
+          }
+        `}</style>
+      </div>
     )
   }
 }

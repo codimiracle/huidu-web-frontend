@@ -3,8 +3,10 @@ import { Episode } from "./episode";
 import { Content } from './content';
 
 export interface Catalogs {
-  title: string,
-  episodeId: string,
+  title: string;
+  bookId: string;
+  episodeNumber: number;
+  episodeId: string;
 }
 
 export enum ElectronicBookStatus {
@@ -15,7 +17,7 @@ export enum ElectronicBookStatus {
 }
 
 export const ELECTRONIC_BOOK_STATUS_TEXTS = {};
-ELECTRONIC_BOOK_STATUS_TEXTS[ElectronicBookStatus.Examining] = '审批中';
+ELECTRONIC_BOOK_STATUS_TEXTS[ElectronicBookStatus.Examining] = '待审';
 ELECTRONIC_BOOK_STATUS_TEXTS[ElectronicBookStatus.Serializing] = '连载';
 ELECTRONIC_BOOK_STATUS_TEXTS[ElectronicBookStatus.Paused] = '停更';
 ELECTRONIC_BOOK_STATUS_TEXTS[ElectronicBookStatus.Ended] = '完结';

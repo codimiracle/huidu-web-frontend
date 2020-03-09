@@ -3,6 +3,7 @@ import { APIResponse } from '../../../../types/api';
 import { Comment } from '../../../../types/comment';
 import { ContentType } from '../../../../types/content';
 import { UNKNOW_USER } from '../../../../types/user';
+import { getMockComment } from '../../mockdata/comment';
 
 export interface CommentListJSON {
   commentList: Array<Comment>,
@@ -17,24 +18,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
   let limitInt = parseInt(limit.toString());
   let list: Array<Comment> = [];
   for (let index = 0; index < limitInt; index++) {
-    list.push({
-      title: 'user-comment',
-      content: {
-        type: "plaintext",
-        source: "hello this is a ebook comments"
-      },
-      owner: UNKNOW_USER,
-      contentId: 'comment-sfa',
-      type: ContentType.Comment,
-      reference: null,
-      likes: 100,
-      comments: 0,
-      reposts: 0,
-      rate: 0,
-      commentList: [],
-      createTime: '2020-01-28T13:59:54.925Z',
-      updateTime: '2020-01-28T13:59:54.925Z'
-    });
+    list.push(getMockComment());
   }
   let data: CommentListJSON = {
     commentList: list,

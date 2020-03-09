@@ -4,12 +4,14 @@ import { Divider } from 'antd';
 export interface HeaderBarProps {
   title: string,
   hint: string,
-  extra?: ReactNode
+  extra?: ReactNode,
+  divider?: boolean;
 };
 export interface HeaderBarState { };
 
 export default class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
   render() {
+    let divider = this.props.divider === undefined ? true : this.props.divider;
     return (
       <>
         <div className="backend-header-bar">
@@ -21,7 +23,9 @@ export default class HeaderBar extends React.Component<HeaderBarProps, HeaderBar
             {this.props.extra}
           </div>
         </div>
-        <Divider type="horizontal" />
+        {
+          divider && <Divider type="horizontal" />
+        }
         <style jsx>{`
           .backend-header-bar {
             display: flex;

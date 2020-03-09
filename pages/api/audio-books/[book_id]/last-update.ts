@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { APIResponse, EntityJSON } from '../../../../types/api';
-import { Episode } from '../../../../types/episode';
+import { Episode, EpisodeStatus } from '../../../../types/episode';
 import { BookType } from '../../../../types/book';
+import { ElectronicBookStatus } from '../../../../types/electronic-book';
 
 export default function (request: NextApiRequest, response: NextApiResponse) {
   const { book_id } = request.query;
@@ -9,6 +10,10 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
     entity: {
       id: '32432',
       title: '示例章节',
+      episodeNumber: 32,
+      status: EpisodeStatus.Publish,
+      words: 352,
+      next: null,
       content: {
         type: 'html',
         source: "<strong>示例内容</strong>"
@@ -20,6 +25,11 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         id: `${book_id}`,
         contentId: '32423',
         type: BookType.ElectronicBook,
+        publishYear: '2011',
+        tags: [],
+        owner: null,
+        likes: 342,
+        reposts: 4534,
         metadata: {
           id: 'somebook',
           name: 'Book Name',
@@ -39,7 +49,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         episodes: 34,
         episodeList: null,
         allEpisodesMoney: 0,
-        status: 'status',
+        status: ElectronicBookStatus.Serializing,
         comments: 342,
         rate: 0.5,
         commentList: [],

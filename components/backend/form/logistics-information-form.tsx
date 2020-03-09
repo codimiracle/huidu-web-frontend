@@ -24,12 +24,19 @@ export default class LogisticsInformationForm extends React.Component<LogisticsI
     this.setState({ passingPoints: this.state.passingPoints.filter((e, i) => i != index) })
   }
   private onPassingPointAdd() {
-    this.setState({ passingPoints: this.state.passingPoints.concat({ name: undefined, status: 'doing' }) });
+    this.setState((state) => {
+      let passingPoints = [].concat(state.passingPoints);
+      passingPoints = passingPoints.concat({
+        name: undefined,
+        status: PassingPointStatus.Doing
+      });
+      return { passingPoints: state.passingPoints};
+    });
   }
   render() {
     const { form, logisticsInformation } = this.props;
     const { passingPoints } = this.state;
-    let renderringPassingPoints = (logisticsInformation.passingPoints || []).concat(passingPoints)
+    let renderringPassingPoints: Array<PassingPoint> = (logisticsInformation.passingPoints || []).concat(passingPoints)
     return (
       <>
         <Row type="flex" gutter={16}>

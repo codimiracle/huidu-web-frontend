@@ -11,16 +11,17 @@ import { ElectronicBook } from '../../../../../types/electronic-book';
 import { fetchDataByGet } from '../../../../../util/network-util';
 import { NextPageContext } from 'next';
 
-export interface NewElectronicBookProps {
+export interface EditElectronicBookProps {
   form: WrappedFormUtils;
   router: Router;
+  book: ElectronicBook;
 };
-export interface NewElectronicBookState {
+export interface EditElectronicBookState {
   saving: boolean;
 };
 
-export class NewElectronicBook extends React.Component<NewElectronicBookProps, NewElectronicBookState> {
-  constructor(props: NewElectronicBookProps) {
+export class EditElectronicBook extends React.Component<EditElectronicBookProps, EditElectronicBookState> {
+  constructor(props: EditElectronicBookProps) {
     super(props);
     this.state = {
       saving: false
@@ -78,6 +79,6 @@ export class NewElectronicBook extends React.Component<NewElectronicBookProps, N
   }
 }
 
-const WrappedNewElectronicBook = withRouter(Form.create<NewElectronicBookProps>({ name: 'new-electronic-book-from' })(NewElectronicBook));
+const WrappedEditElectronicBook = withRouter(Form.create<EditElectronicBookProps>({ name: 'new-electronic-book-from' })(EditElectronicBook));
 
-export default WrappedNewElectronicBook;
+export default WrappedEditElectronicBook;

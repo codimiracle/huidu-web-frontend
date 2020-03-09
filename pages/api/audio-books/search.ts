@@ -1,12 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ElectronicBookListJSON } from '.';
-import { APIResponse } from '../../../types/api';
+import { APIResponse, ListJSON } from '../../../types/api';
 import { BookType } from '../../../types/book';
-import { ElectronicBook } from '../../../types/electronic-book';
 export default function (request: NextApiRequest, response: NextApiResponse) {
   if (request.method.toLowerCase() == 'get') {
     const { q } = request.query;
-    let data: Array<ElectronicBook> = [];
+    let data: Array<any> = [];
     for (let index = 0; index < 10; index++) {
       data.push({
         id: `${index}`,
@@ -41,7 +39,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         updateTime: '2020-01-29T14:16:58.269Z'
       });
     }
-    let json: APIResponse<ElectronicBookListJSON> = {
+    let json: APIResponse<ListJSON<any>> = {
       code: 200,
       message: 'success',
       data: {

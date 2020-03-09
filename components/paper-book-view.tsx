@@ -58,7 +58,7 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
           <p className="description">{book.metadata.description}</p>
           <div className="money">{book.commodity.prices}</div>
           <div className="actions">
-            <DirectLink href={`/user/orderring?book_id=${book.id}`}><Button>立即购买</Button></DirectLink> <Button loading={joining} disabled={joinedCart} onClick={() => this.onJoinCartClick()}>{joinedCart ? '已加入' : '加入购物车'}</Button>
+            <DirectLink href={`/user/orderring?book_id=${book.id}`}><Button size="small">立即购买</Button></DirectLink> <Button size="small" loading={joining} disabled={joinedCart} onClick={() => this.onJoinCartClick()}>{joinedCart ? '已加入' : '加入购物车'}</Button>
           </div>
         </div>
         <style jsx>{`
@@ -69,8 +69,8 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
           img {
             background-color: #f7f7f7;
             border-radius: 4px;
-            width: 128px;
-            height: 172px;
+            width: 7em;
+            height: 9.4em;
           }
           .body {
             padding: 0.5em;
@@ -86,6 +86,10 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
           }
           .description {
             flex: 1;
+
+            max-height: 3em;
+            word-break: break-all;
+            overflow: hidden;
           }
         `}</style>
       </div>

@@ -9,16 +9,13 @@ export interface APIMessage {
 
 export const fetchRaw = async function <T>(api: API, init?: RequestInit): Promise<T> {
   let response = await fetch(api, init);
-  if (response.status != 200) {
-    let reasons = {
-      404: 'not implemented',
-      500: 'server internal error',
-    }
-    throw new Error(`\`${api}\` invoking failed: ${reasons[response.status] || 'unknown'} \n\tfor api: ${JSON.stringify(api)} \n\tfor request: ${JSON.stringify(init)}`);
-  }
   let result = await response.json();
+  if (response.status != 200) {
+    console.error(`Api invoking failed: ${JSON.stringify(api)} \n\t calling with data: ${JSON.stringify(init)}`);
+    throw new Error('发起调用失败！');
+  }
   if (!result) {
-    throw new Error(`data format invalid. \nfor ${api}`);
+    throw new Error(`服务器应答错误！`);
   }
   return result;
 }
@@ -36,8 +33,8 @@ export const fetchRaw = async function <T>(api: API, init?: RequestInit): Promis
  */
 export const fetchData = async function <T>(api: API, init?: RequestInit): Promise<T> {
   let response: any = await fetchRaw(api, init);
-  if (!response || !response.data) {
-    throw new Error(`errocode: ${response.code}: ${response.message}`);
+  if (!response || response.data === null) {
+    throw new Error(`${response.code}: ${response.message}`);
   }
   return response.data;
 }

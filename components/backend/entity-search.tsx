@@ -1,19 +1,19 @@
-import React from 'react';
-import { Input, Select, Form } from 'antd';
+import { Form, Input, Select } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
+import React from 'react';
 
 export interface SearchableColumn<T> {
-  field: keyof T;
+  field: string;
   name: string;
 }
 
 export interface EntitySearchProps<T> {
   columns: Array<SearchableColumn<T>>;
   loading: boolean;
-  onSearch: (keyword: string, field: keyof T) => void;
+  onSearch: (keyword: string, field: string) => void;
 };
 export interface EntitySearchState<T> {
-  field: keyof T
+  field: string;
 };
 
 export default class EntitySearch<T> extends React.Component<EntitySearchProps<T>, EntitySearchState<T>> {

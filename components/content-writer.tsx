@@ -4,7 +4,7 @@ import EditorView from './editor-view';
 
 export interface ArticleProps {
   title: string;
-  count: number;
+  words: number;
   content: {
     type: 'html';
     source: string
@@ -17,7 +17,7 @@ export interface ContentWriterProps {
 };
 export interface ContentWriterState {
   title: string;
-  count: number;
+  words: number;
   source: string;
 };
 
@@ -27,7 +27,7 @@ export default class ContentWriter extends React.Component<ContentWriterProps, C
     this.state = {
       title: props.value && props.value.title || '',
       source: props.value && props.value.content.source || '',
-      count: props.value && props.value.count || 0
+      words: props.value && props.value.words || 0
     }
     this.onTitleChange = this.onTitleChange.bind(this);
     this.onSourceChange = this.onSourceChange.bind(this);
@@ -40,14 +40,14 @@ export default class ContentWriter extends React.Component<ContentWriterProps, C
         type: 'html',
         source: this.state.source
       },
-      count: this.state.count
+      words: this.state.words
     })
   }
   private onTitleChange(title: string) {
     this.setState({ title: title }, this.fireChange);
   }
   private onSourceChange(source: string, count: number) {
-    this.setState({ source: source, count: count }, this.fireChange);
+    this.setState({ source: source, words: count }, this.fireChange);
   }
   render() {
     return (

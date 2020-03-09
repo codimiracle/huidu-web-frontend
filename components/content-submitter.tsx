@@ -9,21 +9,26 @@ export interface ContentSubmitterProps {
   manager?: 'user' | 'admin';
   title?: React.ReactNode;
   extra?: React.ReactNode;
-  onSubmit: () => void;
+  onStatusChange: (status: ContentStatus) => void;
+  onSubmit: (status: ContentStatus) => void;
 };
 export interface ContentSubmitterState {
-
+  status: ContentStatus;
 };
 
 export default class ContentSubmitter extends React.Component<ContentSubmitterProps, ContentSubmitterState> {
   render() {
     const { saved, content, manager, extra } = this.props;
-    let statusList = [];
+    let statusDescriptors = [];
     let isContentCreated = content && content.contentId;
     if (isContentCreated) {
-      statusList = [ContentStatus.Draft, ContentStatus.Examining];
+      statusDescriptors = [
+        { value: ContentStatus.Draft, disabled: false },
+        { value: ContentStatus.Examining, disabled: false },
+        { value: ContentStatus.Publish, disabled: true }
+      ];
       if (manager == 'admin') {
-        statusList = Object.values(ContentStatus);
+        statusDescriptors = Object.values(ContentStatus).map((status) => ({ value: status, disabled: false }));
       }
     }
     return (
@@ -36,9 +41,9 @@ export default class ContentSubmitter extends React.Component<ContentSubmitterPr
               <span>
                 {
                   isContentCreated &&
-                  <Select value={isContentCreated ? content.status : undefined}>
+                  <Select value={isContentCreated ? content.status : undefined} onChange={this.props.onStatusChange}>
                     {
-                      statusList.map((status) => <Select.Option key={status} value={status}>{CONTENT_STATUS_TEXTS[status]}</Select.Option>)
+                      statusDescriptors.map((descriptor) => <Select.Option key={descriptor.value} disabled={descriptor.disabled} value={descriptor.value}>{CONTENT_STATUS_TEXTS[descriptor.value]}</Select.Option>)
                     }
                   </Select>
                 }
@@ -46,7 +51,7 @@ export default class ContentSubmitter extends React.Component<ContentSubmitterPr
               <span>(当前：{isContentCreated ? CONTENT_STATUS_TEXTS[content.status] : '未保存'})</span>
             </div>
             <div className="content-submitter-actions">
-              <Button loading={this.props.loading} disabled={this.props.saved} onClick={this.props.onSubmit}>保存</Button>
+              <Button loading={this.props.loading} disabled={this.props.saved} onClick={() => this.props.onSubmit(this.state.status)}>保存</Button>
             </div>
             <div className="content-submitter-extra">{this.props.extra}</div>
           </div>

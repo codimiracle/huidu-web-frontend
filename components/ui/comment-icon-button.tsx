@@ -13,7 +13,7 @@ export default class CommentIconButton extends React.Component<CommentIconButton
     return (
       <>
         <Tooltip title="评论">
-          <span key="comment-do-comment"><Icon type="message" onClick={() => onClick()} /><span style={{ paddingLeft: '8px' }}>{comments}</span></span>
+          <span key="comment-do-comment" onClick={() => onClick()} ><Icon type="message" /><span style={{ paddingLeft: '8px' }}>{comments}</span></span>
         </Tooltip>
       </>
     )

@@ -1,19 +1,22 @@
 import { Button, Form, message, Modal } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
+import { Router, withRouter } from 'next/router';
 import React from 'react';
 import { API } from '../../configs/api-config';
 import { User } from '../../types/user';
 import { fetchDataByPost } from '../../util/network-util';
 import UserSigninForm from '../form/user-signin-from';
-import { UserJSON } from '../../pages/api/user/logged';
+import { EntityJSON } from '../../types/api';
 
 export interface UserSignInDialogProps {
-  form: WrappedFormUtils,
-  visible: boolean,
-  onLogged: (user: User) => void
+  form: WrappedFormUtils;
+  router: Router;
+  visible: boolean;
+  onLogged?: (user: User) => void;
+  onCancel: () => void;
 };
 export interface UserSignInDialogState {
-  signing: boolean,
+  signing: boolean;
 };
 
 export class UserSignInDialog extends React.Component<UserSignInDialogProps, UserSignInDialogState> {
@@ -24,14 +27,20 @@ export class UserSignInDialog extends React.Component<UserSignInDialogProps, Use
     }
   }
   onSignIn() {
-    const { form, onLogged } = this.props;
+    const { form, onLogged, onCancel } = this.props;
     this.setState({ signing: true });
-    fetchDataByPost<UserJSON>(API.SystemSignIn, {
+    fetchDataByPost<EntityJSON<User>>(API.SystemSignIn, {
       username: form.getFieldValue('username'),
       password: form.getFieldValue('password'),
       remember: form.getFieldValue('remember')
     }).then((data) => {
-      onLogged(data.user);
+      if (onLogged) {
+        onLogged(data.entity);
+        onCancel();
+      } else {
+        this.props.router.reload();
+      }
+
     }).catch((err) => {
       message.error(`登录失败：${err}`);
     }).finally(() => {
@@ -44,19 +53,21 @@ export class UserSignInDialog extends React.Component<UserSignInDialogProps, Use
       <>
         <Modal
           visible={visible}
+          onCancel={this.props.onCancel}
           width={376}
           footer={null}
         >
           <div className="dialog-header">
             <img className="logo" src="/assets/huidu.png" />
-            <span className="title">登录绘读</span>
+            <span className="title">登录荟读</span>
           </div>
           <UserSigninForm form={form} />
-          <Button type="primary" block onClick={() => this.onSignIn()}>登录</Button>
+          <Button loading={this.state.signing} type="primary" block onClick={() => this.onSignIn()}>登录</Button>
         </Modal>
         <style jsx>{`
           .dialog-header {
             text-align: center;
+            margin-left: -24px;
           }
           .logo {
             width: 8em;
@@ -73,6 +84,6 @@ export class UserSignInDialog extends React.Component<UserSignInDialogProps, Use
   }
 }
 
-const WrappedUserSigninDialog = Form.create({ name: 'user-sign-dialog-form' })(UserSignInDialog);
+const WrappedUserSigninDialog = withRouter(Form.create<UserSignInDialogProps>({ name: 'user-sign-dialog-form' })(UserSignInDialog));
 
 export default WrappedUserSigninDialog;

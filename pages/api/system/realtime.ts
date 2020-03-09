@@ -3,9 +3,17 @@ import { APIResponse } from "../../../types/api";
 import { Activity } from "../../../types/activity";
 import { Category } from "../../../types/category";
 import { Topic } from "../../../types/topic";
-import { User } from "../../../types/user";
+import { User, SocialUser } from "../../../types/user";
 import { Operation } from "../../../types/operation";
 import { BookType, Book } from "../../../types/book";
+import { getMockActivity } from "../mockdata/activity";
+import { getMockCategory } from "../mockdata/category";
+import { getMockElectronicBook } from "../mockdata/electronic-book";
+import { getMockTopic } from "../mockdata/topic";
+import { getMockSocialUser } from "../mockdata/user";
+import { getMockReview } from "../mockdata/review";
+import { Review } from "../../../types/review";
+import { getMockOperation } from "../mockdata/operation";
 
 export interface RealtimeJSON {
   activities: Array<Activity>,
@@ -19,7 +27,7 @@ export interface RealtimeJSON {
     topTopics: Array<Topic>,
     topParticipants: Array<Operation>,
     hotTopics: Array<Topic>,
-    hotReviews: Array<Topic>
+    hotReviews: Array<Review>
     focus: Array<{
       topics: Array<Topic>,
       book: Book
@@ -32,254 +40,22 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
     code: 200,
     message: 'success',
     data: {
-      activities: [
-        {
-          id: 'activity-1',
-          banner: '/assets/act1.png',
-          url: 'http://www.baidu.com',
-          book: {
-            id: `book-01`,
-            contentId: '32423',
-            type: BookType.ElectronicBook,
-            metadata: {
-              id: 'somebook',
-              name: 'Book Name 1',
-              description: 'Book Description 1',
-              cover: '/assets/empty.png',
-              words: '4 万字',
-              author: 'Hero',
-              isbm: '342-23432454-34232',
-            },
-            category: {
-              id: '54634',
-              name: '电子书',
-              description: '在线读物',
-              tags: [],
-              extra: null
-            },
-            episodes: 34,
-            episodeList: null,
-            allEpisodesMoney: 0,
-            status: 'status',
-            comments: 342,
-            rate: 0.5,
-            commentList: [],
-            createTime: '2020-01-29T14:16:58.269Z',
-            updateTime: '2020-01-29T14:16:58.269Z'
-          },
-        }, {
-          id: 'activity-2',
-          banner: '/assets/act1.png',
-          url: 'http://www.baidu.com',
-          book: {
-            id: `book-02`,
-            contentId: '32423',
-            type: BookType.ElectronicBook,
-            metadata: {
-              id: 'somebook',
-              name: 'Book Name 2',
-              description: 'Book Description 2',
-              cover: '/assets/empty.png',
-              words: '4 万字',
-              author: 'Hero',
-              isbm: '342-23432454-34232',
-            },
-            category: {
-              id: '54634',
-              name: '电子书',
-              description: '在线读物',
-              tags: [],
-              extra: null
-            },
-            episodes: 34,
-            episodeList: null,
-            allEpisodesMoney: 0,
-            status: 'status',
-            comments: 342,
-            rate: 0.5,
-            commentList: [],
-            createTime: '2020-01-29T14:16:58.269Z',
-            updateTime: '2020-01-29T14:16:58.269Z'
-          },
-        }, {
-          id: 'activity-3',
-          banner: '/assets/act1.png',
-          url: 'http://www.baidu.com',
-          book: {
-            id: `book-03`,
-            contentId: '32423',
-            type: BookType.ElectronicBook,
-            metadata: {
-              id: 'somebook',
-              name: 'Book Name 3',
-              description: 'Book Description 3',
-              cover: '/assets/empty.png',
-              words: '4 万字',
-              author: 'Hero',
-              isbm: '342-23432454-34232',
-            },
-            category: {
-              id: '54634',
-              name: '电子书',
-              description: '在线读物',
-              tags: [],
-              extra: null
-            },
-            episodes: 34,
-            episodeList: null,
-            allEpisodesMoney: 0,
-            status: 'status',
-            comments: 342,
-            rate: 0.5,
-            commentList: [],
-            createTime: '2020-01-29T14:16:58.269Z',
-            updateTime: '2020-01-29T14:16:58.269Z'
-          },
-        }, {
-          id: 'activity-4',
-          banner: '/assets/act1.png',
-          url: 'http://www.baidu.com',
-          book: {
-            id: `book-04`,
-            contentId: '32423',
-            type: BookType.ElectronicBook,
-            metadata: {
-              id: 'somebook',
-              name: 'Book Name 4',
-              description: 'Book Description 4',
-              cover: '/assets/empty.png',
-              words: '4 万字',
-              author: 'Hero',
-              isbm: '342-23432454-34232',
-            },
-            category: {
-              id: '54634',
-              name: '电子书',
-              description: '在线读物',
-              tags: [],
-              extra: null
-            },
-            episodes: 34,
-            episodeList: null,
-            allEpisodesMoney: 0,
-            status: 'status',
-            comments: 342,
-            rate: 0.5,
-            commentList: [],
-            createTime: '2020-01-29T14:16:58.269Z',
-            updateTime: '2020-01-29T14:16:58.269Z'
-          },
-        }, {
-          id: 'activity-5',
-          banner: '/assets/act1.png',
-          url: 'http://www.baidu.com',
-          book: {
-            id: `book-05`,
-            contentId: '32423',
-            type: BookType.ElectronicBook,
-            metadata: {
-              id: 'somebook',
-              name: 'Book Name 5',
-              description: 'Book Description 5',
-              cover: '/assets/empty.png',
-              words: '4 万字',
-              author: 'Hero',
-              isbm: '342-23432454-34232',
-            },
-            category: {
-              id: '54634',
-              name: '电子书',
-              description: '在线读物',
-              tags: [],
-              extra: null
-            },
-            episodes: 34,
-            episodeList: null,
-            allEpisodesMoney: 0,
-            status: 'status',
-            comments: 342,
-            rate: 0.5,
-            commentList: [],
-            createTime: '2020-01-29T14:16:58.269Z',
-            updateTime: '2020-01-29T14:16:58.269Z'
-          },
-        }
-      ],
-      categories: [],
-      sections: [{
-        id: '342354543',
-        name: '阅读有温度',
-        description: '',
-        tags: [{ id: '342', name: '养生' }],
-        extra: {
-          asideTitle: '悦读榜'
-        }
-      }, {
-        id: '342354543',
-        name: '阅读有声',
-        description: '',
-        tags: [{ id: '342', name: '养生' }],
-        extra: {
-          asideTitle: '动听榜'
-        }
-      }, {
-        id: '342354543',
-        name: '值得一购榜单',
-        description: '',
-        tags: [{ id: '342', name: '养生' }],
-      }],
+      activities: new Array(6).fill(0).map(() => getMockActivity()),
+      categories: new Array(3).fill(0).map(() => getMockCategory()),
+      sections: new Array(3).fill(0).map(() => getMockCategory()),
       recommendations: {
-        guessing: {
-          id: '342354543',
-          name: '猜你喜欢榜单',
-          description: '',
-          tags: [{ id: '342', name: '养生' }],
-        },
-        sametaste: {
-          id: '342354543',
-          name: '同样兴趣榜单',
-          description: '',
-          tags: [{ id: '342', name: '养生' }],
-        }
+        guessing: getMockCategory(),
+        sametaste: getMockCategory(),
       },
       community: {
-        topTopics: [],
-        topParticipants: [],
-        hotTopics: [],
-        hotReviews: [],
+        topTopics: new Array(10).fill(0).map(() => getMockTopic()),
+        topParticipants: new Array(10).fill(0).map(() => getMockOperation()),
+        hotTopics: new Array(10).fill(0).map(() => getMockTopic()),
+        hotReviews: new Array(10).fill(0).map(() => getMockReview()),
         focus: [
           {
-            topics: [],
-            book: {
-              id: `book-01`,
-              contentId: '32423',
-              type: BookType.ElectronicBook,
-              metadata: {
-                id: 'somebook',
-                name: 'Book Name 1',
-                description: 'Book Description 1',
-                cover: '/assets/empty.png',
-                words: '4 万字',
-                author: 'Hero',
-                isbm: '342-23432454-34232',
-              },
-              category: {
-                id: '54634',
-                name: '电子书',
-                description: '在线读物',
-                tags: [],
-                extra: null
-              },
-              episodes: 34,
-              episodeList: null,
-              allEpisodesMoney: 0,
-              status: 'status',
-              comments: 342,
-              rate: 0.5,
-              commentList: [],
-              createTime: '2020-01-29T14:16:58.269Z',
-              updateTime: '2020-01-29T14:16:58.269Z'
-            },
+            topics: new Array(10).fill(0).map(() => getMockTopic()),
+            book: getMockElectronicBook(),
           }
         ]
       }

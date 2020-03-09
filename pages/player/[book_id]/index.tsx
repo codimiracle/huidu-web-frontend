@@ -14,7 +14,6 @@ import { Book } from '../../../types/book';
 import { BookNotes } from "../../../types/notes";
 import { DEAULT_THEME, PROTECT_EYE_THEME, Theme } from '../../../types/theme';
 import { fetchDataByGet } from '../../../util/network-util';
-import { BookNotesJSON } from "../../api/user/book-notes/[book_id]";
 
 export interface ReaderProps {
   episode: AudioEpisode,
@@ -53,13 +52,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       api = API.AudioBookEpisodeEntity;
     }
     let episodeData = await fetchDataByGet<EntityJSON<AudioEpisode>>(api, data);
-    let bookNotesData = await fetchDataByGet<BookNotesJSON>(API.UserBookNotesEntity, {
+    let bookNotesData = await fetchDataByGet<EntityJSON<BookNotes>>(API.UserBookNotesEntity, {
       book_id: book_id
     });
     return {
       book: bookData.entity,
       episode: episodeData.entity,
-      bookNotes: bookNotesData.bookNotes
+      bookNotes: bookNotesData.entity
     }
   }
   constructor(props) {
@@ -178,7 +177,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           onFontSizeChange={(size) => this.onFontSizeChange(size)}
         />
         <AudioBookCatalogsView
-          book={book}
+          book={book as AudioBook}
           visible={drawer == DrawerKey.catalogs}
           onClose={onDrawerClose}
         />

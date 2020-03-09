@@ -1,10 +1,11 @@
 import React from 'react';
 import { ElectronicBook } from '../types/electronic-book';
-import { Tag, Button, Rate, message } from 'antd';
+import { Tag, Button, Rate, message, Row, Col, Dropdown, Menu } from 'antd';
 import DirectLink from './direct-link';
 import Link from 'next/link';
 import { API } from '../configs/api-config';
 import { fetchMessageByPost } from '../util/network-util';
+import ElectronicBookStatusView from './electronic-book-status-view';
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
@@ -53,11 +54,12 @@ export default class ElectronicBookView extends React.Component<ElectronicBookVi
           <img src={renderringBook.metadata.cover || EMPTY_IMAGE} />
         </div>
         <div className="body">
-          <div><strong><Link href="/bookshop/electronic-books/[book_id]" as={`/bookshop/electronic-books/${renderringBook.id}`}><a>{renderringBook.metadata.name}</a></Link></strong> <Tag>{renderringBook.status}</Tag> <span className="author">{renderringBook.metadata.author}</span></div>
+          <div><strong><Link href="/bookshop/electronic-books/[book_id]" as={`/bookshop/electronic-books/${renderringBook.id}`}><a>{renderringBook.metadata.name}</a></Link></strong> <ElectronicBookStatusView status={renderringBook.status} /> <span className="author">{renderringBook.metadata.author}</span></div>
           <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
           <p className="description">{renderringBook.metadata.description}</p>
           <div className="actions">
-            <DirectLink href="/reader/[book_id]" as={`/reader/${renderringBook.id}`}><Button>在线阅读</Button></DirectLink> <Button loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
+            <DirectLink href="/reader/[book_id]" as={`/reader/${renderringBook.id}`}><Button size="small">在线阅读</Button></DirectLink> <Button size="small" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
+
           </div>
         </div>
         <style jsx>{`
@@ -78,6 +80,10 @@ export default class ElectronicBookView extends React.Component<ElectronicBookVi
           }
           .description {
             flex: 1;
+
+            max-height: 3em;
+            word-break: break-all;
+            overflow: hidden;
           }
         `}</style>
       </div>

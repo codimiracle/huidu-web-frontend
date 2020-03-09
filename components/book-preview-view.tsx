@@ -1,5 +1,5 @@
 import React from 'react';
-import { Book } from '../types/book';
+import { Book, BookPreview } from '../types/book';
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
@@ -11,21 +11,29 @@ export interface BookPreviewViewState { };
 export default class BookPreviewView extends React.Component<BookPreviewViewProps, BookPreviewViewState> {
   render() {
     const { book } = this.props;
+    const bookPreview = BookPreview.valueOf(book);
     return (
-      <div className="book-reference-view">
-        <img src={book.cover || book.metadata.cover || EMPTY_IMAGE} />
+      <div className="book-preview-view">
+        <img src={bookPreview.cover || EMPTY_IMAGE} />
         <div className="body">
-          <div><strong>{book.title || book.metadata.name}</strong> <span className="help-text">{book.teller || book.metadata.author}</span></div>
-          <p>{book.description || book.metadata.description}</p>
+          <div><strong>{bookPreview.name}</strong> <span>{bookPreview.author}</span></div>
+          <p>{bookPreview.description}</p>
         </div>
         <style jsx>{`
-        .book-reference-view {
+        .book-preview-view {
           display: flex;
         }
         .body {
           display: flex;
           padding-left: 0.5em;
           flex-direction: column;
+        }
+        p {
+          flex: 1;
+          
+          max-height: 3em;
+          word-break: break-all;
+          overflow: hidden;
         }
         img {
           width: 68px;

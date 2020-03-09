@@ -1,10 +1,11 @@
 import React from 'react';
 import { Avatar } from 'antd';
-import { User } from '../types/user';
+import { User, SocialUser } from '../types/user';
 
 export interface AvatarViewProps {
-  user: User,
-  size?: "default" | "small" | "large" | number
+  user: User | SocialUser;
+  size?: "default" | "small" | "large" | number;
+  onClick?: () => void;
 };
 export interface AvatarViewState { };
 
@@ -17,8 +18,8 @@ export default class AvatarView extends React.Component<AvatarViewProps, AvatarV
     const { user, size } = this.props;
     return (
       <>
-        <span>
-          <Avatar size={size} src={user && user.avatar || '/assets/avatar.png'} />
+        <span onClick={this.props.onClick}>
+          <Avatar size={size} src={user && user.avatar || undefined} icon={!user && 'user' || undefined} />
         </span>
       </>
     )

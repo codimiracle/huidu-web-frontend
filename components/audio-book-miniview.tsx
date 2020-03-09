@@ -90,6 +90,10 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
           }
           .description {
             flex: 1;
+            
+            max-height: 3em;
+            word-break: break-all;
+            overflow: hidden;
           }
           `}</style>
       </RetryView>

@@ -7,7 +7,7 @@ import { ListJSON } from '../../../../types/api';
 import { ColumnProps, SorterResult } from 'antd/lib/table';
 import { ElectronicBook, ELECTRONIC_BOOK_STATUS_TEXTS, ElectronicBookStatus, ELECTRONIC_BOOK_STATUS_COLORS } from '../../../../types/electronic-book';
 import { Tag } from 'antd';
-import ElectronicBookFrom from '../../../../components/form/electronic-book-form';
+import ElectronicBookFrom from '../../../../components/backend/form/electronic-book-form';
 import Link from 'next/link';
 
 export interface ElectronicBookManagerProps {
@@ -39,6 +39,12 @@ export default class ElectronicBookManager extends React.Component<ElectronicBoo
   getColumns(filter: Partial<Record<keyof ElectronicBook, string[]>>, sorter: SorterResult<ElectronicBook>): Array<ColumnProps<ElectronicBook>> {
     return [
       {
+        title: '电子书封面',
+        key: 'cover',
+        dataIndex: 'metadata',
+        render: (metadata) => <img src={metadata.cover} style={{ width: '7em', height: '9.4em' }} />
+      },
+      {
         title: '电子书名称',
         key: 'name',
         dataIndex: 'metadata',
@@ -53,7 +59,7 @@ export default class ElectronicBookManager extends React.Component<ElectronicBoo
         key: 'status',
         dataIndex: 'status',
         filters: Object.values(ElectronicBookStatus).map((status) => ({ text: ELECTRONIC_BOOK_STATUS_TEXTS[status], value: status })),
-        filteredValue: filter.status,
+        filteredValue: filter && filter.status || null,
         render: (status) => <Tag color={ELECTRONIC_BOOK_STATUS_COLORS[status]}>{ELECTRONIC_BOOK_STATUS_TEXTS[status]}</Tag>
       }, {
         title: '发布年份',
@@ -78,12 +84,17 @@ export default class ElectronicBookManager extends React.Component<ElectronicBoo
         <EntityManager
           config={{
             list: API.BackendElectronicBookCollection,
-            searchableColumns: [{ name: '电子书名称', field: 'metadata.name' }, { name: '作者', field: 'metadata.author' }, { name: '发布年份', field: 'publishYear' }],
+            searchableColumns: [{ name: '电子书名称', field: 'metadataName' }, { name: '作者', field: 'metadataAuthor' }, { name: '发布年份', field: 'publishYear' }],
             create: API.BackendElectronicBookCreate,
             renderCreateForm: (form) => <ElectronicBookFrom form={form} />,
             update: API.BackendElectronicBookUpdate,
             renderUpdateForm: (form, entity) => <ElectronicBookFrom form={form} book={entity} />,
+            getUpdateRequestData: (form, entity) => ({
+              electronic_book_id: entity.id,
+              ...form.getFieldsValue()
+            }),
             delete: API.BackendElectronicBookDelete,
+            getDeleteRequestData: (entity) => ({electronic_book_id: entity.id})
           }}
           actionOptionsExtra={(entity, index) => <Link href="./electronic-books/[book_id]" as={`./electronic-books/${entity.id}`}><a>章节管理</a></Link>}
           rowKey={(electronicBook) => electronicBook.id}

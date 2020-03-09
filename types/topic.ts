@@ -1,8 +1,7 @@
-import { User, UNKNOW_USER } from "./user";
-import { ContentType, Article } from "./content";
-import { Comment } from './comment';
+import { Article, ContentType } from "./content";
+import { SocialUser } from "./user";
 
 export interface Topic extends Article {
-  participants: Array<User>,
-  type: ContentType.Topic
+  participants: Array<SocialUser>;
+  type: ContentType.Topic;
 }

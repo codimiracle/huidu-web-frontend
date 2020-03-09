@@ -9,7 +9,7 @@ import { API } from '../../configs/api-config';
 
 export interface LogisticsInfomationDialogProps {
   form: WrappedFormUtils;
-  orderNumber?: string,
+  orderNumber: string,
   logisticsInformation?: LogisticsInformation;
   onUpdated: (logisticsInformation: LogisticsInformation) => void,
   visible: boolean;
@@ -27,16 +27,19 @@ export class LogisticsInfomationDialog extends React.Component<LogisticsInfomati
     }
   }
   onUpdateLogisticsInformation() {
-    const { form } = this.props;
+    const { form, onCancel, onUpdated } = this.props;
     form.validateFieldsAndScroll((errors) => {
       if (!errors) {
-        this.setState({ submitting: false });
+        this.setState({ submitting: true });
         fetchDataByPost<EntityJSON<LogisticsInformation>>(API.BackendOrderLogisticsInformationUpdate, {
+          order_number: this.props.orderNumber,
           passingPoints: form.getFieldValue('passingPoints'),
           expressCompany: form.getFieldValue('expressCompany'),
           expressNumber: form.getFieldValue('expressNumber')
         }).then((data) => {
-          this.props.onUpdated && this.props.onUpdated(data.entity);
+          onUpdated && onUpdated(data.entity);
+          form.resetFields();
+          onCancel && onCancel();
         }).catch((err) => {
           message.error(`更新物流信息失败：${err}`)
         }).finally(() => {

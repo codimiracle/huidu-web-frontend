@@ -28,7 +28,7 @@ export default class ExhibitionRankingAsideView<T> extends React.Component<Exhib
   fetchRanks() {
     const { category } = this.props;
     this.setState({ loading: true });
-    fetchDataByGet<ListJSON<T>>(API.CategoryItems, {
+    fetchDataByGet<ListJSON<T>>(API.CategoryItemsCollection, {
       category_id: category.id,
       filter: {
         orderBy: '<hot>',

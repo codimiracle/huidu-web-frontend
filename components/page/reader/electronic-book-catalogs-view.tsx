@@ -7,7 +7,6 @@ import { fetchDataByGet } from '../../../util/network-util';
 import { withRouter, Router } from 'next/router';
 import Link from 'next/link';
 import { API } from '../../../configs/api-config';
-import { CatalogsJSON } from '../../../pages/api/electronic-books/[book_id]/catalogs';
 
 export interface ElectronicBookReaderCatalogsViewProps {
   book: ElectronicBook,
@@ -31,10 +30,10 @@ class ElectronicBookReaderCatalogsView extends React.Component<ElectronicBookRea
   fetchCatalogs() {
     const { book } = this.props;
     this.setState({ loading: true });
-    fetchDataByGet<CatalogsJSON>(API.ElectronicBookCatalogs, {
+    fetchDataByGet<Array<Catalogs>>(API.ElectronicBookCatalogs, {
       book_id: book.id
     }).then((data) => {
-      this.setState({ catalogs: data.catalogs });
+      this.setState({ catalogs: data });
     }).catch((err) => {
       message.error(`获取目录数据失败：${err}`)
     }).finally(() => {
@@ -45,8 +44,9 @@ class ElectronicBookReaderCatalogsView extends React.Component<ElectronicBookRea
     this.fetchCatalogs();
   }
   render() {
-    const { book, visible, onClose,router } = this.props;
+    const { book, visible, onClose, router } = this.props;
     const { catalogs, loading } = this.state;
+    let episodeId = router.query.episode_id as string;
     return (
       <>
         <Drawer
@@ -68,8 +68,12 @@ class ElectronicBookReaderCatalogsView extends React.Component<ElectronicBookRea
           mask={false}
           maskClosable={false}
         >
+          {
+            catalogs && catalogs.length == 0 &&
+            <p>尚无发布章节</p>
+          }
           <LoadingView loading={loading}>
-            <Menu style={{ border: 'none' }} selectedKeys={[router.query.episode_id || '']}>
+            <Menu style={{ border: 'none' }} selectedKeys={[episodeId]}>
               {
                 catalogs.map((catalog) =>
                   <Menu.Item key={catalog.episodeId}>

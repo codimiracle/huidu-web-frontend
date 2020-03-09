@@ -12,11 +12,15 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
     catalogs: [
       {
         title: '第一章',
-        episodeId: '3423'
+        mediaNumber: 1,
+        audioEpisodeId: '3423',
+        bookId: '324',
       },
       {
         title: '第二章',
-        episodeId: '54353'
+        mediaNumber: 2,
+        audioEpisodeId: '54353',
+        bookId: '2432',
       }
     ]
   }

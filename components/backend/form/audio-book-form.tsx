@@ -15,9 +15,9 @@ import CategoryForm from './category-form';
 
 
 export interface AudioBookFromProps {
-  book?: AudioBook,
-  authorInputable?: boolean,
-  form: WrappedFormUtils
+  book?: AudioBook;
+  author?: boolean;
+  form: WrappedFormUtils;
 };
 export interface AudioBookFromState {
 };
@@ -34,11 +34,10 @@ export default class AudioBookFrom extends React.Component<AudioBookFromProps, A
       <>
         <Row>
           <Col span={8}>
-
             <FormItem label="有声书封面">
               {
                 form.getFieldDecorator('cover', {
-                  initialValue: book && book.cover || null,
+                  initialValue: book && book.cover || undefined,
                   rules: [
                     { required: true, message: '请上传封面！' }
                   ]
@@ -50,27 +49,30 @@ export default class AudioBookFrom extends React.Component<AudioBookFromProps, A
             <FormItem label="有声书标题">
               {
                 form.getFieldDecorator('title', {
-                  initialValue: book && book.title || '',
+                  initialValue: book && book.title || undefined,
                   rules: [
                     { required: true, message: '有声书标题不能为空！' }
                   ]
                 })(<Input placeholder="有声书标题" />)
               }
             </FormItem>
-            <FormItem label="讲述人">
-              {
-                form.getFieldDecorator('teller', {
-                  initialValue: book && book.title || '',
-                  rules: [
-                    { required: true, message: '讲述人不能为空！' }
-                  ]
-                })(<Input placeholder="讲述人" />)
-              }
-            </FormItem>
+            {
+              !this.props.author &&
+              <FormItem label="讲述人">
+                {
+                  form.getFieldDecorator('teller', {
+                    initialValue: book && book.teller || undefined,
+                    rules: [
+                      { required: true, message: '讲述人不能为空！' }
+                    ]
+                  })(<Input placeholder="讲述人" />)
+                }
+              </FormItem>
+            }
             <FormItem label="有声书描述">
               {
                 form.getFieldDecorator('description', {
-                  initialValue: book && book.description || '',
+                  initialValue: book && book.description || undefined,
                   rules: [
                     { required: true, message: '有声书描述不能为空！' }
                   ]
@@ -78,16 +80,18 @@ export default class AudioBookFrom extends React.Component<AudioBookFromProps, A
               }
             </FormItem>
           </Col>
-          <SelectableFormItem
-            label="书籍元数据"
-            form={form}
-            selecting={book && book.metadata.id}
-            renderForm={(form) => <MetadataForm form={form} metadata={book && book.metadata || undefined} />}
-            renderSelect={(form) => form.getFieldDecorator("metadataId", {
+        </Row>
+        <FormItem label="书籍元数据">
+          {
+            form.getFieldDecorator("metadataId", {
               initialValue: book && book.metadata.id || undefined,
               rules: [{ required: true, message: '请选择一个书籍元数据' }]
-            })(<MetadataSelect initialMetadata={book && book.metadata || undefined} />)}
-          />
+            })(<MetadataSelect initialMetadata={book && book.metadata || undefined} />)
+          }
+        </FormItem>
+        <p>关联已存在的相关书籍</p>
+        {
+          !this.props.author &&
           <Row>
             <Col span={16}>
               <FormItem label="有声书状态">
@@ -118,24 +122,24 @@ export default class AudioBookFrom extends React.Component<AudioBookFromProps, A
               </FormItem>
             </Col>
           </Row>
-          <SelectableFormItem
-            label="类别"
-            selecting={book && book.category.id}
-            form={form}
-            renderForm={(form) => <CategoryForm form={form} category={book && book.category || undefined} />}
-            renderSelect={(form) => form.getFieldDecorator('categoryId', {
-              initialValue: book && book.category.id || undefined,
-              rules: [{ required: true, message: '请选择一个类别' }]
-            })(<CategorySelect initialDataSource={book && [book.category] || undefined} />)}
-          />
-          <FormItem label="有声书标签">
-            {
-              form.getFieldDecorator('tags', {
-                initialValue: book && book.tags.map((tag) => tag.name) || undefined,
-              })(<TagSelect initialDataSource={book && book.tags || undefined} />)
-            }
-          </FormItem>
-        </Row>
+        }
+        <SelectableFormItem
+          label="类别"
+          selecting
+          form={form}
+          renderForm={(form) => <CategoryForm form={form} category={book && book.category || undefined} />}
+          renderSelect={(form) => form.getFieldDecorator('categoryId', {
+            initialValue: book && book.category.id || undefined,
+            rules: [{ required: true, message: '请选择一个类别' }]
+          })(<CategorySelect initialDataSource={book && [book.category] || undefined} />)}
+        />
+        <FormItem label="有声书标签">
+          {
+            form.getFieldDecorator('tags', {
+              initialValue: book && book.tags.map((tag) => tag.name) || undefined,
+            })(<TagSelect initialDataSource={book && book.tags || undefined} />)
+          }
+        </FormItem>
       </>
     )
   }

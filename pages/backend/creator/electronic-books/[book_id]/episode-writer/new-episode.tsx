@@ -1,12 +1,12 @@
 import { Button, Divider, Form, message } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
+import { Router, withRouter } from 'next/router';
 import React from 'react';
 import EpisodeForm from '../../../../../../components/form/episode-form';
 import { API } from '../../../../../../configs/api-config';
-import { fetchDataByPost } from '../../../../../../util/network-util';
-import { Router, withRouter } from 'next/router';
 import { EntityJSON } from '../../../../../../types/api';
 import { Episode } from '../../../../../../types/episode';
+import { fetchDataByPost } from '../../../../../../util/network-util';
 
 export interface NewEpisodeEditorProps {
   form: WrappedFormUtils,
@@ -33,7 +33,7 @@ export class NewEpisodeEditorEditor extends React.Component<NewEpisodeEditorProp
         source: form.getFieldDecorator('content'),
       }
     }).then((data) => {
-      router.replace('/creator/electronic-books/[book_id]/episodes/[episode_id]',`/creator/electronic-books/${router.query.book_id}/episodes/${data.episode.id}`);
+      router.replace('/creator/electronic-books/[book_id]/episodes/[episode_id]',`/creator/electronic-books/${router.query.book_id}/episodes/${data.entity.id}`);
     }).catch((err) => {
       message.error(`添加失败：${err}`)
     }).finally(() => {

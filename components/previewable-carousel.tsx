@@ -2,6 +2,7 @@ import React from 'react';
 import { Row, Col, Carousel, List } from 'antd';
 import { Activity } from '../types/activity';
 import Link from 'next/link';
+import { BookPreview } from '../types/book';
 
 interface PreviewImageViewProps {
   selectedIndex: number,
@@ -10,9 +11,10 @@ interface PreviewImageViewProps {
 }
 function PreviewImageView(props: PreviewImageViewProps) {
   const { selectedIndex, index, activity } = props;
+  const bookPreview = BookPreview.valueOf(activity.book);
   return (
     <>
-      <img className={index === selectedIndex ? 'selected' : ''} width="100%" src={activity.book.cover || activity.book.metadata.cover || '/assets/empty.png'} />
+      <img className={index === selectedIndex ? 'selected' : ''} width="100%" src={bookPreview.cover || '/assets/empty.png'} />
       <style jsx>{`
         img.selected {
           outline: 0.1em solid grey;
@@ -48,7 +50,7 @@ export class PreviewableCarousel extends React.Component<PreviewableCarouselProp
       <>
         <Row gutter={8}>
           <Col span={17}>
-            <Carousel ref={this.carousel} dots={false} afterChange={(current) => this.setState({ selectedIndex: current })} autoplay style={{ width: '100%', height: '396px' }}>
+            <Carousel ref={this.carousel} dots={false} afterChange={(current) => this.setState({ selectedIndex: current })} autoplay style={{ width: '100%' }}>
               {
                 activities.map((activity: Activity) => (
                   <div className="activity-content" key={activity.id}>
@@ -87,6 +89,11 @@ export class PreviewableCarousel extends React.Component<PreviewableCarouselProp
           .activity-content {
             overflow: hidden;
             border-radius: 8px;
+          }
+          p {
+            max-height: 3em;
+            word-break: break-all;
+            overflow: hidden;
           }
         `}</style>
       </>

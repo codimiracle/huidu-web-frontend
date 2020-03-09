@@ -1,19 +1,19 @@
-import { Avatar, BackTop, Col, Layout, Menu, message, Row, Select } from 'antd';
+import { Avatar, BackTop, Col, Layout, Menu, message, Row } from 'antd';
 import SubMenu from "antd/lib/menu/SubMenu";
 import Link from 'next/link';
 import { Router, withRouter } from 'next/router';
 import React from "react";
-import { } from 'react-responsive';
 import DirectLink from "../components/direct-link";
+import NotificationView from '../components/notification-view';
 import SearchView from "../components/search-view";
 import { API } from "../configs/api-config";
-import { UserJSON } from "../pages/api/user/logged";
+import { Authority } from '../configs/backend-config';
+import { EntityJSON } from '../types/api';
 import { User } from '../types/user';
+import AuthorityUtil from '../util/authority-util';
 import { fetchDataByGet } from "../util/network-util";
-import NotificationView from '../components/notification-view';
 
 const { Header, Footer, Content } = Layout;
-const { Option } = Select;
 
 export interface BasicLayoutProps {
   router: Router
@@ -42,8 +42,8 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
     return currentKey === '' ? 'home' : currentKey;
   }
   refreshUserData() {
-    fetchDataByGet<UserJSON>(API.LoggedUserData).then((data) => {
-      this.setState({ userdata: data.user });
+    fetchDataByGet<EntityJSON<User>>(API.LoggedUserData).then((data) => {
+      this.setState({ userdata: data.entity });
     }).catch((err) => {
       message.warn(`获取用户数据失败：${err}`);
     });
@@ -60,7 +60,7 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
         <BackTop />
         <Layout className="layout">
           <Header style={{ display: 'flex' }}>
-            <div className="logo">绘读</div>
+            <div className="logo">荟读</div>
             <Menu
               theme="dark"
               mode="horizontal"
@@ -78,16 +78,21 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
             </Menu>
             <div className="user-tools">
               <SearchView />
-              <NotificationView userdata={userdata} />
+              <NotificationView user={userdata} style={{ color: 'white' }} />
               <Menu
                 mode="horizontal"
                 theme="dark"
               >
                 <SubMenu title={<Link href="/user-central/profile"><a><Avatar {...(userdata ? { src: userdata.avatar } : { icon: 'user' })} /></a></Link>}>
-                  <Menu.Item><Link href="/user-central/shelf"><a>我的书架</a></Link></Menu.Item>
+                  <Menu.Item><Link href="/user-central/bookshelf"><a>我的书架</a></Link></Menu.Item>
                   <Menu.Item><Link href="/user-central/orders"><a>我的订单</a></Link></Menu.Item>
                   <Menu.Item><Link href="/user/arrived"><a>读书打卡</a></Link></Menu.Item>
                   <Menu.Item><Link href="/user-central/history"><a>阅读历史</a></Link></Menu.Item>
+                  {
+                    AuthorityUtil.checkAuthority(userdata, Authority.AuthorElectronicsBooksService) &&
+                    AuthorityUtil.checkAuthority(userdata, Authority.AuthorAudioBooksService) &&
+                    <Menu.Item><Link href="/backend/creator/dashboard"><a>创作中心</a></Link></Menu.Item>
+                  }
                   <Menu.Item><Link href="/user-central/profile"><a>个人中心</a></Link></Menu.Item>
                   <Menu.Divider />
                   <Menu.Item>退出登录</Menu.Item>
@@ -102,8 +107,8 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
                 sm={{ span: 22, push: 1 }}
                 md={{ span: 20, push: 2 }}
                 lg={{ span: 20, push: 2 }}
-                xl={{ span: 16, push: 4 }}
-                xxl={{ span: 16, push: 4 }}
+                xl={{ span: 20, push: 2 }}
+                xxl={{ span: 12, push: 6 }}
                 style={{ backgroundColor: '#fff', padding: '32px' }}
               >
                 {children}

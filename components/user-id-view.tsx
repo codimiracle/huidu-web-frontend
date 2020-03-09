@@ -1,10 +1,10 @@
 import React, { CSSProperties } from 'react';
 import { Skeleton, Button, message } from 'antd';
 import AvatarView from './avatar-view';
-import { UserJSON } from '../pages/api/user/logged';
 import { fetchDataByGet } from '../util/network-util';
 import { API } from '../configs/api-config';
 import { User } from '../types/user';
+import { EntityJSON } from '../types/api';
 
 export interface UserIdViewProps {
   style?: CSSProperties
@@ -24,8 +24,8 @@ export default class UserIdView extends React.Component<UserIdViewProps, UserIdV
   }
   fetchUser() {
     this.setState({ loading: true })
-    fetchDataByGet<UserJSON>(API.LoggedUserData).then((data) => {
-      this.setState({ user: data.user });
+    fetchDataByGet<EntityJSON<User>>(API.LoggedUserData).then((data) => {
+      this.setState({ user: data.entity });
     }).catch((err) => {
       message.error(`读取用户数据失败：${err}`);
     }).finally(() => {

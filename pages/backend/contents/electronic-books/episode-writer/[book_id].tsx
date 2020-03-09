@@ -1,7 +1,7 @@
-import { Affix, Button, Select, message } from 'antd';
+import { Affix, Button, Select, message, InputNumber } from 'antd';
 import React from 'react';
 import PageWriterView from '../../../../../components/page-writer-view';
-import { ElectronicBook } from '../../../../../types/electronic-book';
+import { ElectronicBook, ElectronicBookStatus } from '../../../../../types/electronic-book';
 import { Episode, EPISODE_STATUS_TEXTS, EpisodeStatus } from '../../../../../types/episode';
 import { DEAULT_THEME } from '../../../../../types/theme';
 import { fetchDataByGet, fetchDataByPut, fetchDataByPost } from '../../../../../util/network-util';
@@ -10,17 +10,19 @@ import BookPreviewView from '../../../../../components/book-preview-view';
 import { API } from '../../../../../configs/api-config';
 import { NextPageContext } from 'next';
 import DatetimeUtil from '../../../../../util/datetime-util';
+import { Router, withRouter } from 'next/router';
 
 export interface EpisodeWriterProps {
   book: ElectronicBook;
   episode: Episode;
+  router: Router;
 };
 export interface EpisodeWriterState {
   episode: Episode;
   saving: boolean;
 };
 
-export default class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWriterState> {
+export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWriterState> {
   static async getInitialProps(context: NextPageContext) {
     const { book_id, episode_id } = context.query;
     let electronicBookData = await fetchDataByGet<EntityJSON<ElectronicBook>>(API.BackendElectronicBookEntity, {
@@ -43,8 +45,27 @@ export default class EpisodeWriter extends React.Component<EpisodeWriterProps, E
       saving: false
     };
   }
+  fetchLastEpisodeNumber() {
+    if (!this.props.episode) {
+      fetchDataByGet<number>(API.BackendElectronicBookEpisodeLastNumber, {
+        book_id: this.props.book.id
+      }).then((lastEpisodeNumber) => {
+        this.setState((state) => {
+          let episode: any = state.episode || {};
+          episode.episodeNumber = lastEpisodeNumber + 1;
+          return { episode: episode };
+        });
+      }).catch((err) => {
+        message.error('读取最后章节号失败，请手动输入')
+      })
+    }
+  }
+  componentDidMount() {
+    this.fetchLastEpisodeNumber();
+  }
   onSave() {
-    const { episode } = this.state.episode;
+    const { router } = this.props;
+    const { episode } = this.state;
     if (!(episode && episode.title && episode.words)) {
       message.error('您至少需要把标题和内容填写完！');
       return;
@@ -55,9 +76,13 @@ export default class EpisodeWriter extends React.Component<EpisodeWriterProps, E
         book_id: this.props.book.id,
         title: episode.title,
         content: episode.content,
-        words: episode.words
+        words: episode.words,
+        episodeNumber: episode.episodeNumber,
+        status: EpisodeStatus.Draft,
       }).then((data) => {
         this.setState({ episode: data.entity });
+        router.replace(`${router.pathname}?episode_id=${data.entity.id}`, `${router.asPath}?episode_id=${data.entity.id}`);
+        message.success('保存成功！');
       }).catch((err) => {
         message.error(`保存失败：${err}`);
       }).finally(() => {
@@ -70,8 +95,11 @@ export default class EpisodeWriter extends React.Component<EpisodeWriterProps, E
         title: episode.title,
         content: episode.content,
         words: episode.words,
+        status: episode.status,
+        episodeNumber: episode.episodeNumber
       }).then((data) => {
-        this.setState({ episode: data.entity })
+        this.setState({ episode: data.entity });
+        message.success('保存成功！');
       }).catch((err) => {
         message.error(`更新章节数据失败：${err}`)
       }).finally(() => {
@@ -87,11 +115,12 @@ export default class EpisodeWriter extends React.Component<EpisodeWriterProps, E
         <Affix offsetTop={16} style={{ position: 'absolute', right: '24px', paddingTop: '8px' }}>
           <div>
             <BookPreviewView book={this.props.book} />
-            <div>
-              {episode && <div>字数：{episode.words}</div>}
+            <div className="episode-property">
+              {episode && <div>字数：{episode.words || 0}</div>}
               <div>修改时间：{episode && episode.updateTime ? DatetimeUtil.fromNow(episode.updateTime) : '未保存'}</div>
               <div>章节状态：{episode && episode.id ? (
                 <Select
+                  size="small"
                   defaultValue={EpisodeStatus.Draft}
                   value={episode.status}
                   onChange={(status) => this.setState((state) => {
@@ -103,6 +132,11 @@ export default class EpisodeWriter extends React.Component<EpisodeWriterProps, E
                   {Object.values(EpisodeStatus).map((status) => <Select.Option key={status} value={status}>{EPISODE_STATUS_TEXTS[status]}</Select.Option>)}
                 </Select>
               ) : <span style={{ color: 'red' }}>未保存</span>}</div>
+              <div>章节号：<InputNumber size="small" min={1} value={episode && episode.episodeNumber || undefined} placeholder="章节号" onChange={(value) => this.setState((state) => {
+                let episode: any = state.episode || {};
+                episode.episodeNumber = value;
+                return { episode: episode }
+              })} /></div>
             </div>
             <div>
               <Button loading={saving} onClick={() => this.onSave()}>保存</Button>
@@ -111,17 +145,27 @@ export default class EpisodeWriter extends React.Component<EpisodeWriterProps, E
         </Affix>
         <PageWriterView
           theme={DEAULT_THEME}
-          value={{ title: episode && episode.title || '', content: { type: 'html', source: episode && episode.content.source || '' } }}
-          onChange={(value, count) => this.setState((state) => {
+          defaultValue={{ title: episode && episode.title || '', content: { type: 'html', source: episode && episode.content && episode.content.source || '' } }}
+          onChange={(value) => this.setState((state) => {
             let episode = { ...state.episode };
             episode.title = value.title;
             episode.words = value.count;
-            episode.content = episode.content || {};
+            episode.content = {
+              type: 'html',
+              source: ''
+            };
             episode.content.source = value.content.source;
             return { episode: episode };
           })}
         />
-      </div >
+        <style jsx>{`
+          .episode-property > div {
+            margin: 0.5em 0;
+          }
+        `}</style>
+      </div>
     )
   }
-} 
+}
+
+export default withRouter(EpisodeWriter);

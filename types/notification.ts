@@ -1,10 +1,12 @@
+import { SocialUser } from "./user";
+
 export enum NotificationType {
   Subscribe = 'subscribe',
   Message = 'message',
 }
 export interface Notification {
-  sender: User,
-  receiver: User,
+  sender: SocialUser,
+  receiver: SocialUser,
   type: NotificationType,
   message: string,
   link: string,

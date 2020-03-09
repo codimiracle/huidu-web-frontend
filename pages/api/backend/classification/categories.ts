@@ -12,7 +12,8 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
     for (let ti = 0; ti < 5; ti++) {
       tags.push({
         id: `${ci}-${ti}`,
-        name: `标签 ${ci}-${ti}`
+        name: `标签 ${ci}-${ti}`,
+        categoryId: null
       });
     }
     categories.push({

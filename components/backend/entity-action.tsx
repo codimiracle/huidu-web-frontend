@@ -1,8 +1,10 @@
 import React from 'react';
+import { Button } from 'antd';
 
 export interface EntityActionProps<T> {
   entity: T;
-  actionName: string,
+  name: string,
+  disabled?: boolean;
   renderDialog: (entity, visible, cancelor) => React.ReactNode;
 };
 export interface EntityActionState<T> {
@@ -16,11 +18,14 @@ export default class EntityAction<T> extends React.Component<EntityActionProps<T
       visible: false
     }
   }
+  onClick() {
+    this.setState({visible: true})
+  }
   render() {
     return (
       <>
-        <a onClick={() => this.setState({ visible: true })}>{this.props.actionName}</a>
-        {this.props.renderDialog(this.props.entity, this.state.visible, () => this.setState({ visible: false }))}
+        <Button type="link" disabled={this.props.disabled} onClick={() => this.onClick()} style={{padding: '0'}}>{this.props.name}</Button>
+        {!this.props.disabled && this.props.renderDialog(this.props.entity, this.state.visible, () => this.setState({ visible: false }))}
       </>
     )
   }

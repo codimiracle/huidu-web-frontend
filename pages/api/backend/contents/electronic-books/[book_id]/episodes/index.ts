@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ListJSON, APIResponse } from '../../../../../../../types/api';
-import { Episode, EpisodeStatus } from '../../../../../../../types/episode';
+import { APIResponse, ListJSON } from '../../../../../../../types/api';
 import { BookType } from '../../../../../../../types/book';
 import { ElectronicBookStatus } from '../../../../../../../types/electronic-book';
+import { Episode, EpisodeStatus } from '../../../../../../../types/episode';
 export default function (request: NextApiRequest, response: NextApiResponse) {
   if (request.method.toLowerCase() == 'get') {
     const { book_id, filter, sorter, page, limit } = request.query;
@@ -14,6 +14,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
       episodes.push({
         id: `${(pageInt - 1) * limitInt + index + 1}`,
         title: `章节 ${index + 1}`,
+        episodeNumber: 323,
         content: {
           type: 'html',
           source: `章节内容 ${index + 1}`
@@ -22,6 +23,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         book: {
           id: `${book_id}`,
           contentId: '32423',
+          owner: null,
           metadata: {
             id: '23423',
             name: `Book ${book_id}`,
@@ -50,7 +52,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
             description: '现代的文学著作',
             tags: [],
           },
-          tags: [{ id: '342', name: '推荐标注|23423423' }]
+          tags: [{ id: '342', name: '推荐标注|23423423', categoryId: null }]
         },
         status: EpisodeStatus.Draft,
         commodity: null,

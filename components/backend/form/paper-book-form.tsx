@@ -23,15 +23,7 @@ export default class PaperBookFrom extends React.Component<PaperBookFromProps, P
     const { form, book } = this.props;
     return (
       <>
-        <SelectableFormItem
-          label="书籍元数据"
-          form={form}
-          renderForm={(form) => <MetadataForm form={form} metadata={book && book.metadata || undefined} />}
-          renderSelect={(form) => form.getFieldDecorator("metadataId", {
-            initialValue: book && book.metadata.id || undefined,
-            rules: [{ required: true, message: '请选择一个书籍元数据' }]
-          })(<MetadataSelect initialMetadata={book && book.metadata || undefined} />)}
-        />
+        <MetadataForm form={form} metadata={book && book.metadata || undefined} />
         <FormItem label="出版年份">
           {
             form.getFieldDecorator('publishYear', {
@@ -44,17 +36,10 @@ export default class PaperBookFrom extends React.Component<PaperBookFromProps, P
             })(<Input placeholder="发布年份" />)
           }
         </FormItem>
-        <SelectableFormItem
-          label="购买项"
-          form={form}
-          renderForm={(form) => <CommodityForm form={form} linked commodity={book && book.commodity || undefined} />}
-          renderSelect={(form) => form.getFieldDecorator("commodityId", {
-            initialValue: book && book.metadata.id || undefined,
-            rules: [{ required: true, message: '请选择一个购买项' }]
-          })(<CommoditySelect initialCommodity={book && book.commodity || undefined} />)}
-        />
+        <CommodityForm form={form} linked commodity={book && book.commodity || undefined} />
         <SelectableFormItem
           label="类别"
+          selecting
           form={form}
           renderForm={(form) => <CategoryForm form={form} category={book && book.category || undefined} />}
           renderSelect={(form) => form.getFieldDecorator('categoryId', {
@@ -65,7 +50,7 @@ export default class PaperBookFrom extends React.Component<PaperBookFromProps, P
         <FormItem label="纸质书标签">
           {
             form.getFieldDecorator('tags', {
-              initialValue: book && book.tags || undefined,
+              initialValue: book && book.tags.map((tag) => tag.name) || undefined,
             })(<TagSelect initialDataSource={book && book.tags || undefined} />)
           }
         </FormItem>

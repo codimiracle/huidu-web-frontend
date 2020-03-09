@@ -46,6 +46,7 @@ export interface EntityManagerProps<T> {
 export interface EntityManagerState<T> {
   loading: boolean;
   createDialogVisible: boolean,
+  searchingField: string,
   filter: Partial<Record<keyof T, string[]>>;
   sorter: SorterResult<T>,
   dataSource: Array<T>;
@@ -61,9 +62,10 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
     this.state = {
       dataSource: [],
       loading: true,
+      searchingField: null,
       createDialogVisible: false,
-      filter: {},
-      sorter: {},
+      filter: null,
+      sorter: null,
       keyword: '',
       total: 0,
       page: 1,
@@ -76,7 +78,7 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
     let extraData = this.props.config.getListingRequestExtraData && this.props.config.getListingRequestExtraData() || {};
     fetchDataByGet<ListJSON<T>>(this.props.config.list, {
       filter: { ...filter },
-      sorter: { field: sorter.field, order: sorter.order },
+      sorter: { ...sorter },
       page: page,
       limit: limit,
       ...extraData
@@ -110,6 +112,7 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
       current: this.state.page,
       pageSize: this.state.limit
     }
+    let defaultRequestDataGetter = (form: WrappedFormUtils) => (form && form.getFieldsValue() || {});
     let entityUpdater = (entity, index) => {
       this.setState((state) => {
         let list = [].concat(state.dataSource);
@@ -123,10 +126,10 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
       width: this.props.actionOptionWidth,
       fixed: 'right',
       render: (text, record: T, index: number) => (
-        <EntityUdAction
+        <EntityUdAction<T>
           entity={record}
           index={index}
-          extra={(entity, index) => this.props.actionOptionsExtra && this.props.actionOptionsExtra(entity, index, (entity) => entityUpdater(entity, index))}
+          extra={this.props.actionOptionsExtra && ((entity, index) => this.props.actionOptionsExtra(entity, index, (entity) => entityUpdater(entity, index)))}
           onUpdated={entityUpdater}
           getUpdateRequestData={this.props.config.getUpdateRequestData}
           renderUpdateForm={this.props.config.renderUpdateForm}
@@ -153,18 +156,22 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
           {
             this.props.config.searchableColumns &&
             <div className="table-tools-bar-search">
-              <EntitySearch
+              <EntitySearch<T>
                 columns={this.props.config.searchableColumns}
                 onSearch={(keyword, field) => {
-                  this.setState((state) => {
+                  this.setState(state => {
                     let filter = { ...state.filter };
                     if (keyword) {
+                      //删除之前的搜索
+                      if (state.searchingField) {
+                        filter[state.searchingField] = undefined;
+                      }
                       filter[field] = [keyword];
                     } else {
                       // 赋值为 undefined ，JSON#stringify 将会忽略
                       filter[field] = undefined;
                     }
-                    return { filter: filter };
+                    return { filter: filter, searchingField: field };
                   }, () => {
                     this.fetchList(this.state.filter, this.state.sorter, 1, 10);
                   });
@@ -191,7 +198,7 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
             api={this.props.config.create}
             visible={this.state.createDialogVisible}
             renderForm={this.props.config.renderCreateForm}
-            getArguments={this.props.config.getCreateRequestData}
+            getArguments={this.props.config.getCreateRequestData || defaultRequestDataGetter}
             onCreated={(entity) => { this.setState((state) => ({ dataSource: state.dataSource.concat(entity) })) }}
             onCancel={() => this.setState({ createDialogVisible: false })}
           />

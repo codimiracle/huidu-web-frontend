@@ -47,6 +47,7 @@ class AudioBookReaderCatalogsView extends React.Component<AudioBookReaderCatalog
   render() {
     const { book, visible, onClose, router } = this.props;
     const { catalogs, loading } = this.state;
+    let episodeId = router.query.episode_id as string;
     return (
       <>
         <Drawer
@@ -69,11 +70,11 @@ class AudioBookReaderCatalogsView extends React.Component<AudioBookReaderCatalog
           maskClosable={false}
         >
           <LoadingView loading={loading}>
-            <Menu style={{ border: 'none' }} selectedKeys={[router.query.episode_id || '']}>
+            <Menu style={{ border: 'none' }} selectedKeys={[episodeId]}>
               {
                 catalogs.map((catalog) =>
-                  <Menu.Item key={catalog.episodeId}>
-                    <Link href={`/player/[book_id]?episode_id=${catalog.episodeId}`} as={`/player/${book.id}?episode_id=${catalog.episodeId}`}><a>{catalog.title}</a></Link>
+                  <Menu.Item key={catalog.audioEpisodeId}>
+                    <Link href={`/player/[book_id]?episode_id=${catalog.audioEpisodeId}`} as={`/player/${book.id}?episode_id=${catalog.audioEpisodeId}`}><a>{catalog.title}</a></Link>
                   </Menu.Item>
                 )
               }

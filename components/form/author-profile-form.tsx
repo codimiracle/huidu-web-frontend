@@ -36,6 +36,19 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
   componentDidMount() {
     this.fetchChainDivision();
   }
+  isNicknameValid(rule, value, callback) {
+    fetchMessageByGet(API.SystemNicknameExists, {
+      nickname: value
+    }).then((msg) => {
+      if (msg.code == 404) {
+        callback();
+      } else {
+        callback(new Error(msg.message));
+      }
+    }).catch((err) => {
+      callback(err);
+    });
+  }
   isUsernameValid(rule, value, callback) {
     fetchMessageByGet(API.SystemUsernameExists, {
       username: value
@@ -59,7 +72,7 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
           <Col span={12}>
             <FormItem label="签名" key="slogan">
               {form.getFieldDecorator('slogan', {
-                initialValue: userdata && userdata.extra.slogan || ''
+                initialValue: userdata && userdata.extra.slogan || undefined
               })(
                 <Input disabled={disabled} placeholder="请写好签名！" />
               )
@@ -68,7 +81,7 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
             <FormItem label="作者简介" key="introduction">
               {
                 form.getFieldDecorator('introduction', {
-                  initialValue: userdata && userdata.extra.introduction || ''
+                  initialValue: userdata && userdata.extra.introduction || undefined
                 })(
                   <TextArea disabled={disabled} placeholder="请写下作者简介" />
                 )
@@ -79,7 +92,12 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
             <FormItem label="作者头像">
               <Row>
                 <Col span={12}>
-                  <AvatarUpload disabled={disabled} />
+                  {
+                    form.getFieldDecorator('avatar', {
+                      initialValue: userdata && userdata.avatar || undefined,
+                      rules: [{ required: true, message: '请上传头像' }]
+                    })(<AvatarUpload disabled={disabled} />)
+                  }
                 </Col>
                 {
                   userdata &&
@@ -109,9 +127,9 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
               }
               {!userdata &&
                 form.getFieldDecorator('username', {
-                  initialValue: '',
                   rules: [
                     { required: true, message: '请输入用户名！' },
+                    { pattern: /[a-zA-z0-9]+/, message: '只能是由英文数字作为账号！' },
                     { validator: this.isUsernameValid, message: '该用户名不可用或已占用！' }
                   ]
                 })(<Input placeholder="用户名" />)
@@ -124,8 +142,11 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
             <FormItem label="笔名" key="nickname">
               {
                 form.getFieldDecorator('nickname', {
-                  initialValue: userdata && userdata.nickname || '',
-                  rules: [{ required: true, message: '笔名不能为空' }]
+                  initialValue: userdata && userdata.nickname || undefined,
+                  rules: [
+                    { required: true, message: '笔名不能为空' },
+                    { validator: this.isNicknameValid, message: '该昵称不可用或已被占用！' }
+                  ]
                 })(<Input disabled={disabled} placeholder="笔名" />)
               }
             </FormItem>
@@ -134,7 +155,7 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
             <FormItem label="生日" key="birthdate">
               {
                 form.getFieldDecorator('birthdate', {
-                  initialValue: userdata && moment(userdata.extra.birthdate) || null,
+                  initialValue: userdata && moment(userdata.extra.birthdate) || undefined,
                   rules: [{ required: true, message: '请填写生日' }]
                 })(
                   <DatePicker disabled={disabled} placeholder="生日" />
@@ -148,7 +169,7 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
             <FormItem label="手机号" key="phone">
               {
                 form.getFieldDecorator('phone', {
-                  initialValue: userdata && userdata.extra.phone || '',
+                  initialValue: userdata && userdata.extra.phone || undefined,
                   rules: [
                     { required: true, message: '请输入手机号' },
                     { pattern: /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/, message: '手机号码不合法' }
@@ -163,7 +184,7 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
             <FormItem label="性别" key="gender">
               {
                 form.getFieldDecorator('gender', {
-                  initialValue: userdata && userdata.extra.gender || '',
+                  initialValue: userdata && userdata.extra.gender || undefined,
                   rules: [{ required: true, message: '请选择你的性别' }]
                 })(
                   <Radio.Group disabled={disabled}>
@@ -180,7 +201,7 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
             <FormItem label="邮箱" key="email">
               {
                 form.getFieldDecorator('email', {
-                  initialValue: userdata && userdata.extra.email || '',
+                  initialValue: userdata && userdata.extra.email || undefined,
                   rules: [
                     { required: true, message: '邮箱地址不能留空！' },
                     { type: "email", message: '请输入正确的邮件地址' }
@@ -193,7 +214,7 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
             <FormItem label="地区" key='region'>
               {
                 form.getFieldDecorator('region', {
-                  initialValue: userdata && userdata.extra.region.split(' ') || '',
+                  initialValue: userdata && userdata.extra.region.split(' ') || undefined,
                   rules: [
                     { required: true, message: '请选择您的地区' }
                   ]

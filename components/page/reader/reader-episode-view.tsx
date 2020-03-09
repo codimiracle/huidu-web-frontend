@@ -57,7 +57,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
     console.log(relativeNotes);
     let ranges = relativeNotes.map((note) => {
       let container = this.pageViewRef.current;
-      let range = DommarkUtil.getRange(note.domMark, container);
+      let range = DommarkUtil.getRange(note.dommark, container);
       let selection = window.getSelection();
       selection.addRange(range);
       selection.removeAllRanges();
@@ -181,6 +181,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
           }
           .page-content {
             padding: 8px 0;
+            word-break: break-all;
           }
           .page-view {
             position: relative;

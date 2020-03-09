@@ -1,13 +1,13 @@
-import React from 'react';
-import { Layout, Skeleton, message, Button, Tabs, Menu } from 'antd';
+import { Layout, Menu, message, Tabs } from 'antd';
+import Link from 'next/link';
 import { Router, withRouter } from 'next/router';
-import BasicLayout from './basic-layout';
-import AvatarView from '../components/avatar-view';
+import React from 'react';
+import UserIdView from '../components/user-id-view';
+import { API } from '../configs/api-config';
+import { EntityJSON } from '../types/api';
 import { UNKNOW_USER, User } from '../types/user';
 import { fetchDataByGet } from '../util/network-util';
-import { API } from '../configs/api-config';
-import Link from 'next/link';
-import UserIdView from '../components/user-id-view';
+import BasicLayout from './basic-layout';
 
 const { Sider, Content } = Layout;
 const { TabPane } = Tabs;
@@ -36,8 +36,8 @@ class UserCentralLayout extends React.Component<UserCentralLayoutProps, UserCent
     return currentKey;
   }
   fetchUser() {
-    fetchDataByGet(API.LoggedUserData).then((data: { user: User }) => {
-      this.setState({ user: data.user, loading: false });
+    fetchDataByGet<EntityJSON<User>>(API.LoggedUserData).then((data) => {
+      this.setState({ user: data.entity, loading: false });
     }).catch((err) => {
       message.error('错误：无法读取到相应的用户数据，请刷新页面以解决这个问题！');
     });
@@ -47,7 +47,6 @@ class UserCentralLayout extends React.Component<UserCentralLayoutProps, UserCent
   }
   render() {
     const { children } = this.props;
-    const { user, loading } = this.state;
     return (
       <>
         <BasicLayout>

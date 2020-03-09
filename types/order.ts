@@ -6,11 +6,13 @@ import { User } from "./user";
 export enum PayType {
   Wechat = "wechat",
   Alipay = "alipay",
+  Huidu = "huidu"
 }
 
 export const PAY_TYPE_TEXTS = {};
 PAY_TYPE_TEXTS[PayType.Wechat] = "微信";
 PAY_TYPE_TEXTS[PayType.Alipay] = "支付宝";
+PAY_TYPE_TEXTS[PayType.Huidu] = "荟读";
 
 export enum OrderType {
   ElectronicBook = "electronic-book",
@@ -23,7 +25,7 @@ export const ORDER_TYPE_TEXTS = {};
 ORDER_TYPE_TEXTS[OrderType.ElectronicBook] = "购买 电子书";
 ORDER_TYPE_TEXTS[OrderType.AudioBook] = "购买 有声书";
 ORDER_TYPE_TEXTS[OrderType.PaperBook] = "购买 纸质书";
-ORDER_TYPE_TEXTS[OrderType.Recharge] = "充值"; 
+ORDER_TYPE_TEXTS[OrderType.Recharge] = "充值";
 
 export enum OrderStatus {
   AwaitingPayment = 'awaiting-payment',
@@ -51,10 +53,36 @@ ORDER_STATUS_COLORS[OrderStatus.AwaitingShipment] = 'geekblue';
 ORDER_STATUS_COLORS[OrderStatus.Canceled] = 'volcano';
 ORDER_STATUS_COLORS[OrderStatus.Completed] = 'purple';
 
+export interface Money {
+  negative: boolean,
+  zero: boolean,
+  positiveOrZero: boolean,
+  negativeOrZero: boolean,
+  positive: boolean,
+  scale: number,
+  currencyUnit: {
+    code: string,
+    numericCode: number,
+    decimalPlaces: number,
+    countryCodes: string[],
+    numeric3Code: string,
+    pseudoCurrency: boolean,
+    symbol: string
+  },
+  amountMinor: number,
+  amount: number,
+  minorPart: number,
+  amountMajor: number,
+  amountMajorLong: number,
+  amountMinorInt: number,
+  amountMajorInt: number,
+  amountMinorLong: number
+}
+
 export interface OrderDetails {
-  commodity: Commodity<any>,
-  quantity: number,
-  prices: number
+  commodity: Commodity<any>;
+  quantity: number;
+  prices: Money
 }
 
 export interface Order {
@@ -68,8 +96,8 @@ export interface Order {
   payTime: string,
   deliverTime: string,
   closingTime: string,
-  totalMoney: number,
-  shipmentMoney: number,
+  totalMoney: Money,
+  shipmentMoney: Money,
   status: OrderStatus,
   logisticsInformation: LogisticsInformation
 }
