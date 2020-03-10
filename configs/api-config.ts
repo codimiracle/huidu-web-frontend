@@ -1047,10 +1047,10 @@ export const APIDefinitionData: APIDefinitionSet = {
   user: {
     notification: {
       read: {
-        collection: `${testOrigin}/api/user/notifications/reads`
+        collection: `${testOrigin}/api/user/notifications/reads?page=@{page}&limit=@{limit}`
       },
       unread: {
-        collection: `${testOrigin}/api/user/notifications/unreads`
+        collection: `${testOrigin}/api/user/notifications/unreads?page=@{page}&limit=@{limit}`
       },
       markAsRead: {
         url: `${testOrigin}/api/user/notifications/@{notification_id}/read`

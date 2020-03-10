@@ -9,11 +9,14 @@ export interface APIMessage {
 
 export const fetchRaw = async function <T>(api: API, init?: RequestInit): Promise<T> {
   let response = await fetch(api, init);
-  let result = await response.json();
+  if (response.status == 403) {
+    throw new Error(`权限不足！`);
+  }
   if (response.status != 200) {
     console.error(`Api invoking failed: ${JSON.stringify(api)} \n\t calling with data: ${JSON.stringify(init)}`);
-    throw new Error('发起调用失败！');
+    throw new Error('调用失败！');
   }
+  let result = await response.json();
   if (!result) {
     throw new Error(`服务器应答错误！`);
   }

@@ -33,11 +33,13 @@ export class UserSignInDialog extends React.Component<UserSignInDialogProps, Use
       if (!errors) {
         type UserToken = {
           token: string,
+          expireTime: string,
           user: User
         };
 
         fetchDataByPost<UserToken>(API.SystemSignIn, values).then((data) => {
           window.localStorage.setItem('token', data.token);
+          window.localStorage.setItem('expired', data.expireTime);
           onCancel();
           if (onLogged) {
             onLogged(data.user);
