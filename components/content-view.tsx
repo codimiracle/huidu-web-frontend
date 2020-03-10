@@ -18,17 +18,19 @@ export default class ContentView extends React.Component<ContentViewProps, Conte
   render() {
     const { content } = this.props;
     let view;
-    if (content.type == ContentType.Topic) {
-      view = <TopicView topic={content as Topic} />;
-    }
-    if (content.type == ContentType.Review) {
-      view = <ReviewView review={content as Review} />;
-    }
-    if (content.type == ContentType.Comment) {
-      view = <CommentView comment={content as Comment} />;
-    }
-    if (content.type == ContentType.Book) {
-      view = <BookView book={content as unknown as Book} />;
+    if (content) {
+      if (content.type == ContentType.Topic) {
+        view = <TopicView topic={content as Topic} />;
+      }
+      if (content.type == ContentType.Review) {
+        view = <ReviewView review={content as Review} />;
+      }
+      if (content.type == ContentType.Comment) {
+        view = <CommentView comment={content as Comment} />;
+      }
+      if (content.type == ContentType.Book) {
+        view = <BookView book={content as unknown as Book} />;
+      }
     }
     if (view == null) {
       view = <p>无法显示该内容</p>

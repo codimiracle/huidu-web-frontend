@@ -15,6 +15,7 @@ import { User } from '../../../types/user';
 import { AudioBook, AudioEpisode } from '../../../types/audio-book';
 import { CommentListJSON } from '../../api/audio-books/[book_id]/comments';
 import { EntityJSON, ListJSON } from '../../../types/api';
+import { UserContext } from '../../../components/hooks/with-user';
 
 const { TabPane } = Tabs;
 
@@ -113,7 +114,6 @@ class BookInfo extends React.Component<BookInfoProps, BookInfoState> {
 }
 
 export interface BookDetailsProps {
-  user: User,
   book: AudioBook,
   comments: Array<Comment>,
   lastUpdate: Episode,
@@ -129,7 +129,6 @@ export interface BookDetailsState {
 export default class BookDetails extends React.Component<BookDetailsProps, BookDetailsState> {
   static async getInitialProps(context: NextPageContext) {
     const { book_id } = context.query;
-    let userData = await fetchDataByGet<EntityJSON<User>>(API.LoggedUserData);
     let bookData = await fetchDataByGet<EntityJSON<AudioBook>>(API.AudioBookEntity, {
       book_id: book_id
     });
@@ -142,7 +141,6 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
       limit: 10
     });
     return {
-      user: userData.entity,
       book: bookData.entity,
       lastUpdate: lastUpdateData.entity,
       comments: commentsData.list
@@ -182,7 +180,7 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
     this.fetchComments(page, limit);
   }
   render() {
-    const { book, user, lastUpdate } = this.props;
+    const { book, lastUpdate } = this.props;
     const { commentList, page, limit, commentsLoading, hasMoreComments } = this.state;
     const loadMore = (hasMoreComments ? <div style={{ textAlign: 'center', padding: '1em' }}><Button loading={commentsLoading} onClick={() => this.fetchComments(page, limit)}>加载更多</Button></div> : null)
     return (
@@ -206,7 +204,7 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
             <div className="comments-pagination">
               <Pagination size="small" />
             </div>
-            <CommentEditor rate contentId={book.contentId} user={user} />
+            <CommentEditor rate contentId={book.contentId} />
             <List
               renderItem={(comment: Comment) => <List.Item><CommentView comment={comment} /></List.Item>}
               loadMore={loadMore}

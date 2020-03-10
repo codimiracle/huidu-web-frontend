@@ -70,14 +70,14 @@ export default class PaperBookManager extends React.Component<PaperBookManagerPr
         key: 'publishYear',
         width: '128px',
         sorter: (a, b) => parseInt(a.publishYear) - parseInt(b.publishYear),
-        sortOrder: sorter.columnKey === 'publishYear' ? sorter.order : false,
+        sortOrder: sorter && sorter.columnKey === 'publishYear' ? sorter.order : false,
         dataIndex: 'publishYear',
       },
       {
         title: '图书销量',
         key: 'commoditySales',
         sorter: (a, b) => a.commodity.sales - b.commodity.sales,
-        sortOrder: sorter.columnKey === 'commoditySales' ? sorter.order : false,
+        sortOrder: sorter && sorter.columnKey === 'commoditySales' ? sorter.order : false,
         render: (commodity) => commodity.sales,
         dataIndex: 'commodity',
       },
@@ -86,7 +86,7 @@ export default class PaperBookManager extends React.Component<PaperBookManagerPr
         key: 'commodityPrices',
         dataIndex: 'commodity',
         sorter: (a, b) => a.commodity.prices - b.commodity.prices,
-        sortOrder: sorter.columnKey === 'commodityPrices' ? sorter.order : false,
+        sortOrder: sorter && sorter.columnKey === 'commodityPrices' ? sorter.order : false,
         render: (commodity) => <span style={{ color: 'red' }}>￥{commodity.prices}</span>
       }
     ];

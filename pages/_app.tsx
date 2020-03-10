@@ -10,15 +10,21 @@ import CentralOrderManagerLayout from '../layouts/central-order-manage-layout';
 import ReaderLayout from '../layouts/reader-layout';
 import CreatorLayout from '../layouts/creator-layout';
 import BackendLayout from '../layouts/backend-layout';
+import withUser from '../components/hooks/with-user';
+import { User } from '../types/user';
 
 Router.events.on('routeChangeStart', url => {
-  console.log(`Loading: ${url}`)
-  NProgress.start()
+  console.log(`Loading: ${url}`);
+  NProgress.start();
 })
-Router.events.on('routeChangeComplete', () => NProgress.done())
-Router.events.on('routeChangeError', () => NProgress.done())
+Router.events.on('routeChangeComplete', () => NProgress.done());
+Router.events.on('routeChangeError', () => NProgress.done());
 
-class HuiduWebApp extends App {
+interface HuiduWebAppProps {
+  user: User;
+}
+
+class HuiduWebApp extends App<HuiduWebAppProps> {
   render() {
     const { router, Component, pageProps } = this.props;
     let Layout: any = BasicLayout;
@@ -60,4 +66,4 @@ class HuiduWebApp extends App {
   }
 }
 
-export default withRouter(HuiduWebApp);
+export default withUser(withRouter(HuiduWebApp));

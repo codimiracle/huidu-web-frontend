@@ -70,7 +70,7 @@ export default class ElectronicBookManager extends React.Component<ElectronicBoo
         key: 'episodes',
         dataIndex: 'episodes',
         sorter: (a, b) => a.episodes - b.episodes,
-        sortOrder: sorter.columnKey == "episodes" ? sorter.order : false
+        sortOrder: sorter && sorter.columnKey == "episodes" ? sorter.order : false
       }
     ];
   }

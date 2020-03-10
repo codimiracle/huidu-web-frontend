@@ -82,7 +82,7 @@ const getColumns = (filter: Partial<Record<keyof Order, string[]>>, sorter: Sort
       dataIndex: 'totalMoney',
       fixed: 'right',
       sorter: (a, b) => a.totalMoney.amount - b.totalMoney.amount,
-      sortOrder: sorter.columnKey === 'totalMoney' && sorter.order || false,
+      sortOrder: sorter && sorter.columnKey === 'totalMoney' && sorter.order || false,
       render: (value) => (<span style={{ color: 'red' }}>{value.currencyUnit.symbol}{value.amountMajor}.{value.minorPart}</span>)
     }
   ];

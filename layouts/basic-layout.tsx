@@ -41,17 +41,6 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
     }
     return currentKey === '' ? 'home' : currentKey;
   }
-  refreshUserData() {
-    fetchDataByGet<EntityJSON<User>>(API.LoggedUserData).then((data) => {
-      this.setState({ userdata: data.entity });
-    }).catch((err) => {
-      message.warn(`获取用户数据失败：${err}`);
-    });
-  }
-
-  componentDidMount() {
-    this.refreshUserData();
-  }
   render() {
     const { children } = this.props;
     const { userdata } = this.state;
@@ -74,7 +63,7 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
                 <Menu.Item key="paper-books"><DirectLink href="/bookshop/paper-books">纸质书</DirectLink></Menu.Item>
               </SubMenu>
               <Menu.Item key="discover"><DirectLink href="/discover">发现</DirectLink></Menu.Item>
-              <Menu.Item key="community"><DirectLink href="/community/dynamics">社区</DirectLink></Menu.Item>
+              <Menu.Item key="community"><DirectLink href="/community?tab=dynamics">社区</DirectLink></Menu.Item>
             </Menu>
             <div className="user-tools">
               <SearchView />

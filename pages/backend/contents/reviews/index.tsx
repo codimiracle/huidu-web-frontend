@@ -56,7 +56,7 @@ export default class ReviewManager extends React.Component<ReviewManagerProps, R
         width: '10em',
         dataIndex: 'rate',
         sorter: (a, b) => a.rate - b.rate,
-        sortOrder: sorter.columnKey === 'rate' ? sorter.order : false,
+        sortOrder: sorter && sorter.columnKey === 'rate' ? sorter.order : false,
         render: (rate) => <Rate allowHalf defaultValue={rate} disabled style={{ fontSize: '1em' }} />
       }, {
         title: '点评书籍',
@@ -80,21 +80,21 @@ export default class ReviewManager extends React.Component<ReviewManagerProps, R
         key: 'reads',
         dataIndex: 'reads',
         sorter: (a, b) => a.reads - b.reads,
-        sortOrder: sorter.columnKey === 'reads' ? sorter.order : false,
+        sortOrder: sorter && sorter.columnKey === 'reads' ? sorter.order : false,
         render: (reads) => <strong>{reads}</strong>
       }, {
         title: '点赞数',
         key: 'likes',
         dataIndex: 'likes',
         sorter: (a, b) => a.likes - b.likes,
-        sortOrder: sorter.columnKey === 'likes' ? sorter.order : false,
+        sortOrder: sorter && sorter.columnKey === 'likes' ? sorter.order : false,
         render: (likes) => <strong>{likes}</strong>
       }, {
         title: '评论数',
         key: 'comments',
         dataIndex: 'comments',
         sorter: (a, b) => a.comments - b.comments,
-        sortOrder: sorter.columnKey === 'comments' ? sorter.order : false,
+        sortOrder: sorter && sorter.columnKey === 'comments' ? sorter.order : false,
         render: (comments) => <strong>{comments}</strong>
       }, {
         title: '创建时间',

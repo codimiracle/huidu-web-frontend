@@ -1,6 +1,5 @@
 import { ElectronicBookStatus } from "../types/electronic-book";
 
-// For IE
 let browserWindow = null;
 if (typeof window == 'object') {
   browserWindow = window;
@@ -13,17 +12,22 @@ if (typeof window == 'object') {
     }
   }
 }
+// For IE
 if (!browserWindow.location.origin) {
   browserWindow.location.origin = browserWindow.location.protocol + "://" + browserWindow.location.hostname + (browserWindow.location.port ? ':' + browserWindow.location.port : '');
 }
 
-export interface APIDefinitionSet {
-  [x: string]: any;
+export interface APIDefinition {
+  url: string,
+  method: "get" | "post" | "put" | "delete",
+  query: any,
+  body: any,
 }
 
-/**
- * for using API in netwok-util
- */
+export interface APIDefinitionSet {
+  [x: string]: any | APIDefinition | APIDefinitionSet;
+}
+
 /**
  * for using API in netwok-util
  */
@@ -232,18 +236,11 @@ export enum API {
 // const address = '192.168.1.150';
 // const address = '192.168.43.195';
 
-var testOrigin = browserWindow.location.origin;
-var origin = testOrigin;
+var testOrigin: string = "http://localhost:4000";
+var origin: string = browserWindow.location.origin;
 // var origin = `http://${address}:3000`;
 
 // var testOrigin = `http://192.168.43.178:4000`;
-
-interface APIDefinition {
-  url: string,
-  method: "get" | "post" | "put" | "delete",
-  parameters: any,
-  body: any,
-}
 
 /**
  * API definitions, it is url plus placeholder really.
@@ -1149,10 +1146,17 @@ export const APIDefinitionData: APIDefinitionSet = {
     collection: `${origin}/api/recommendation/discover`
   },
   system: {
-    signIn: `${origin}/api/system/sign-in`,
-    signUp: `${origin}/api/system/sign-up`,
-    usernameExists: `${origin}/api/system/username-exists?username=@{username}`,
-    nicknameExists: `${origin}/api/system/nickname-exists?nickname=@{nickname}`,
+    signIn: {
+      url: `${testOrigin}/api/system/sign-in`,
+      body: {
+        username: null,
+        password: null,
+        rememberMe: false
+      }
+    },
+    signUp: `${testOrigin}/api/system/sign-up`,
+    usernameExists: `${testOrigin}/api/system/username-exists?username=@{username}`,
+    nicknameExists: `${testOrigin}/api/system/nickname-exists?nickname=@{nickname}`,
     realtime: `${origin}/api/system/realtime`
   }
 }

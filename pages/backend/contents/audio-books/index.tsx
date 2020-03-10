@@ -62,7 +62,7 @@ export default class AudioBookManager extends React.Component<AudioBookManagerPr
         title: '章节数',
         key: 'episodes',
         sorter: (a, b) => a.episodes - b.episodes,
-        sortOrder: sorter.columnKey == "episodes" ? sorter.order : false,
+        sortOrder: sorter && sorter.columnKey == "episodes" ? sorter.order : false,
         dataIndex: 'episodes',
       }
     ];

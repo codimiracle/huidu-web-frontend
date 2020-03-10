@@ -29,7 +29,7 @@ export default class ReviewDisplayer extends React.Component<ReviewDisplayerProp
         <div className="container">
           <div className="article">
             <h2><Link href={`/contents/reviews/[review_id]`} as={`/contents/reviews/${review.contentId}`}><a>{review.title}</a></Link></h2>
-            <div className="review-info">
+            <div className="review-info ant-comment-content-author">
               <AvatarView size="large" user={review.owner} />
               <div>
                 <div className="ant-comment-content-author-name">{review.owner.nickname}</div>

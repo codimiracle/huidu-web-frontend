@@ -80,7 +80,6 @@ function BookInfo(props: BookInfoProps) {
 }
 
 export interface BookDetailsProps {
-  user: User,
   book: ElectronicBook,
   comments: Array<Comment>,
   lastUpdate: Episode,
@@ -96,7 +95,6 @@ export interface BookDetailsState {
 export default class BookDetails extends React.Component<BookDetailsProps, BookDetailsState> {
   static async getInitialProps(context: NextPageContext) {
     const { book_id } = context.query;
-    let userData = await fetchDataByGet<EntityJSON<User>>(API.LoggedUserData);
     let bookData = await fetchDataByGet<EntityJSON<ElectronicBook>>(API.ElectronicBookEntity, {
       book_id: book_id
     });

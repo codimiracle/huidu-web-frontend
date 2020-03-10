@@ -14,20 +14,17 @@ import { fetchDataByGet } from '../../../../util/network-util';
 
 export interface TopicPostProps {
   topic: Topic,
-  user: User
 };
 export interface TopicPostState { };
 
 export default class TopicPost extends React.Component<TopicPostProps, TopicPostState> {
   static async getInitialProps(context: NextPageContext) {
     const { topic_id } = context.query;
-    let userData = await fetchDataByGet<EntityJSON<User>>(API.LoggedUserData);
     let topicData = await fetchDataByGet<EntityJSON<Topic>>(API.TopicEntity, {
       topic_id: topic_id
     });
     return {
       topic: topicData.entity,
-      user: userData.entity
     }
   }
   constructor(props: TopicPostProps) {
@@ -37,7 +34,7 @@ export default class TopicPost extends React.Component<TopicPostProps, TopicPost
     }
   }
   render() {
-    const { topic, user } = this.props;
+    const { topic } = this.props;
     return (
       <>
         <ContentSection
@@ -46,10 +43,10 @@ export default class TopicPost extends React.Component<TopicPostProps, TopicPost
               <div className="topic-author">
                 <AvatarView
                   size={64}
-                  user={user}
+                  user={topic.owner}
                 />
                 <div>{
-                  user.nickname}
+                  topic.owner.nickname}
                 </div>
               </div>
             </>
@@ -81,7 +78,6 @@ export default class TopicPost extends React.Component<TopicPostProps, TopicPost
               <Divider type="horizontal" />
               <h3>评论</h3>
               <CommentModularView
-                user={user}
                 content={topic}
               />
             </div>

@@ -3,12 +3,11 @@ import { WrappedFormUtils } from 'antd/lib/form/Form';
 import React from 'react';
 import ProfileForm from '../../components/form/profile-form';
 import { API } from '../../configs/api-config';
-import { EntityJSON } from '../../types/api';
 import { User } from '../../types/user';
-import { fetchDataByGet, fetchMessageByPost } from '../../util/network-util';
+import { fetchMessageByPost } from '../../util/network-util';
+import { UserContext } from '../../components/hooks/with-user';
 
 export interface UserCentralProfileProps {
-  userdata: User,
   form: WrappedFormUtils
 };
 export interface UserCentralProfileState {
@@ -17,12 +16,6 @@ export interface UserCentralProfileState {
 };
 
 export class UserCentralProfile extends React.Component<UserCentralProfileProps, UserCentralProfileState> {
-  static async getInitialProps() {
-    let data = await fetchDataByGet<EntityJSON<User>>(API.LoggedUserData);
-    return {
-      userdata: data.entity
-    }
-  }
   constructor(props: UserCentralProfileProps) {
     super(props);
     this.state = {
@@ -72,7 +65,7 @@ export class UserCentralProfile extends React.Component<UserCentralProfileProps,
     }
   }
   render() {
-    const { userdata, form } = this.props;
+    const { form } = this.props;
     const { editing } = this.state;
     return (
       <>
@@ -81,7 +74,12 @@ export class UserCentralProfile extends React.Component<UserCentralProfileProps,
           <div>
             <Row>
               <Col span={16}>
-                <ProfileForm form={form} disabled={!editing} userdata={userdata} />
+                <UserContext.Consumer>
+                  {
+                    (user) =>
+                      <ProfileForm form={form} disabled={!editing} userdata={user} />
+                  }
+                </UserContext.Consumer>
               </Col>
             </Row>
           </div>
@@ -90,7 +88,6 @@ export class UserCentralProfile extends React.Component<UserCentralProfileProps,
     )
   }
 }
-
 const WrappedUserCentralProfile = Form.create<UserCentralProfileProps>({ name: 'profile-form' })(UserCentralProfile);
 
 export default WrappedUserCentralProfile;

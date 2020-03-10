@@ -9,6 +9,7 @@ import { Book, BookPreview } from '../../types/book';
 import { User } from '../../types/user';
 import DatetimeUtil from '../../util/datetime-util';
 import { fetchDataByGet, fetchMessageByPost } from '../../util/network-util';
+import { UserContext } from '../../components/hooks/with-user';
 
 const EMPTY_IMAGE = "/assets/empty.png";
 
@@ -48,7 +49,6 @@ function BookView(props: BookViewProps) {
 }
 
 export interface ArrivedProps {
-  user: User,
   arriveddata: ArrivedData
 };
 export interface ArrivedState {
@@ -58,10 +58,8 @@ export interface ArrivedState {
 
 export default class Arrived extends React.Component<ArrivedProps, ArrivedState> {
   static async getInitialProps() {
-    let data = await fetchDataByGet<EntityJSON<User>>(API.LoggedUserData);
     let arrived = await fetchDataByGet<EntityJSON<ArrivedData>>(API.UserArriveToday);
     return {
-      user: data.entity,
       arriveddata: arrived.entity
     }
   }
@@ -96,7 +94,6 @@ export default class Arrived extends React.Component<ArrivedProps, ArrivedState>
     });
   }
   render() {
-    const { user } = this.props;
     const { signing, arriveddata } = this.state;
     let dateCellRender = (date) => (
       <>
@@ -129,7 +126,12 @@ export default class Arrived extends React.Component<ArrivedProps, ArrivedState>
     return (
       <div>
         <div className="summary-info">
-          <AvatarView size={128} user={user} />
+          <UserContext.Consumer>
+            {
+              (user) =>
+                <AvatarView size={128} user={user} />
+            }
+          </UserContext.Consumer>
           <div className="motto-view">{arriveddata.motto}</div>
         </div>
         <Row type="flex" gutter={32} style={{ marginLeft: '128px' }}>

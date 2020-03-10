@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-unfetch';
 import { APIDefinitionSet, APIDefinitionData, API } from '../configs/api-config';
+import { useEffect } from 'react';
 
 interface APIDefinition {
   url: string,
@@ -10,7 +11,7 @@ interface APIDefinition {
 
 export function retriveApiDefinition(object: APIDefinitionSet, api: API): (null | APIDefinition) {
   if (!api) {
-    throw new Error(`Unknown api invoking for \`${api}\``); 
+    throw new Error(`Unknown api invoking for \`${api}\``);
   }
   let paths = api.split(/\./);
   let index = 0;
@@ -30,7 +31,7 @@ export function retriveApiDefinition(object: APIDefinitionSet, api: API): (null 
 
 export function queryPlaceholderReplacer(apiDefinition: APIDefinition, data: any) {
   let url = apiDefinition.url;
-  let args = {...apiDefinition.query, ...data }
+  let args = { ...apiDefinition.query, ...data }
   for (let key in args) {
     let obj = args[key];
     let value = obj;
@@ -53,6 +54,17 @@ export function bodyPlaceholderReplacer(apiDefinition: APIDefinition, data: any)
   return body;
 }
 
+export function requestAuthorization(init?: RequestInit): RequestInit {
+  if (typeof window == 'object') {
+    let token = window.localStorage.getItem("token");
+    if (token) {
+      init = init || {};
+      init.headers = { ...init.headers, 'Authorization': `Bearer ${token}` };
+    }
+  }
+  return init;
+}
+
 export default async function (api: API, init?: RequestInit): Promise<Response> {
   if (!api) {
     throw new Error(`Api name is required but call with ${api} !`)
@@ -62,7 +74,7 @@ export default async function (api: API, init?: RequestInit): Promise<Response> 
     throw new Error(`API definition not found: \`${api}\``);
   }
   console.debug(`API definition: ${JSON.stringify(apiDefinition)}`)
-  const { body, ...other } = init || { method: 'get'};
+  const { body, ...other } = init || { method: 'get' };
   let url = apiDefinition.url;
   let data = {};
   if (body) {
@@ -75,9 +87,11 @@ export default async function (api: API, init?: RequestInit): Promise<Response> 
   }
   // for post or similar request
   if (apiDefinition.body) {
-    init.headers = init.headers || {'Content-Type': 'application/json;charset=utf-8'};
+    init.headers = { 'Content-Type': 'application/json;charset=utf-8', ...init.headers };
     init.body = JSON.stringify(bodyPlaceholderReplacer(apiDefinition, data));
   }
+  init = requestAuthorization(init);
+  console.log(init);
   // will normally call fetch if not satisfied conditions. 
   return await fetch(url, init);
 }

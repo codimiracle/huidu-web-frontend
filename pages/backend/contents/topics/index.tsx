@@ -35,7 +35,7 @@ function getColumns(filter: Partial<Record<keyof Topic, string[]>>, sorter: Sort
       key: 'reads',
       dataIndex: 'reads',
       sorter: (a, b) => a.reads - b.reads,
-      sortOrder: sorter.columnKey === 'reads' ? sorter.order : false,
+      sortOrder: sorter && sorter.columnKey === 'reads' ? sorter.order : false,
       render: (reads) => <strong>{reads}</strong>
     },
     {
@@ -43,7 +43,7 @@ function getColumns(filter: Partial<Record<keyof Topic, string[]>>, sorter: Sort
       key: 'likes',
       dataIndex: 'likes',
       sorter: (a, b) => a.likes - b.likes,
-      sortOrder: sorter.columnKey === 'likes' ? sorter.order : false,
+      sortOrder: sorter && sorter.columnKey === 'likes' ? sorter.order : false,
       render: (likes) => <strong>{likes}</strong>
     },
     {
@@ -51,7 +51,7 @@ function getColumns(filter: Partial<Record<keyof Topic, string[]>>, sorter: Sort
       key: 'comments',
       dataIndex: 'comments',
       sorter: (a, b) => a.comments - b.comments,
-      sortOrder: sorter.columnKey === 'comments' ? sorter.order : false,
+      sortOrder: sorter && sorter.columnKey === 'comments' ? sorter.order : false,
       render: (comments) => <strong>{comments}</strong>
     },
     {

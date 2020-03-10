@@ -1,19 +1,17 @@
-import { Button, List, message, Pagination } from 'antd';
+import { Button, List, message } from 'antd';
 import React from 'react';
 import { API } from '../configs/api-config';
+import { ListJSON } from '../types/api';
 import { Comment } from '../types/comment';
 import { Content } from '../types/content';
-import { User } from '../types/user';
 import { fetchDataByGet } from '../util/network-util';
-import CommentView from './comment-view';
 import CommentEditorView from './comment-editor-view';
-import { ListJSON } from '../types/api';
+import CommentView from './comment-view';
 
 interface CommentItemProps {
-  rate?: boolean,
-  replay?: boolean,
-  comment: Comment
-  user: User
+  rate?: boolean;
+  replay?: boolean;
+  comment: Comment;
 }
 
 interface CommentItemState {
@@ -28,7 +26,7 @@ class CommentItem extends React.Component<CommentItemProps, CommentItemState> {
     };
   }
   render() {
-    const { rate, comment, replay, user } = this.props
+    const { rate, comment, replay } = this.props
     const { visible } = this.state;
     let toggleTrigger = () => this.setState((state) => ({ visible: !state.visible }));
     return (
@@ -46,14 +44,13 @@ class CommentItem extends React.Component<CommentItemProps, CommentItemState> {
             <CommentModularView
               replay
               content={comment}
-              user={user}
             />
           </div>
         }
         {
           replay &&
           <div className="replay-comment-editor" style={{ display: visible ? 'block' : 'none' }}>
-            <CommentEditorView user={user} mention={replay ? comment.owner : undefined} contentId={comment.targetContentId} replay={replay} />
+            <CommentEditorView mention={replay ? comment.owner : undefined} contentId={comment.targetContentId} replay={replay} />
           </div>
         }
         <style jsx>{`
@@ -68,7 +65,6 @@ class CommentItem extends React.Component<CommentItemProps, CommentItemState> {
 
 export interface CommentModularViewProps {
   content: Content,
-  user: User,
   rate?: boolean,
   replay?: boolean
 };
@@ -117,13 +113,13 @@ export default class CommentModularView extends React.Component<CommentModularVi
     this.fetchCommentList(page, limit);
   }
   render() {
-    const { content, user, rate, replay } = this.props;
+    const { content, rate, replay } = this.props;
     const { hasMoreComments, page, limit, total, list, loading } = this.state;
     const loadMore = (hasMoreComments ? <div style={{ textAlign: 'center', padding: '1em' }}><Button type={replay ? 'link' : 'default'} loading={loading} onClick={() => this.fetchCommentList(page + 1, limit)}>加载更多...</Button></div> : null)
     const hasComments = list && list.length > 0;
     return (
       <div className="comment-modular-view">
-        <CommentEditorView replay={replay} mention={replay ? content.owner : undefined} rate={rate} contentId={content.contentId} user={user} />
+        <CommentEditorView replay={replay} mention={replay ? content.owner : undefined} rate={rate} contentId={content.contentId} />
         {
           hasComments &&
           <List
@@ -134,7 +130,6 @@ export default class CommentModularView extends React.Component<CommentModularVi
                   replay={replay}
                   rate={rate}
                   comment={comment}
-                  user={user}
                 />
               </List.Item>
             )}
@@ -148,7 +143,7 @@ export default class CommentModularView extends React.Component<CommentModularVi
         }
         {
           hasComments && list.length > 20 &&
-          <CommentEditorView replay={replay} mention={replay ? content.owner : undefined} rate={rate} contentId={content.contentId} user={user} />
+          <CommentEditorView replay={replay} mention={replay ? content.owner : undefined} rate={rate} contentId={content.contentId} />
         }
         <style jsx>{`
           .empty-comments {

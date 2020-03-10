@@ -79,14 +79,14 @@ export default class CommodityManager extends React.Component<CommodityManagerPr
         key: 'availableStock',
         dataIndex: 'availableStock',
         sorter: (a, b) => a.availableStock - b.availableStock,
-        sortOrder: sorter.columnKey === 'availableStock' ? sorter.order : false,
+        sortOrder: sorter && sorter.columnKey === 'availableStock' ? sorter.order : false,
       },
       {
         title: '已销售',
         key: 'sales',
         dataIndex: 'sales',
         sorter: (a, b) => a.sales - b.sales,
-        sortOrder: sorter.columnKey === 'sales' ? sorter.order : false,
+        sortOrder: sorter && sorter.columnKey === 'sales' ? sorter.order : false,
       },
       {
         title: '商品评价',
@@ -94,7 +94,7 @@ export default class CommodityManager extends React.Component<CommodityManagerPr
         fixed: 'right',
         dataIndex: 'rate',
         sorter: (a, b) => a.rate - b.rate,
-        sortOrder: sorter.columnKey === 'rate' ? sorter.order : false,
+        sortOrder: sorter && sorter.columnKey === 'rate' ? sorter.order : false,
         render: (rate) => <Rate defaultValue={rate} disabled allowHalf style={{ fontSize: '1em' }} />
       },
       {
@@ -103,7 +103,7 @@ export default class CommodityManager extends React.Component<CommodityManagerPr
         dataIndex: 'prices',
         fixed: 'right',
         sorter: (a, b) => a.prices - b.prices,
-        sortOrder: sorter.columnKey === 'prices' ? sorter.order : false,
+        sortOrder: sorter && sorter.columnKey === 'prices' ? sorter.order : false,
         render: (prices: number) => <span style={{ color: 'red' }}>￥{prices}</span>
       },
     ]

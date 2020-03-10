@@ -1,21 +1,28 @@
-import { Button, Form } from 'antd';
+import { Form } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
-import React from 'react';
-import PaperBookFrom from '../components/backend/form/paper-book-form';
+import FormItem from 'antd/lib/form/FormItem';
+import React, { useContext } from 'react';
+import CategorySelect from '../components/backend/util/category-select';
+import { UserContext } from '../components/hooks/with-user';
 import { API } from '../configs/api-config';
 import { Address } from '../types/address';
+import CommunityLayout from '../layouts/community-layout';
 import { ListJSON } from '../types/api';
+import { User } from '../types/user';
 import { fetchDataByGet } from '../util/network-util';
-import EpisodeSelect from '../components/backend/util/episode-select';
-import FormItem from 'antd/lib/form/FormItem';
-import CategorySelect from '../components/backend/util/category-select';
 
 export interface HelloProps extends ListJSON<Address> {
-  form: WrappedFormUtils
+  form: WrappedFormUtils;
+  user: User;
 };
 export interface HelloState {
   retry: boolean
 };
+
+function TestUser() {
+  const user: User = useContext(UserContext);
+  return <>hahahahah: {JSON.stringify(user)}</>
+}
 
 export class Hello extends React.Component<HelloProps, HelloState> {
   static async getInitialProps() {
@@ -49,7 +56,7 @@ export class Hello extends React.Component<HelloProps, HelloState> {
     })
   }
   render() {
-    const { list, form } = this.props;
+    const { list, form, user } = this.props;
     const { retry } = this.state;
     return (
       <div>
@@ -67,13 +74,14 @@ export class Hello extends React.Component<HelloProps, HelloState> {
             })(<CategorySelect multiple />)
           }
         </FormItem>
-       
-        <Button onClick={() => this.valid()}>验证</Button>
+        <CommunityLayout>
+        <TestUser />
+        </CommunityLayout>
       </div>
     )
   }
 }
 
-const WrappedHello = Form.create({ name: 'hello-form' })(Hello);
+const WrappedHello = Form.create<HelloProps>({ name: 'hello-form' })(Hello);
 
 export default WrappedHello;

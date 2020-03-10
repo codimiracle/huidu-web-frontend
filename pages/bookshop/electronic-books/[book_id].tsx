@@ -114,7 +114,6 @@ class BookInfo extends React.Component<BookInfoProps, BookInfoState> {
 }
 
 export interface BookDetailsProps {
-  user: User;
   book: ElectronicBook;
   catalogs: Array<Catalogs>;
   lastUpdate: Episode;
@@ -125,7 +124,6 @@ export interface BookDetailsState {
 export default class BookDetails extends React.Component<BookDetailsProps, BookDetailsState> {
   static async getInitialProps(context: NextPageContext) {
     const { book_id } = context.query;
-    let userData = await fetchDataByGet<EntityJSON<User>>(API.LoggedUserData);
     let bookData = await fetchDataByGet<EntityJSON<ElectronicBook>>(API.ElectronicBookEntity, {
       book_id: book_id
     });
@@ -136,7 +134,6 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
       book_id: book_id
     });
     return {
-      user: userData.entity,
       book: bookData.entity,
       catalogs: catalogsData,
       lastUpdate: lastUpdateEpisodeData.entity
@@ -148,7 +145,7 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
     }
   }
   render() {
-    const { book, user, lastUpdate } = this.props;
+    const { book, lastUpdate } = this.props;
     return (
       <SectionView
         content={
@@ -177,7 +174,6 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
             <CommentModularView
               rate
               content={book}
-              user={user}
             />
           </div >
         }

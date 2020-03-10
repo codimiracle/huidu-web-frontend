@@ -5,7 +5,7 @@ import React from 'react';
 import UserIdView from '../components/user-id-view';
 import { API } from '../configs/api-config';
 import { EntityJSON } from '../types/api';
-import { UNKNOW_USER, User } from '../types/user';
+import { User } from '../types/user';
 import { fetchDataByGet } from '../util/network-util';
 import BasicLayout from './basic-layout';
 
@@ -16,8 +16,7 @@ export interface UserCentralLayoutProps {
   router: Router
 };
 export interface UserCentralLayoutState {
-  loading: boolean,
-  user: User
+  loading: boolean;
 };
 
 class UserCentralLayout extends React.Component<UserCentralLayoutProps, UserCentralLayoutState> {
@@ -25,7 +24,6 @@ class UserCentralLayout extends React.Component<UserCentralLayoutProps, UserCent
     super(props);
     this.state = {
       loading: true,
-      user: UNKNOW_USER
     }
   }
   private getCurrentKey() {
@@ -34,16 +32,6 @@ class UserCentralLayout extends React.Component<UserCentralLayoutProps, UserCent
     let rightIndex = path.indexOf('/', '/user-central'.length + 1);
     let currentKey = path.substring('/user-central'.length + 1, rightIndex == -1 ? path.length : rightIndex)
     return currentKey;
-  }
-  fetchUser() {
-    fetchDataByGet<EntityJSON<User>>(API.LoggedUserData).then((data) => {
-      this.setState({ user: data.entity, loading: false });
-    }).catch((err) => {
-      message.error('错误：无法读取到相应的用户数据，请刷新页面以解决这个问题！');
-    });
-  }
-  componentDidMount() {
-    this.fetchUser();
   }
   render() {
     const { children } = this.props;

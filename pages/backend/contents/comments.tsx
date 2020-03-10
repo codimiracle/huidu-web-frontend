@@ -88,7 +88,7 @@ export default class CommentManger extends React.Component<CommentMangerProps, C
       width: '104px',
       dataIndex: 'likes',
       sorter: (a, b) => a.likes - b.likes,
-      sortOrder: sorter.columnKey === 'likes' ? sorter.order : false,
+      sortOrder: sorter && sorter.columnKey === 'likes' ? sorter.order : false,
       render: (likes) => <strong>{likes}</strong>
     },
     {
@@ -97,7 +97,7 @@ export default class CommentManger extends React.Component<CommentMangerProps, C
       width: '104px',
       dataIndex: 'comments',
       sorter: (a, b) => a.comments - b.comments,
-      sortOrder: sorter.columnKey === 'comments' ? sorter.order : false,
+      sortOrder: sorter && sorter.columnKey === 'comments' ? sorter.order : false,
       render: (comments) => <strong>{comments}</strong>
     },
     {

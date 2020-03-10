@@ -26,7 +26,7 @@ export default class UserSigninForm extends React.Component<UserSigninFormProps,
             })(<Input.Password prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="密码" />)}
           </FormItem>
           <FormItem>
-            {form.getFieldDecorator('remember', {
+            {form.getFieldDecorator('rememberMe', {
               initialValue: false
             })(<Checkbox>记住我</Checkbox>)}
             <span className="extra-actions">

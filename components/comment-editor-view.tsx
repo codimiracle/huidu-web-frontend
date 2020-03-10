@@ -7,10 +7,10 @@ import { SocialUser, User } from '../types/user';
 import { fetchMessageByPost } from '../util/network-util';
 import AvatarView from './avatar-view';
 import WrappedUserSigninDialog from './dialogs/user-signin-dialog';
+import { UserContext } from './hooks/with-user';
 
 export interface CommentEditorProps {
   form: WrappedFormUtils,
-  user: User,
   contentId: string,
   mention?: SocialUser,
   replay?: boolean
@@ -54,79 +54,79 @@ class CommentEditor extends React.Component<CommentEditorProps, CommentEditorSta
     })
   }
   render() {
-    const { form, user, rate, replay, mention } = this.props;
+    const { form, rate, replay, mention } = this.props;
     const { loading } = this.state;
-    let isLogged = !!user;
     form.getFieldDecorator('content.type', { initialValue: 'html' });
     form.getFieldDecorator('metions[0]', { initialValue: mention ? [mention.id] : [] });
     return (
       <div className="comment-editor">
-        <div className="comment-editor-user">
+        <UserContext.Consumer>
           {
-            isLogged &&
-            <AvatarView user={user} size="large" />
-          }
-          {
-            !isLogged &&
-            <AvatarView user={null} size="large" onClick={() => this.setState({ signInDialogVisible: true })} />
-          }
-        </div>
-        <div className="comment-editor-panel">
-          <Form>
-            {rate &&
-              <Row>
-                <FormItem>
-                  {
-                    form.getFieldDecorator('rate', {
-                      initialValue: 0,
-                      rules: [
-                        { required: true, message: '请给出评分！' }
-                      ]
-                    })(
-                      <Rate disabled={!isLogged} allowHalf />
-                    )
-                  }
-                </FormItem>
-              </Row>
-            }
-            <Row type="flex" gutter={16}>
-              <Col style={{ flex: 1 }}>
-                <FormItem>
-                  {
-                    form.getFieldDecorator('content.source', {
-                      rules: [
-                        { required: true, message: `${replay ? '回复' : '评论'}内容不能为空！` }
-                      ]
-                    })(
-                      <Mentions placeholder={replay ? `回复 @${mention.nickname}` : '评论内容'} disabled={!isLogged} rows={replay ? 2 : 3} >
+            (user: User) => <>
+
+              <div className="comment-editor-user">
+                {
+                  user ?
+                  <AvatarView user={user} size="large" /> :
+                  <AvatarView user={null} size="large" onClick={() => this.setState({ signInDialogVisible: true })} />
+                }
+              </div>
+              <div className="comment-editor-panel">
+                <Form>
+                  {rate &&
+                    <Row>
+                      <FormItem>
                         {
-                          mention &&
-                          <Mentions.Option value={mention.id}>{mention.nickname}</Mentions.Option>
+                          form.getFieldDecorator('rate', {
+                            initialValue: 0,
+                            rules: [
+                              { required: true, message: '请给出评分！' }
+                            ]
+                          })(
+                            <Rate disabled={!user} allowHalf />
+                          )
                         }
-                      </Mentions>
-                    )
+                      </FormItem>
+                    </Row>
                   }
-                </FormItem>
-              </Col>
-              <Col>
-                <FormItem>
-                  {
-                    isLogged &&
-                    <Button loading={loading} block onClick={() => this.onPostComment()}>{replay ? '回复' : '评论'}</Button>
-                  }
-                  {
-                    !isLogged &&
-                    <Button block onClick={() => this.setState({ signInDialogVisible: true })}>登录</Button>
-                  }
-                </FormItem>
-              </Col>
-            </Row>
-          </Form>
-          <WrappedUserSigninDialog
-            visible={this.state.signInDialogVisible}
-            onCancel={() => this.setState({ signInDialogVisible: false })}
-          />
-        </div>
+                  <Row type="flex" gutter={16}>
+                    <Col style={{ flex: 1 }}>
+                      <FormItem>
+                        {
+                          form.getFieldDecorator('content.source', {
+                            rules: [
+                              { required: true, message: `${replay ? '回复' : '评论'}内容不能为空！` }
+                            ]
+                          })(
+                            <Mentions placeholder={replay ? `回复 @${mention.nickname}` : '评论内容'} disabled={!user} rows={replay ? 2 : 3} >
+                              {
+                                mention &&
+                                <Mentions.Option value={mention.id}>{mention.nickname}</Mentions.Option>
+                              }
+                            </Mentions>
+                          )
+                        }
+                      </FormItem>
+                    </Col>
+                    <Col>
+                      <FormItem>
+                        {
+                          user ?
+                          <Button loading={loading} block onClick={() => this.onPostComment()}>{replay ? '回复' : '评论'}</Button> :
+                          <Button block onClick={() => this.setState({ signInDialogVisible: true })}>登录</Button>
+                        }
+                      </FormItem>
+                    </Col>
+                  </Row>
+                </Form>
+                <WrappedUserSigninDialog
+                  visible={this.state.signInDialogVisible}
+                  onCancel={() => this.setState({ signInDialogVisible: false })}
+                />
+              </div>
+            </>
+          }
+        </UserContext.Consumer>
         <style jsx>{`
           .comment-editor-user {
             margin: 0 1.5em 0.5em 0;

@@ -10,33 +10,22 @@ import AvatarView from '../components/avatar-view';
 import NotificationView from '../components/notification-view';
 import AuthorityUtil from '../util/authority-util';
 import { EntityJSON } from '../types/api';
+import { UserContext } from '../components/hooks/with-user';
 
 const { Header, Sider, Content, Footer } = Layout;
 
 export interface BackendLayoutProps { };
 export interface BackendLayoutState {
-  collapsed: boolean,
-  userdata: User
+  collapsed: boolean;
 };
 
 export default class BackendLayout extends React.Component<BackendLayoutProps, BackendLayoutState> {
   constructor(props: BackendLayoutProps) {
     super(props);
     this.state = {
-      collapsed: false,
-      userdata: null
+      collapsed: false
     }
     this.toggle = this.toggle.bind(this);
-  }
-  componentDidMount() {
-    this.refreshUserData();
-  }
-  refreshUserData() {
-    fetchDataByGet<EntityJSON<User>>(API.LoggedUserData).then((data) => {
-      this.setState({ userdata: data.entity });
-    }).catch((err) => {
-      message.warn(`获取用户数据失败：${err}`);
-    });
   }
   toggle() {
     this.setState((state) => ({
@@ -72,6 +61,7 @@ export default class BackendLayout extends React.Component<BackendLayoutProps, B
   render() {
     return (
       <>
+
         <Layout>
           <Sider
             trigger={null}
@@ -90,11 +80,16 @@ export default class BackendLayout extends React.Component<BackendLayoutProps, B
               <img src="/assets/huidu.png" alt="huidu logo" />
               {!this.state.collapsed && <span>荟读</span>}
             </div>
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={[]}>
+            <UserContext.Consumer>
               {
-                this.renderMenuItem(getNavigationMenus(AuthorityUtil.getAuthorities(this.state.userdata)))
+                (user: User) =>
+                  <Menu theme="dark" mode="inline" defaultSelectedKeys={[]}>
+                    {
+                      this.renderMenuItem(getNavigationMenus(AuthorityUtil.getAuthorities(user)))
+                    }
+                  </Menu>
               }
-            </Menu>
+            </UserContext.Consumer>
           </Sider>
           <Layout style={{
             marginLeft: this.state.collapsed ? '80px' : '200px'
@@ -106,8 +101,14 @@ export default class BackendLayout extends React.Component<BackendLayoutProps, B
                 onClick={this.toggle}
               />
               <div className="backend-user-tools">
-                <NotificationView user={this.state.userdata} />
-                <AvatarView user={this.state.userdata} />
+                <UserContext.Consumer>
+                  {
+                    (user: User) => <>
+                      <NotificationView user={user} />
+                      <AvatarView user={user} />
+                    </>
+                  }
+                </UserContext.Consumer>
               </div>
             </Header>
             <Content
@@ -120,11 +121,12 @@ export default class BackendLayout extends React.Component<BackendLayoutProps, B
               }}
             >
               {this.props.children}
-          </Content>
+            </Content>
             <Footer style={{ textAlign: 'center' }}>Huidu Backend ©2020 Created by <a href="http://github.com/codimiracle">codimiracle</a></Footer>
           </Layout>
         </Layout>
-        <style jsx>{`
+        }
+      <style jsx>{`
           .logo-wrapper {
             display: flex;
             align-items: center;
@@ -143,7 +145,7 @@ export default class BackendLayout extends React.Component<BackendLayoutProps, B
             display: flex;
             align-items: center;
           }
-        `}</style>
+          `}</style>
       </>
     );
   }

@@ -1,0 +1,679 @@
+
+> huidu-web-frontend@0.1.0 dev /mnt/projects
+> next dev
+
+[ wait ]  starting the development server ...
+[ info ]  waiting on http://localhost:3000 ...
+> Using external babel configuration
+> Location: "/mnt/projects/.babelrc"
+[ info ]  bundled successfully, waiting for typecheck results...
+[ event ] build page: /next/dist/pages/_error
+[ wait ]  compiling ...
+[ event ] build page: /next/dist/pages/_error
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+[ info ]  bundled successfully, waiting for typecheck results...
+[ event ] build page: /user-central/profile
+[ wait ]  compiling ...
+[ event ] build page: /community/dynamics
+[ event ] build page: /community/dynamics
+[ event ] build page: /user-central/profile
+[ event ] build page: /community/dynamics
+[ event ] build page: /community/dynamics
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+[ info ]  bundled successfully, waiting for typecheck results...
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+[ event ] build page: /
+[ wait ]  compiling ...
+[ event ] build page: /api/dynamics
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+API definition: {"url":"http://localhost:3000/api/system/realtime"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+[ event ] build page: /api/system/realtime
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+[ info ]  bundled successfully, waiting for typecheck results...
+Warning: componentWillMount has been renamed, and is not recommended for use. See https://fb.me/react-unsafe-component-lifecycles for details.
+
+* Move code from componentWillMount to componentDidMount (preferred in most cases) or the constructor.
+
+Please update the following components: Sticky
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+[ ready ] compiled successfully - ready on http://localhost:3000
+[ info ]  bundled successfully, waiting for typecheck results...
+[ ready ] compiled successfully - ready on http://localhost:3000
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+[ event ] build page: /api/dynamics
+[ wait ]  compiling ...
+[ ready ] compiled successfully - ready on http://localhost:3000
+[ event ] build page: /hello
+[ wait ]  compiling ...
+[ info ]  bundled successfully, waiting for typecheck results...
+[ ready ] compiled successfully - ready on http://localhost:3000
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://localhost:3000/api/user/addresses?page=@{page}&limit=@{limit}"}
+[ event ] build page: /api/user/addresses
+[ wait ]  compiling ...
+[ error ] ./pages/hello.tsx
+SyntaxError: /mnt/projects/pages/hello.tsx: Expected corresponding JSX closing tag for <CommunityLayout> (78:6)
+
+  76 |         <CommunityLayout>
+  77 |         <TestUser />
+> 78 |       </div>
+     |       ^
+  79 |     )
+  80 |   }
+  81 | }
+[ wait ]  compiling ...
+[ error ] ./pages/hello.tsx
+SyntaxError: /mnt/projects/pages/hello.tsx: Expected corresponding JSX closing tag for <CommunityLayout> (78:6)
+
+  76 |         <CommunityLayout>
+  77 |         <TestUser />
+> 78 |       </div>
+     |       ^
+  79 |     )
+  80 |   }
+  81 | }
+ModuleBuildError: Module build failed (from ./node_modules/_next@9.2.0@next/dist/build/webpack/loaders/next-babel-loader.js):
+SyntaxError: /mnt/projects/pages/hello.tsx: Expected corresponding JSX closing tag for <CommunityLayout> (78:6)
+
+  76 |         <CommunityLayout>
+  77 |         <TestUser />
+> 78 |       </div>
+     |       ^
+  79 |     )
+  80 |   }
+  81 | }
+    at Object.raise (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:7013:17)
+    at Object.jsxParseElementAt (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:4078:16)
+    at Object.jsxParseElementAt (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:4046:32)
+    at Object.jsxParseElement (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:4104:17)
+    at Object.parseExprAtom (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:4111:19)
+    at Object.parseExprSubscripts (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9219:23)
+    at Object.parseMaybeUnary (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9199:21)
+    at Object.parseMaybeUnary (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:6265:20)
+    at Object.parseExprOps (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9067:23)
+    at Object.parseMaybeConditional (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9040:23)
+    at Object.parseMaybeAssign (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9000:21)
+    at jsx.tryParse (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:6198:39)
+    at Object.tryParse (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:8440:20)
+    at Object.parseMaybeAssign (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:6198:18)
+    at Object.parseParenAndDistinguishExpression (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9782:28)
+    at Object.parseExprAtom (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9560:21)
+    at runLoaders (/mnt/projects/node_modules/_webpack@4.41.2@webpack/lib/NormalModule.js:316:20)
+    at /mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:367:11
+    at /mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:233:18
+    at context.callback (/mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:111:13)
+    at loader.call.then.err (/mnt/projects/node_modules/_babel-loader@8.0.6@babel-loader/lib/index.js:55:103)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+ModuleBuildError: Module build failed (from ./node_modules/_next@9.2.0@next/dist/build/webpack/loaders/next-babel-loader.js):
+SyntaxError: /mnt/projects/pages/hello.tsx: Expected corresponding JSX closing tag for <CommunityLayout> (78:6)
+
+  76 |         <CommunityLayout>
+  77 |         <TestUser />
+> 78 |       </div>
+     |       ^
+  79 |     )
+  80 |   }
+  81 | }
+    at Object.raise (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:7013:17)
+    at Object.jsxParseElementAt (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:4078:16)
+    at Object.jsxParseElementAt (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:4046:32)
+    at Object.jsxParseElement (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:4104:17)
+    at Object.parseExprAtom (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:4111:19)
+    at Object.parseExprSubscripts (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9219:23)
+    at Object.parseMaybeUnary (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9199:21)
+    at Object.parseMaybeUnary (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:6265:20)
+    at Object.parseExprOps (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9067:23)
+    at Object.parseMaybeConditional (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9040:23)
+    at Object.parseMaybeAssign (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9000:21)
+    at jsx.tryParse (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:6198:39)
+    at Object.tryParse (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:8440:20)
+    at Object.parseMaybeAssign (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:6198:18)
+    at Object.parseParenAndDistinguishExpression (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9782:28)
+    at Object.parseExprAtom (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9560:21)
+    at runLoaders (/mnt/projects/node_modules/_webpack@4.41.2@webpack/lib/NormalModule.js:316:20)
+    at /mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:367:11
+    at /mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:233:18
+    at context.callback (/mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:111:13)
+    at loader.call.then.err (/mnt/projects/node_modules/_babel-loader@8.0.6@babel-loader/lib/index.js:55:103)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[ event ] build page: /next/dist/pages/_error
+[ wait ]  compiling ...
+[ error ] ./pages/hello.tsx
+SyntaxError: /mnt/projects/pages/hello.tsx: Expected corresponding JSX closing tag for <CommunityLayout> (78:6)
+
+  76 |         <CommunityLayout>
+  77 |         <TestUser />
+> 78 |       </div>
+     |       ^
+  79 |     )
+  80 |   }
+  81 | }
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+ModuleBuildError: Module build failed (from ./node_modules/_next@9.2.0@next/dist/build/webpack/loaders/next-babel-loader.js):
+SyntaxError: /mnt/projects/pages/hello.tsx: Expected corresponding JSX closing tag for <CommunityLayout> (78:6)
+
+  76 |         <CommunityLayout>
+  77 |         <TestUser />
+> 78 |       </div>
+     |       ^
+  79 |     )
+  80 |   }
+  81 | }
+    at Object.raise (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:7013:17)
+    at Object.jsxParseElementAt (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:4078:16)
+    at Object.jsxParseElementAt (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:4046:32)
+    at Object.jsxParseElement (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:4104:17)
+    at Object.parseExprAtom (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:4111:19)
+    at Object.parseExprSubscripts (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9219:23)
+    at Object.parseMaybeUnary (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9199:21)
+    at Object.parseMaybeUnary (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:6265:20)
+    at Object.parseExprOps (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9067:23)
+    at Object.parseMaybeConditional (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9040:23)
+    at Object.parseMaybeAssign (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9000:21)
+    at jsx.tryParse (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:6198:39)
+    at Object.tryParse (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:8440:20)
+    at Object.parseMaybeAssign (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:6198:18)
+    at Object.parseParenAndDistinguishExpression (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9782:28)
+    at Object.parseExprAtom (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:9560:21)
+    at runLoaders (/mnt/projects/node_modules/_webpack@4.41.2@webpack/lib/NormalModule.js:316:20)
+    at /mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:367:11
+    at /mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:233:18
+    at context.callback (/mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:111:13)
+    at loader.call.then.err (/mnt/projects/node_modules/_babel-loader@8.0.6@babel-loader/lib/index.js:55:103)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+[ info ]  bundled successfully, waiting for typecheck results...
+[ ready ] compiled successfully - ready on http://localhost:3000
+[ event ] build page: /next/dist/pages/_error
+[ wait ]  compiling ...
+[ info ]  bundled successfully, waiting for typecheck results...
+[ ready ] compiled successfully - ready on http://localhost:3000
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+[ event ] build page: /hello
+[ wait ]  compiling ...
+[ error ] ./pages/hello.tsx
+SyntaxError: /mnt/projects/pages/hello.tsx: Unexpected token, expected "{" (10:0)
+
+   8 | import { Address } from '../types/address';
+   9 | import 
+> 10 | import { ListJSON } from '../types/api';
+     | ^
+  11 | import { User } from '../types/user';
+  12 | import { fetchDataByGet } from '../util/network-util';
+  13 |
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://localhost:3000/api/user/addresses?page=@{page}&limit=@{limit}"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://localhost:3000/api/user/addresses?page=@{page}&limit=@{limit}"}
+API definition: {"url":"http://localhost:3000/api/user/addresses?page=@{page}&limit=@{limit}"}
+[ event ] build page: /api/user/addresses
+[ wait ]  compiling ...
+API definition: {"url":"http://localhost:3000/api/user/addresses?page=@{page}&limit=@{limit}"}
+API definition: {"url":"http://localhost:3000/api/user/addresses?page=@{page}&limit=@{limit}"}
+[ error ] ./pages/hello.tsx
+SyntaxError: /mnt/projects/pages/hello.tsx: Unexpected token, expected "{" (10:0)
+
+   8 | import { Address } from '../types/address';
+   9 | import 
+> 10 | import { ListJSON } from '../types/api';
+     | ^
+  11 | import { User } from '../types/user';
+  12 | import { fetchDataByGet } from '../util/network-util';
+  13 |
+{ Error: Cannot find module for page: /api/user/addresses
+    at pageNotFoundError (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/require.js:13:17)
+    at Object.getPagePath (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/require.js:33:19)
+    at DevServer.getPagePath (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/next-server.js:378:26)
+    at DevServer.handleApiRequest (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/next-server.js:419:42)
+    at process._tickCallback (internal/process/next_tick.js:68:7) code: 'ENOENT' }
+[ wait ]  compiling ...
+ModuleBuildError: Module build failed (from ./node_modules/_next@9.2.0@next/dist/build/webpack/loaders/next-babel-loader.js):
+SyntaxError: /mnt/projects/pages/hello.tsx: Unexpected token, expected "{" (10:0)
+
+   8 | import { Address } from '../types/address';
+   9 | import 
+> 10 | import { ListJSON } from '../types/api';
+     | ^
+  11 | import { User } from '../types/user';
+  12 | import { fetchDataByGet } from '../util/network-util';
+  13 | 
+    at Object.raise (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:7013:17)
+    at Object.unexpected (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:8384:16)
+    at Object.expect (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:8370:28)
+    at Object.parseNamedImportSpecifiers (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:12040:10)
+    at Object.parseImport (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:11993:39)
+    at Object.parseImport (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:5916:18)
+    at Object.parseStatementContent (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:10756:27)
+    at Object.parseStatementContent (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:5972:18)
+    at Object.parseStatement (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:10658:17)
+    at Object.parseBlockOrModuleBlockBody (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:11234:25)
+    at Object.parseBlockBody (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:11221:10)
+    at Object.parseTopLevel (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:10589:10)
+    at Object.parse (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:12192:10)
+    at parse (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:12218:26)
+    at parser (/mnt/projects/node_modules/_@babel_core@7.7.2@@babel/core/lib/transformation/normalize-file.js:168:34)
+    at normalizeFile (/mnt/projects/node_modules/_@babel_core@7.7.2@@babel/core/lib/transformation/normalize-file.js:102:11)
+    at runLoaders (/mnt/projects/node_modules/_webpack@4.41.2@webpack/lib/NormalModule.js:316:20)
+    at /mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:367:11
+    at /mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:233:18
+    at context.callback (/mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:111:13)
+    at loader.call.then.err (/mnt/projects/node_modules/_babel-loader@8.0.6@babel-loader/lib/index.js:55:103)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+{ Error: Cannot find module for page: /api/user/addresses
+    at pageNotFoundError (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/require.js:13:17)
+    at Object.getPagePath (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/require.js:33:19)
+    at DevServer.getPagePath (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/next-server.js:378:26)
+    at DevServer.handleApiRequest (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/next-server.js:419:42) code: 'ENOENT' }
+{ Error: Cannot find module for page: /api/user/addresses
+    at pageNotFoundError (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/require.js:13:17)
+    at Object.getPagePath (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/require.js:33:19)
+    at DevServer.getPagePath (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/next-server.js:378:26)
+    at DevServer.handleApiRequest (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/next-server.js:419:42) code: 'ENOENT' }
+{ Error: Cannot find module for page: /api/user/addresses
+    at pageNotFoundError (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/require.js:13:17)
+    at Object.getPagePath (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/require.js:33:19)
+    at DevServer.getPagePath (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/next-server.js:378:26)
+    at DevServer.handleApiRequest (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/next-server.js:419:42) code: 'ENOENT' }
+{ Error: Cannot find module for page: /api/user/addresses
+    at pageNotFoundError (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/require.js:13:17)
+    at Object.getPagePath (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/require.js:33:19)
+    at DevServer.getPagePath (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/next-server.js:378:26)
+    at DevServer.handleApiRequest (/mnt/projects/node_modules/_next@9.2.0@next/dist/next-server/server/next-server.js:419:42) code: 'ENOENT' }
+[ error ] ./pages/hello.tsx
+SyntaxError: /mnt/projects/pages/hello.tsx: Unexpected token (9:12)
+
+   7 | import { API } from '../configs/api-config';
+   8 | import { Address } from '../types/address';
+>  9 | import from '../'
+     |             ^
+  10 | import { ListJSON } from '../types/api';
+  11 | import { User } from '../types/user';
+  12 | import { fetchDataByGet } from '../util/network-util';
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+ModuleBuildError: Module build failed (from ./node_modules/_next@9.2.0@next/dist/build/webpack/loaders/next-babel-loader.js):
+SyntaxError: /mnt/projects/pages/hello.tsx: Unexpected token (9:12)
+
+   7 | import { API } from '../configs/api-config';
+   8 | import { Address } from '../types/address';
+>  9 | import from '../'
+     |             ^
+  10 | import { ListJSON } from '../types/api';
+  11 | import { User } from '../types/user';
+  12 | import { fetchDataByGet } from '../util/network-util';
+    at Object.raise (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:7013:17)
+    at Object.unexpected (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:8384:16)
+    at Object.expectContextual (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:8350:41)
+    at Object.parseImport (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:11994:12)
+    at Object.parseImport (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:5916:18)
+    at Object.parseStatementContent (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:10756:27)
+    at Object.parseStatementContent (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:5972:18)
+    at Object.parseStatement (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:10658:17)
+    at Object.parseBlockOrModuleBlockBody (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:11234:25)
+    at Object.parseBlockBody (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:11221:10)
+    at Object.parseTopLevel (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:10589:10)
+    at Object.parse (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:12192:10)
+    at parse (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:12218:26)
+    at parser (/mnt/projects/node_modules/_@babel_core@7.7.2@@babel/core/lib/transformation/normalize-file.js:168:34)
+    at normalizeFile (/mnt/projects/node_modules/_@babel_core@7.7.2@@babel/core/lib/transformation/normalize-file.js:102:11)
+    at runSync (/mnt/projects/node_modules/_@babel_core@7.7.2@@babel/core/lib/transformation/index.js:44:43)
+    at runLoaders (/mnt/projects/node_modules/_webpack@4.41.2@webpack/lib/NormalModule.js:316:20)
+    at /mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:367:11
+    at /mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:233:18
+    at context.callback (/mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:111:13)
+    at loader.call.then.err (/mnt/projects/node_modules/_babel-loader@8.0.6@babel-loader/lib/index.js:55:103)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[ wait ]  compiling ...
+[ error ] ./pages/hello.tsx
+SyntaxError: /mnt/projects/pages/hello.tsx: Unexpected token (9:12)
+
+   7 | import { API } from '../configs/api-config';
+   8 | import { Address } from '../types/address';
+>  9 | import from '../layouts/c'
+     |             ^
+  10 | import { ListJSON } from '../types/api';
+  11 | import { User } from '../types/user';
+  12 | import { fetchDataByGet } from '../util/network-util';
+[ wait ]  compiling ...
+[ error ] ./pages/hello.tsx
+SyntaxError: /mnt/projects/pages/hello.tsx: Unexpected token (9:12)
+
+   7 | import { API } from '../configs/api-config';
+   8 | import { Address } from '../types/address';
+>  9 | import from '../layouts/commun'
+     |             ^
+  10 | import { ListJSON } from '../types/api';
+  11 | import { User } from '../types/user';
+  12 | import { fetchDataByGet } from '../util/network-util';
+ModuleBuildError: Module build failed (from ./node_modules/_next@9.2.0@next/dist/build/webpack/loaders/next-babel-loader.js):
+SyntaxError: /mnt/projects/pages/hello.tsx: Unexpected token (9:12)
+
+   7 | import { API } from '../configs/api-config';
+   8 | import { Address } from '../types/address';
+>  9 | import from '../layouts/commun'
+     |             ^
+  10 | import { ListJSON } from '../types/api';
+  11 | import { User } from '../types/user';
+  12 | import { fetchDataByGet } from '../util/network-util';
+    at Object.raise (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:7013:17)
+    at Object.unexpected (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:8384:16)
+    at Object.expectContextual (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:8350:41)
+    at Object.parseImport (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:11994:12)
+    at Object.parseImport (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:5916:18)
+    at Object.parseStatementContent (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:10756:27)
+    at Object.parseStatementContent (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:5972:18)
+    at Object.parseStatement (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:10658:17)
+    at Object.parseBlockOrModuleBlockBody (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:11234:25)
+    at Object.parseBlockBody (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:11221:10)
+    at Object.parseTopLevel (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:10589:10)
+    at Object.parse (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:12192:10)
+    at parse (/mnt/projects/node_modules/_@babel_parser@7.8.3@@babel/parser/lib/index.js:12218:26)
+    at parser (/mnt/projects/node_modules/_@babel_core@7.7.2@@babel/core/lib/transformation/normalize-file.js:168:34)
+    at normalizeFile (/mnt/projects/node_modules/_@babel_core@7.7.2@@babel/core/lib/transformation/normalize-file.js:102:11)
+    at runSync (/mnt/projects/node_modules/_@babel_core@7.7.2@@babel/core/lib/transformation/index.js:44:43)
+    at runLoaders (/mnt/projects/node_modules/_webpack@4.41.2@webpack/lib/NormalModule.js:316:20)
+    at /mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:367:11
+    at /mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:233:18
+    at context.callback (/mnt/projects/node_modules/_loader-runner@2.4.0@loader-runner/lib/LoaderRunner.js:111:13)
+    at loader.call.then.err (/mnt/projects/node_modules/_babel-loader@8.0.6@babel-loader/lib/index.js:55:103)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+[ wait ]  compiling ...
+[ error ] ./pages/hello.tsx
+SyntaxError: /mnt/projects/pages/hello.tsx: Unexpected token (9:12)
+
+   7 | import { API } from '../configs/api-config';
+   8 | import { Address } from '../types/address';
+>  9 | import from '../layouts/community-layout-one.'
+     |             ^
+  10 | import { ListJSON } from '../types/api';
+  11 | import { User } from '../types/user';
+  12 | import { fetchDataByGet } from '../util/network-util';
+[ wait ]  compiling ...
+[ error ] ./pages/hello.tsx
+SyntaxError: /mnt/projects/pages/hello.tsx: Expected corresponding JSX closing tag for <CommunityLayout> (79:8)
+
+  77 |         <CommunityLayout>
+  78 |         <TestUser />
+> 79 |         </CommuntiyLayout>
+     |         ^
+  80 |       </div>
+  81 |     )
+  82 |   }
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+[ wait ]  compiling ...
+[ error ] ./pages/hello.tsx
+SyntaxError: /mnt/projects/pages/hello.tsx: Expected corresponding JSX closing tag for <CommunityLayout> (79:8)
+
+  77 |         <CommunityLayout>
+  78 |         <TestUser />
+> 79 |         </CommuntiyLayout>
+     |         ^
+  80 |       </div>
+  81 |     )
+  82 |   }
+[ wait ]  compiling ...
+[ error ] ./pages/hello.tsx
+SyntaxError: /mnt/projects/pages/hello.tsx: Expected corresponding JSX closing tag for <CommunityLayout> (79:8)
+
+  77 |         <CommunityLayout>
+  78 |         <TestUser />
+> 79 |         </CommuntiyLayout>
+     |         ^
+  80 |       </div>
+  81 |     )
+  82 |   }
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+[ wait ]  compiling ...
+[ error ] ./pages/hello.tsx
+SyntaxError: /mnt/projects/pages/hello.tsx: Expected corresponding JSX closing tag for <CommunityLayout> (79:8)
+
+  77 |         <CommunityLayout>
+  78 |         <TestUser />
+> 79 |         </CommuntiyLayout>
+     |         ^
+  80 |       </div>
+  81 |     )
+  82 |   }
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+[ wait ]  compiling ...
+[ error ] ./pages/hello.tsx
+SyntaxError: /mnt/projects/pages/hello.tsx: Expected corresponding JSX closing tag for <CommunityLayout> (79:8)
+
+  77 |         <CommunityLayout>
+  78 |         <TestUser />
+> 79 |         </CommuntiyLayout>
+     |         ^
+  80 |       </div>
+  81 |     )
+  82 |   }
+[ wait ]  compiling ...
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+[ info ]  bundled successfully, waiting for typecheck results...
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://localhost:3000/api/user/addresses?page=@{page}&limit=@{limit}"}
+[ ready ] compiled successfully - ready on http://localhost:3000
+[ info ]  bundled successfully, waiting for typecheck results...
+[ ready ] compiled successfully - ready on http://localhost:3000
+[ wait ]  compiling ...
+[ info ]  bundled successfully, waiting for typecheck results...
+[ ready ] compiled successfully - ready on http://localhost:3000
+[ wait ]  compiling ...
+[ info ]  bundled successfully, waiting for typecheck results...
+[ ready ] compiled successfully - ready on http://localhost:3000
+[ wait ]  compiling ...
+[ info ]  bundled successfully, waiting for typecheck results...
+[ event ] build page: /next/dist/pages/_error
+[ wait ]  compiling ...
+[ info ]  bundled successfully, waiting for typecheck results...
+[ ready ] compiled successfully - ready on http://localhost:3000
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://localhost:3000/api/dynamics?limit=@{limit}&page=@{page}"}
+[ event ] build page: /api/dynamics
+[ wait ]  compiling ...
+[ event ] build page: /community
+Killed
+npm ERR! code ELIFECYCLE
+npm ERR! errno 137
+npm ERR! huidu-web-frontend@0.1.0 dev: `next dev`
+npm ERR! Exit status 137
+npm ERR! 
+npm ERR! Failed at the huidu-web-frontend@0.1.0 dev script.
+npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /home/ubuntu/.npm/_logs/2020-03-09T08_14_31_923Z-debug.log
+
+> huidu-web-frontend@0.1.0 dev /mnt/projects
+> next dev
+
+[ wait ]  starting the development server ...
+[ info ]  waiting on http://localhost:3000 ...
+> Using external babel configuration
+> Location: "/mnt/projects/.babelrc"
+[ info ]  bundled successfully, waiting for typecheck results...
+[ event ] build page: /community
+[ wait ]  compiling ...
+[ info ]  bundled successfully, waiting for typecheck results...
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+Community returned an empty object from `getInitialProps`. This de-optimizes and prevents automatic static optimization. https://err.sh/zeit/next.js/empty-object-getInitialProps
+Warning: componentWillMount has been renamed, and is not recommended for use. See https://fb.me/react-unsafe-component-lifecycles for details.
+
+* Move code from componentWillMount to componentDidMount (preferred in most cases) or the constructor.
+
+Please update the following components: Sticky
+[ event ] build page: /community/topics
+[ wait ]  compiling ...
+[ event ] build page: /community/reviews
+[ event ] build page: /community/dynamics
+[ info ]  bundled successfully, waiting for typecheck results...
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+Community returned an empty object from `getInitialProps`. This de-optimizes and prevents automatic static optimization. https://err.sh/zeit/next.js/empty-object-getInitialProps
+[ wait ]  compiling ...
+[ error ] ERROR in /mnt/projects/layouts/community-layout.tsx(36,31):
+36:31 Type '{ user: User; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<UserIdView> & Readonly<UserIdViewProps> & Readonly<...>'.
+  Property 'user' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<UserIdView> & Readonly<UserIdViewProps> & Readonly<...>'.
+    34 |               {
+    35 |                 (user: User) =>
+  > 36 |                   <UserIdView user={user} />
+       |                               ^
+    37 |               }
+    38 |             </UserContext.Consumer>
+    39 |           </Sider>
+[ event ] build page: /next/dist/pages/_error
+[ wait ]  compiling ...
+[ info ]  bundled successfully, waiting for typecheck results...
+[ error ] ERROR in /mnt/projects/layouts/community-layout.tsx(36,31):
+36:31 Type '{ user: User; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<UserIdView> & Readonly<UserIdViewProps> & Readonly<...>'.
+  Property 'user' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<UserIdView> & Readonly<UserIdViewProps> & Readonly<...>'.
+    34 |               {
+    35 |                 (user: User) =>
+  > 36 |                   <UserIdView user={user} />
+       |                               ^
+    37 |               }
+    38 |             </UserContext.Consumer>
+    39 |           </Sider>
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+undefined
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+[ info ]  bundled successfully, waiting for typecheck results...
+[ error ] ERROR in /mnt/projects/layouts/community-layout.tsx(36,31):
+36:31 Type '{ user: User; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<UserIdView> & Readonly<UserIdViewProps> & Readonly<...>'.
+  Property 'user' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<UserIdView> & Readonly<UserIdViewProps> & Readonly<...>'.
+    34 |               {
+    35 |                 (user: User) =>
+  > 36 |                   <UserIdView user={user} />
+       |                               ^
+    37 |               }
+    38 |             </UserContext.Consumer>
+    39 |           </Sider>
+[ event ] build page: /next/dist/pages/_error
+[ wait ]  compiling ...
+[ info ]  bundled successfully, waiting for typecheck results...
+[ error ] ERROR in /mnt/projects/layouts/community-layout.tsx(36,31):
+36:31 Type '{ user: User; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<UserIdView> & Readonly<UserIdViewProps> & Readonly<...>'.
+  Property 'user' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<UserIdView> & Readonly<UserIdViewProps> & Readonly<...>'.
+    34 |               {
+    35 |                 (user: User) =>
+  > 36 |                   <UserIdView user={user} />
+       |                               ^
+    37 |               }
+    38 |             </UserContext.Consumer>
+    39 |           </Sider>
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+undefined
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+undefined
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+[ wait ]  compiling ...
+[ info ]  bundled successfully, waiting for typecheck results...
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+API definition: {"url":"http://192.168.43.178:4000/api/user/logged"}
+[ error ] ERROR in /mnt/projects/layouts/community-layout.tsx(36,31):
+36:31 Type '{ user: User; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<UserIdView> & Readonly<UserIdViewProps> & Readonly<...>'.
+  Property 'user' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<UserIdView> & Readonly<UserIdViewProps> & Readonly<...>'.
+    34 |               {
+    35 |                 (user: User) =>
+  > 36 |                   <UserIdView user={user} />
+       |                               ^
+    37 |               }
+    38 |             </UserContext.Consumer>
+    39 |           </Sider>
+[ info ]  bundled successfully, waiting for typecheck results...
+[ error ] ERROR in /mnt/projects/layouts/community-layout.tsx(36,31):
+36:31 Type '{ user: User; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<UserIdView> & Readonly<UserIdViewProps> & Readonly<...>'.
+  Property 'user' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<UserIdView> & Readonly<UserIdViewProps> & Readonly<...>'.
+    34 |               {
+    35 |                 (user: User) =>
+  > 36 |                   <UserIdView user={user} />
+       |                               ^
+    37 |               }
+    38 |             </UserContext.Consumer>
+    39 |           </Sider>

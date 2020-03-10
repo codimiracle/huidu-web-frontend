@@ -11,23 +11,21 @@ import { User } from '../../../../types/user';
 import DatetimeUtil from '../../../../util/datetime-util';
 import { fetchDataByGet } from '../../../../util/network-util';
 import { EntityJSON } from '../../../../types/api';
+import { UserContext } from '../../../../components/hooks/with-user';
 
 export interface ReviewPostProps {
-  review: Review,
-  user: User
+  review: Review;
 };
 export interface ReviewPostState { };
 
 export default class ReviewPost extends React.Component<ReviewPostProps, ReviewPostState> {
   static async getInitialProps(context: NextPageContext) {
     const { review_id } = context.query;
-    let userData = await fetchDataByGet<EntityJSON<User>>(API.LoggedUserData);
     let reviewData = await fetchDataByGet<EntityJSON<Review>>(API.ReviewEntity, {
       review_id: review_id
     });
     return {
       review: reviewData.entity,
-      user: userData.entity
     }
   }
   constructor(props: ReviewPostProps) {
@@ -37,22 +35,18 @@ export default class ReviewPost extends React.Component<ReviewPostProps, ReviewP
     }
   }
   render() {
-    const { review, user } = this.props;
+    const { review } = this.props;
     return (
       <>
         <ContentSection
           aside={
-            <>
-              <div className="review-author">
-                <AvatarView
-                  size={64}
-                  user={user}
-                />
-                <div>{
-                  user.nickname}
-                </div>
-              </div>
-            </>
+            <div className="review-author">
+              <AvatarView
+                size={64}
+                user={review.owner}
+              />
+              <div>{review.owner.nickname}</div>
+            </div>
           }
           content={
             <div className="review-post">
@@ -85,7 +79,6 @@ export default class ReviewPost extends React.Component<ReviewPostProps, ReviewP
               <h3>评论</h3>
               <CommentModularView
                 rate
-                user={user}
                 content={review}
               />
             </div>

@@ -29,23 +29,26 @@ export class UserSignInDialog extends React.Component<UserSignInDialogProps, Use
   onSignIn() {
     const { form, onLogged, onCancel } = this.props;
     this.setState({ signing: true });
-    fetchDataByPost<EntityJSON<User>>(API.SystemSignIn, {
-      username: form.getFieldValue('username'),
-      password: form.getFieldValue('password'),
-      remember: form.getFieldValue('remember')
-    }).then((data) => {
-      if (onLogged) {
-        onLogged(data.entity);
-        onCancel();
-      } else {
-        this.props.router.reload();
-      }
+    form.validateFieldsAndScroll((errors, values) => {
+      if (!errors) {
+        type UserToken = {
+          token: string,
+          user: User
+        };
 
-    }).catch((err) => {
-      message.error(`登录失败：${err}`);
-    }).finally(() => {
-      this.setState({ signing: false });
-    })
+        fetchDataByPost<UserToken>(API.SystemSignIn, values).then((data) => {
+          window.localStorage.setItem('token', data.token);
+          if (onLogged) {
+            onCancel();
+            onLogged(data.user);
+          }
+        }).catch((err) => {
+          message.error(`登录失败：${err}`);
+        }).finally(() => {
+          this.setState({ signing: false });
+        })
+      }
+    });
   }
   render() {
     const { visible, form } = this.props;

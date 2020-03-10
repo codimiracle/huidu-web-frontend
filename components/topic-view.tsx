@@ -39,6 +39,9 @@ export default class TopicView extends React.Component<TopicViewProps, TopicView
             margin-right: 8px;
             padding-right: 0;
           }
+          p {
+            word-break: break-all;
+          }
         `}</style>
       </>
     )
