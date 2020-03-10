@@ -37,9 +37,9 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
       loading: false
     }
   }
-  fetchNotification() {
+  fetchNotification(page?: number) {
     fetchDataByGet<ListJSON<Notification>>(this.props.api, {
-      page: this.state.page,
+      page: page || 1,
       limit: this.state.limit
     }).then((data) => {
       this.setState({ list: data.list, page: data.page, limit: data.limit })
@@ -47,12 +47,16 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
       message.error("读取通知消息失败！");
     });
   }
+  componentDidMount() {
+    this.fetchNotification();
+  }
   render() {
     const { list, loading } = this.state;
     return (
       <List
         renderItem={(item) => <List.Item><NotificationItemView notification={item} /></List.Item>}
         loading={loading}
+        loadMore={<div style={{textAlign: 'center'}}><a onClick={() => this.fetchNotification(this.state.page + 1)}>更多...</a></div>}
         dataSource={list}
       />
     );

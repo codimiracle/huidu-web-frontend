@@ -31,6 +31,9 @@ export interface APIDefinitionSet {
 /**
  * for using API in netwok-util
  */
+/**
+ * for using API in netwok-util
+ */
 export enum API {
   UserCollection = "user.collection",
   LoggedUserData = "user.logged",
@@ -234,7 +237,11 @@ export enum API {
   UserNotificationCollection = "user.notification.collection",
   UserNotificationMarkAsRead = "user.notification.markAsRead",
   UserNotificationReadCollection = "user.notification.read.collection",
-  UserNotificationUnreadCollection = "user.notification.unread.collection"
+  UserNotificationUnreadCollection = "user.notification.unread.collection",
+  CommunityDynamicCollection = "community.dynamic.collection",
+  CommunityTopicCollection = "community.topic.collection",
+  CommunityReviewCollection = "community.review.collection",
+  UserDynamicCollection = "user.community.dynamic.collection"
 }
 
 // const address = '192.168.1.150';
@@ -869,6 +876,23 @@ export const APIDefinitionData: APIDefinitionSet = {
       collection: `${testOrigin}/api/creator/electronic-books?filter=null&sorter=null&page=@{page}&limit=@{limit}`
     },
   },
+  community: {
+    dynamic: {
+      collection: {
+        url: `${testOrigin}/api/community/dynamics?page=@{page}&limit=@{limit}`
+      }
+    },
+    topic: {
+      collection: {
+        url: `${testOrigin}/api/community/topics?page=@{page}&limit=@{limit}`
+      }
+    },
+    review: {
+      collection: {
+        url: `${testOrigin}/api/community/reviews?page=@{page}&limit=@{limit}`
+      }
+    },
+  },
   common: {
     mostRead: `${testOrigin}/api/common/most-read?type=@{type}&page=@{page}&limit=@{limit}`,
     recommends: `${testOrigin}/api/common/recommends?page=@{page}&limit=@{limit}`
@@ -1048,6 +1072,11 @@ export const APIDefinitionData: APIDefinitionSet = {
       },
       today: {
         url: `${origin}/api/user/arrive/today`,
+      }
+    },
+    community: {
+      dynamic: {
+        collection: `${origin}/api/user/community/dynamics?page=@{page}&limit=@{limit}`
       }
     },
     logout: `${origin}/api/user/logout`,

@@ -1,9 +1,9 @@
-import React from 'react';
 import { Layout, Menu } from 'antd';
-import { withRouter, Router } from 'next/router';
+import { Router, withRouter } from 'next/router';
+import React from 'react';
 import UserIdView from '../components/user-id-view';
-import { UserContext } from '../components/hooks/with-user';
-import { User } from '../types/user';
+import BasicLayout from './basic-layout';
+import Link from 'next/link';
 
 const { Sider, Content } = Layout;
 
@@ -16,24 +16,21 @@ export class CommunityLayout extends React.Component<CommunityLayoutProps, Commu
   render() {
     const tab = this.props.router.query.tab as string;
     return (
-      <>
+      <BasicLayout>
         <Layout>
           <Sider>
             <Menu defaultSelectedKeys={[tab]}>
-              <Menu.Item key="daynamics">动态</Menu.Item>
-              <Menu.Item key="topics">话题</Menu.Item>
-              <Menu.Item key="reviews">点评</Menu.Item>
-              <Menu.Item key="for-me">我的</Menu.Item>
+              <Menu.Item key="daynamics"><Link href="/community/dynamics"><a>动态</a></Link></Menu.Item>
+              <Menu.Item key="topics"><Link href="/community/topics"><a>话题</a></Link></Menu.Item>
+              <Menu.Item key="reviews"><Link href="/community/reviews"><a>点评</a></Link></Menu.Item>
+              <Menu.Item key="for-me"><Link href="/community/for-me"><a>我的</a></Link></Menu.Item>
             </Menu>
           </Sider>
           <Content>
             {this.props.children}
           </Content>
-          <Sider>
-            <UserIdView />
-          </Sider>
         </Layout>
-      </>
+      </BasicLayout>
     )
   }
 }
