@@ -1076,7 +1076,7 @@ export const APIDefinitionData: APIDefinitionSet = {
     },
     community: {
       dynamic: {
-        collection: `${origin}/api/user/community/dynamics?page=@{page}&limit=@{limit}`
+        collection: `${testOrigin}/api/user/community/dynamics?page=@{page}&limit=@{limit}`
       }
     },
     logout: `${origin}/api/user/logout`,
