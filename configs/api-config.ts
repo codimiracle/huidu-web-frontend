@@ -236,11 +236,10 @@ export enum API {
 // const address = '192.168.1.150';
 // const address = '192.168.43.195';
 
-var testOrigin: string = "http://localhost:4000";
 var origin: string = browserWindow.location.origin;
 // var origin = `http://${address}:3000`;
 
-// var testOrigin = `http://192.168.43.178:4000`;
+var testOrigin = `http://192.168.43.178:4000`;
 
 /**
  * API definitions, it is url plus placeholder really.
