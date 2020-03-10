@@ -212,7 +212,7 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
             />
             {
               commentList.length > 20 &&
-              <CommentEditor rate contentId={book.contentId} user={user} />
+              <CommentEditor rate contentId={book.contentId} />
             }
             <style jsx>{`
               .comments-pagination {

@@ -67,7 +67,7 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
             </Menu>
             <div className="user-tools">
               <SearchView />
-              <NotificationView user={userdata} style={{ color: 'white' }} />
+              <NotificationView style={{ color: 'white' }} />
               <Menu
                 mode="horizontal"
                 theme="dark"

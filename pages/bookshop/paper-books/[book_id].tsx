@@ -107,7 +107,6 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
       limit: 10
     });
     return {
-      user: userData.entity,
       book: bookData.entity,
       lastUpdate: lastUpdateData.entity,
       comments: commentsData.list
@@ -147,7 +146,7 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
     this.fetchComments(page, limit);
   }
   render() {
-    const { book, user, lastUpdate } = this.props;
+    const { book, lastUpdate } = this.props;
     const { commentList, page, limit, commentsLoading, hasMoreComments } = this.state;
     const loadMore = (hasMoreComments ? <div style={{ textAlign: 'center', padding: '1em' }}><Button loading={commentsLoading} onClick={() => this.fetchComments(page, limit)}>加载更多</Button></div> : null)
     return (
@@ -171,7 +170,7 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
             <div className="comments-pagination">
               <Pagination size="small" />
             </div>
-            <CommentEditor contentId={book.contentId} user={user} />
+            <CommentEditor contentId={book.contentId} />
             <List
               renderItem={(comment: Comment) => <List.Item><CommentView comment={comment} /></List.Item>}
               loadMore={loadMore}
@@ -179,7 +178,7 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
             />
             {
               commentList.length > 20 &&
-              <CommentEditor contentId={book.contentId} user={user} />
+              <CommentEditor contentId={book.contentId} />
             }
             <style jsx>{`
               .comments-pagination {
