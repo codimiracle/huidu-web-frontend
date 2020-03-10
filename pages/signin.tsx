@@ -23,14 +23,10 @@ export class SignIn extends React.Component<SignInProps, SignInState> {
   }
   onSignIn() {
     const { form, router } = this.props;
-    form.validateFields((errors) => {
+    form.validateFields((errors, values) => {
       if (!errors) {
         this.setState({ signing: true });
-        fetchMessageByPost(API.SystemSignIn, {
-          username: form.getFieldValue('username'),
-          password: form.getFieldValue('password'),
-          remember: form.getFieldValue('remember')
-        }).then((msg) => {
+        fetchMessageByPost(API.SystemSignIn).then((msg) => {
           if (msg.code == 200) {
             message.success('登录成功！');
             router.replace('/');
