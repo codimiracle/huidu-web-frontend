@@ -28,7 +28,6 @@ export default class ReviewDisplayer extends React.Component<ReviewDisplayerProp
       <div className="review-view" {...otherProps}>
         <div className="container">
           <div className="article">
-            <h2><Link href={`/contents/reviews/[review_id]`} as={`/contents/reviews/${review.contentId}`}><a>{review.title}</a></Link></h2>
             <div className="review-info ant-comment-content-author">
               <AvatarView size="large" user={review.owner} />
               <div>
@@ -37,6 +36,7 @@ export default class ReviewDisplayer extends React.Component<ReviewDisplayerProp
               </div>
               <Rate style={{ fontSize: '14px' }} disabled defaultValue={review.rate} />
             </div>
+            <h2><Link href={`/contents/reviews/[review_id]`} as={`/contents/reviews/${review.contentId}`}><a>{review.title}</a></Link></h2>
             <div className="article-preview" dangerouslySetInnerHTML={{ __html: review.content.source }}></div>
           </div>
           <div className="review-extra">

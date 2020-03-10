@@ -20,24 +20,24 @@ export class CommunityLayout extends React.Component<CommunityLayoutProps, Commu
     return (
       <BasicLayout>
         <Layout>
-          <Sider style={{ backgroundColor: 'white' }}>
-            <Menu defaultSelectedKeys={[tab]}>
-              <Menu.Item key="daynamics"><Link href="/community/dynamics"><a>动态</a></Link></Menu.Item>
-              <Menu.Item key="topics"><Link href="/community/topics"><a>话题</a></Link></Menu.Item>
-              <Menu.Item key="reviews"><Link href="/community/reviews"><a>点评</a></Link></Menu.Item>
-              <UserContext.Consumer>
-                {
-                  (user: User) => <>
+          <Sider theme="light">
+            <UserContext.Consumer>
+              {
+                (user: User) => <>
+                  <Menu defaultSelectedKeys={[tab]}>
+                    <Menu.Item key="daynamics"><Link href="/community/dynamics"><a>动态</a></Link></Menu.Item>
+                    <Menu.Item key="topics"><Link href="/community/topics"><a>话题</a></Link></Menu.Item>
+                    <Menu.Item key="reviews"><Link href="/community/reviews"><a>点评</a></Link></Menu.Item>
                     {
                       user &&
                       <Menu.Item key="for-me"><Link href="/community/for-me"><a>我的</a></Link></Menu.Item>
                     }
-                  </>
-                }
-              </UserContext.Consumer>
-            </Menu>
+                  </Menu>
+                </>
+              }
+            </UserContext.Consumer>
           </Sider>
-          <Content style={{ padding: '0 16px' }}>
+          <Content style={{ backgroundColor: 'white', padding: '0 16px' }}>
             {this.props.children}
           </Content>
         </Layout>

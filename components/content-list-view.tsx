@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { List, message, Button } from 'antd';
 import { API } from '../configs/api-config';
 import { ListJSON } from '../types/api';
@@ -8,6 +8,7 @@ import ContentView from './content-view';
 
 export interface ContentListProps {
   api: API;
+  style?: CSSProperties;
 };
 export interface ContentListState {
   loading: boolean;
@@ -64,6 +65,7 @@ export default class ContentList extends React.Component<ContentListProps, Conte
           </List.Item>
         )}
         dataSource={this.state.list}
+        style={this.props.style}
       />
     )
   }

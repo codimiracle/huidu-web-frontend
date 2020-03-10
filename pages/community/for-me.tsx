@@ -14,25 +14,26 @@ export interface FormeDynamicState { };
 export default class FormeDynamic extends React.Component<FormeDynamicProps, FormeDynamicState> {
   render() {
     return (
-      <Layout>
+      <>
         <UserContext.Consumer>
           {
             (user: User) => <>
-              {
-                user ?
-                  (
+              <Layout>
+                {
+                  user ? (
                     <>
-                      <ContentList api={API.UserDynamicCollection} />
-                      <Sider>
+                      <ContentList api={API.UserDynamicCollection} style={{ flex: 1 }} />
+                      <Sider theme="light">
                         <AvatarView user={user} />
                       </Sider>
                     </>
                   ) : <div>请先登录，再查看我的动态！</div>
-              }
+                }
+              </Layout>
             </>
           }
         </UserContext.Consumer>
-      </Layout>
+      </>
     )
   }
 }

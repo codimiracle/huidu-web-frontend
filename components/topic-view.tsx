@@ -19,7 +19,6 @@ export default class TopicView extends React.Component<TopicViewProps, TopicView
     return (
       <>
         <div className="topic-view">
-          <h2><Link href="/contents/topics/[topic_id]" as={`/contents/topics/${topic.contentId}`}><a>{topic.title}</a></Link></h2>
           <div className="ant-comment-content-author">
             <AvatarView user={topic.owner} />
             <span className="ant-comment-content-author-name">{topic.owner.nickname}</span>
@@ -29,6 +28,7 @@ export default class TopicView extends React.Component<TopicViewProps, TopicView
               </Tooltip>
             </span>
           </div>
+          <h2><Link href="/contents/topics/[topic_id]" as={`/contents/topics/${topic.contentId}`}><a>{topic.title}</a></Link></h2>
           <p dangerouslySetInnerHTML={{ __html: topic.content.source }}></p>
           <ReferenceDisplayer references={topic.references} />
           <ContentInteractor comments={topic.comments} likes={topic.likes} />
