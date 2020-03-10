@@ -70,14 +70,13 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
                   <div className="user-tools">
                     <SearchView />
                     <NotificationView style={{ color: 'white' }} />
-                    <Menu
-                      mode="horizontal"
-                      theme="light"
-                    >
-                      <SubMenu title={<Link href={user ? "/user-central/profile" : "/signin"}><a><AvatarView user={user} /></a></Link>}>
-                        {
-                          user &&
-                          <>
+                    {
+                      user ? (
+                        <Menu
+                          mode="horizontal"
+                          theme="dark"
+                        >
+                          <SubMenu title={<Link href="/user-central/profile"><a><AvatarView user={user} /></a></Link>}>
                             <Menu.Item><Link href="/user-central/bookshelf"><a>我的书架</a></Link></Menu.Item>
                             <Menu.Item><Link href="/user-central/orders"><a>我的订单</a></Link></Menu.Item>
                             <Menu.Item><Link href="/user/arrived"><a>读书打卡</a></Link></Menu.Item>
@@ -90,10 +89,18 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
                             <Menu.Item><Link href="/user-central/profile"><a>个人中心</a></Link></Menu.Item>
                             <Menu.Divider />
                             <Menu.Item>退出登录</Menu.Item>
-                          </>
-                        }
-                      </SubMenu>
-                    </Menu>
+                          </SubMenu>
+                        </Menu>
+                      ) : (
+                          <Menu
+                            mode="horizontal"
+                            theme="dark"
+                          >
+                            <SubMenu title={<Link href="/signin"><a><AvatarView user={user} /></a></Link>}>
+                            </SubMenu>
+                          </Menu>
+                        )
+                    }
                   </div>
               }
             </UserContext.Consumer>

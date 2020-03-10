@@ -44,7 +44,7 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
     }).then((data) => {
       this.setState({ list: data.list, page: data.page, limit: data.limit })
     }).catch((err) => {
-      message.error("读取通知消息失败！");
+      message.error(`读取通知消息失败：${err}`);
     });
   }
   componentDidMount() {
@@ -56,7 +56,7 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
       <List
         renderItem={(item) => <List.Item><NotificationItemView notification={item} /></List.Item>}
         loading={loading}
-        loadMore={<div style={{textAlign: 'center'}}><a onClick={() => this.fetchNotification(this.state.page + 1)}>更多...</a></div>}
+        loadMore={<div style={{ textAlign: 'center' }}><a onClick={() => this.fetchNotification(this.state.page + 1)}>更多...</a></div>}
         dataSource={list}
       />
     );
