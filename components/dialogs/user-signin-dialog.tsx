@@ -38,8 +38,8 @@ export class UserSignInDialog extends React.Component<UserSignInDialogProps, Use
 
         fetchDataByPost<UserToken>(API.SystemSignIn, values).then((data) => {
           window.localStorage.setItem('token', data.token);
+          onCancel();
           if (onLogged) {
-            onCancel();
             onLogged(data.user);
           }
         }).catch((err) => {
