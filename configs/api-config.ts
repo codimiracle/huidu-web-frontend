@@ -230,7 +230,11 @@ export enum API {
   BackendUserResetPassword = "BackendUserResetPassword",
   BackendOrderLogisticsInformationUpdate = "backend.order.logisticsInformation.update",
   ElectronicBookEpisodeSuggestion = "electronicBook.episode.suggestion",
-  ElectronicBookComments = "ElectronicBookComments"
+  ElectronicBookComments = "electronic.book.comments",
+  UserNotificationCollection = "user.notification.collection",
+  UserNotificationMarkAsRead = "user.notification.markAsRead",
+  UserNotificationReadCollection = "user.notification.read.collection",
+  UserNotificationUnreadCollection = "user.notification.unread.collection"
 }
 
 // const address = '192.168.1.150';
@@ -1017,6 +1021,17 @@ export const APIDefinitionData: APIDefinitionSet = {
     }
   },
   user: {
+    notification: {
+      read: {
+        collection: `${testOrigin}/api/user/notifications/read`
+      },
+      unread: {
+        collection: `${testOrigin}/api/user/notifications/unread`
+      },
+      markAsRead: {
+        url: `${testOrigin}/api/user/notifications/@{notification_id}/read`
+      }
+    },
     space: {
       dynamicCollection: `${origin}/api/users/@{user_id}/space/dynamics?page=@{page}&limit=@{limit}`,
       topicCollection: `${origin}/api/users/@{user_id}/space/topics?page=@{page}&limit=@{limit}`,

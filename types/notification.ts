@@ -5,6 +5,7 @@ export enum NotificationType {
   Message = 'message',
 }
 export interface Notification {
+  id: string,
   sender: SocialUser,
   receiver: SocialUser,
   type: NotificationType,

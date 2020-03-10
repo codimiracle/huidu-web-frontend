@@ -1,25 +1,81 @@
+import { List, Tabs, message } from 'antd';
 import React from 'react';
-import { Tabs, List } from 'antd';
-import { User } from '../types/user';
+import NotificationItemView from './notification-item-view';
+import { API } from '../configs/api-config';
+import { fetchDataByGet } from '../util/network-util';
+import useSWR from 'swr';
+import { ListJSON } from '../types/api';
+import { Notification } from '../types/notification';
+
 const { TabPane } = Tabs;
 
-export interface NotificationContentViewProps {
-  user: User
+export interface NotificationContentViewProps { };
+export interface NotificationContentViewState {
+  loading: boolean;
+  currentKey: string;
 };
-export interface NotificationContentViewState { };
+
+interface NotificationListProps {
+  api: API
+}
+
+interface NotificationListState {
+  list: Array<Notification>;
+  limit: number;
+  page: number;
+  loading: boolean;
+}
+
+
+class NotificationList extends React.Component<NotificationListProps, NotificationListState> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      list: [],
+      page: 1,
+      limit: 10,
+      loading: false
+    }
+  }
+  fetchNotification() {
+    fetchDataByGet<ListJSON<Notification>>(this.props.api, {
+      page: this.state.page,
+      limit: this.state.limit
+    }).then((data) => {
+      this.setState({ list: data.list, page: data.page, limit: data.limit })
+    }).catch((err) => {
+      message.error("读取通知消息失败！");
+    });
+  }
+  render() {
+    const { list, loading } = this.state;
+    return (
+      <List
+        renderItem={(item) => <List.Item><NotificationItemView notification={item} /></List.Item>}
+        loading={loading}
+        dataSource={list}
+      />
+    );
+  }
+}
 
 export default class NotificationContentView extends React.Component<NotificationContentViewProps, NotificationContentViewState> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      currentKey: null
+    }
+  }
   render() {
     return (
       <div className="notification-content-view">
-        <Tabs size="small">
+        <Tabs size="small" onChange={(activeKey) => this.setState({ currentKey: activeKey })}>
           <TabPane tab="未读" key="unread">
-            <List
-             />
+            <NotificationList api={API.UserNotificationUnreadCollection} />
           </TabPane>
           <TabPane tab="已读" key="read">
-            <List
-            />
+            <NotificationList api={API.UserNotificationReadCollection} />
           </TabPane>
         </Tabs>
         <style jsx>{`
