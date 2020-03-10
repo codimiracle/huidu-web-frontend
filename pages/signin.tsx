@@ -4,7 +4,8 @@ import { Router, withRouter } from 'next/router';
 import React from 'react';
 import UserSigninForm from '../components/form/user-signin-from';
 import { API } from '../configs/api-config';
-import { fetchMessageByPost } from '../util/network-util';
+import { fetchMessageByPost, fetchDataByPost } from '../util/network-util';
+import { User } from '../types/user';
 
 export interface SignInProps {
   form: WrappedFormUtils,
@@ -25,19 +26,18 @@ export class SignIn extends React.Component<SignInProps, SignInState> {
     const { form, router } = this.props;
     form.validateFields((errors, values) => {
       if (!errors) {
-        this.setState({ signing: true });
-        fetchMessageByPost(API.SystemSignIn).then((msg) => {
-          if (msg.code == 200) {
-            message.success('登录成功！');
-            router.replace('/');
-          } else {
-            message.error(msg.message);
-          }
+        type UserToken = {
+          token: string,
+          user: User
+        };
+        fetchDataByPost<UserToken>(API.SystemSignIn, values).then((data) => {
+          window.localStorage.setItem('token', data.token);
+          router.replace('/');
         }).catch((err) => {
           message.error(`登录失败：${err}`);
         }).finally(() => {
           this.setState({ signing: false });
-        })
+        });
       }
     });
   }
