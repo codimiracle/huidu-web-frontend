@@ -30,11 +30,15 @@ export default class ReviewDisplayer extends React.Component<ReviewDisplayerProp
           <div className="article">
             <div className="review-info ant-comment-content-author">
               <AvatarView size="large" user={review.owner} />
-              <div>
-                <div className="ant-comment-content-author-name">{review.owner.nickname}</div>
-                <div className="ant-comment-content-author-time">{DatetimeUtil.fromNow(review.updateTime)}</div>
-              </div>
-              <Rate style={{ fontSize: '14px' }} disabled defaultValue={review.rate} />
+              <span>
+                <div>
+                  <div className="ant-comment-content-author-name">{review.owner.nickname}</div>
+                  <div className="ant-comment-content-author-time">{DatetimeUtil.fromNow(review.updateTime)}</div>
+                </div>
+              </span>
+              <span>
+                <Rate style={{ fontSize: '14px' }} disabled defaultValue={review.rate} />
+              </span>
             </div>
             <h2><Link href={`/contents/reviews/[review_id]`} as={`/contents/reviews/${review.contentId}`}><a>{review.title}</a></Link></h2>
             <div className="article-preview" dangerouslySetInnerHTML={{ __html: review.content.source }}></div>

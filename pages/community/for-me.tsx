@@ -18,7 +18,7 @@ export default class FormeDynamic extends React.Component<FormeDynamicProps, For
         <UserContext.Consumer>
           {
             (user: User) => <>
-              <Layout>
+              <Layout style={{ backgroundColor: 'white' }}>
                 {
                   user ? (
                     <>
