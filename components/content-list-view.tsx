@@ -54,7 +54,7 @@ export default class ContentList extends React.Component<ContentListProps, Conte
       <List
         loadMore={
           (this.state.total > this.state.list.length || this.state.page == 0) &&
-          <div>
+          <div style={{textAlign: 'center'}}>
             <Button type="link" loading={this.state.loading} onClick={() => this.fetchList(this.state.page + 1, this.state.limit)}>{this.state.page == 0 ? '重新加载' : '更多...'}</Button>
           </div>
         }
