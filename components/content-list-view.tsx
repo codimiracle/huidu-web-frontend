@@ -48,7 +48,7 @@ export default class ContentList extends React.Component<ContentListProps, Conte
         total: data.total,
       }));
     }).catch((err) => {
-      message.error("拉取列表失败！");
+      message.error(`拉取列表失败：${err}`);
     }).finally(() => {
       this.setState({ loading: false })
     });
