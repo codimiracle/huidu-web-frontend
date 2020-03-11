@@ -5,42 +5,35 @@ import { Review } from '../../../types/review';
 import ReviewDisplayer from '../../../components/review-view';
 import { fetchDataByGet } from '../../../util/network-util';
 import { API } from '../../../configs/api-config';
+import ContentList from '../../../components/content-list-view';
+import { ListJSON } from '../../../types/api';
 
 export interface ReviewsProps {
-  reviews: Array<Review>
+  list: Array<Review>;
+  total: number;
 };
 export interface ReviewsState {
-  reviews: Array<Review>
 };
 
 export default class Reviews extends React.Component<ReviewsProps, ReviewsState> {
   static async getInitialProps() {
-    let data = await fetchDataByGet(API.ReviewCollection, {
-      page: 0,
+    let data = await fetchDataByGet<ListJSON<Review>>(API.CommunityReviewCollection, {
+      page: 1,
       limit: 10
     });
-    return data;
+    return {
+      list: data.list,
+      total: data.total
+    };
   }
   constructor(props: ReviewsProps) {
     super(props);
-    this.state = {
-      reviews: props.reviews
-    }
   }
   render() {
-    const { reviews } = this.state;
+    const { total, list } = this.props;
     return (
       <>
         <SectionView
-          content={
-            <List
-              renderItem={(data: Review) =>
-                <List.Item key={data.contentId}>
-                  <ReviewDisplayer review={data} style={{ flex: '1' }} />
-                </List.Item>}
-              dataSource={reviews}
-            />
-          }
           aside={
             <>
               <Card>
@@ -48,6 +41,11 @@ export default class Reviews extends React.Component<ReviewsProps, ReviewsState>
               </Card>
             </>
           }
+        />
+        <ContentList
+          api={API.CommunityReviewCollection}
+          initialTotal={total}
+          initialDataSource={list}
         />
       </>
     )

@@ -1,4 +1,4 @@
-import { List, Tabs, message } from 'antd';
+import { List, Tabs, message, Button } from 'antd';
 import React from 'react';
 import NotificationItemView from './notification-item-view';
 import { API } from '../configs/api-config';
@@ -56,7 +56,7 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
       <List
         renderItem={(item) => <List.Item><NotificationItemView notification={item} /></List.Item>}
         loading={loading}
-        loadMore={<div style={{ textAlign: 'center' }}><a onClick={() => this.fetchNotification(this.state.page + 1)}>更多...</a></div>}
+        loadMore={<div style={{ textAlign: 'center' }}><Button type="link" loading={this.state.loading} onClick={() => this.fetchNotification(this.state.page + 1)}>更多...</Button></div>}
         dataSource={list}
       />
     );

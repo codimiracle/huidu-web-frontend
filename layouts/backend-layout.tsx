@@ -1,16 +1,13 @@
-import React from 'react';
-import { ALL_AUTHORITIES, getNavigationMenus, BASE_URL } from '../configs/backend-config';
-import { Layout, Menu, Icon, message } from 'antd';
+import { Icon, Layout, Menu } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
-import DirectLink from '../components/direct-link';
-import { User } from '../types/user';
-import { fetchDataByGet } from '../util/network-util';
-import { API } from '../configs/api-config';
+import React from 'react';
 import AvatarView from '../components/avatar-view';
-import NotificationView from '../components/notification-view';
-import AuthorityUtil from '../util/authority-util';
-import { EntityJSON } from '../types/api';
+import DirectLink from '../components/direct-link';
 import { UserContext } from '../components/hooks/with-user';
+import NotificationView from '../components/notification-view';
+import { BASE_URL, getNavigationMenus } from '../configs/backend-config';
+import { User } from '../types/user';
+import AuthorityUtil from '../util/authority-util';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -61,7 +58,6 @@ export default class BackendLayout extends React.Component<BackendLayoutProps, B
   render() {
     return (
       <>
-
         <Layout>
           <Sider
             trigger={null}

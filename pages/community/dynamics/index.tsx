@@ -1,21 +1,21 @@
-import { Card, List } from 'antd';
+import { Card } from 'antd';
 import React from 'react';
-import ContentView from '../../../components/content-view';
+import ContentList from '../../../components/content-list-view';
 import SectionView from '../../../components/section-view';
 import { API } from '../../../configs/api-config';
 import { ListJSON } from '../../../types/api';
-import { Content } from '../../../types/content';
+import { Article } from '../../../types/content';
 import { fetchDataByGet } from '../../../util/network-util';
 
 interface DynamicsProps {
-  list: Array<Content>,
+  list: Array<Article>,
   total: number
 }
 interface DynamicsState { }
 
 export default class Dynamics extends React.Component<DynamicsProps, DynamicsState> {
   static async getInitialProps() {
-    let data = await fetchDataByGet<ListJSON<Content>>(API.DynamicCollection, {
+    let data = await fetchDataByGet<ListJSON<Article>>(API.CommunityDynamicCollection, {
       page: 1,
       limit: 10
     })
@@ -37,13 +37,10 @@ export default class Dynamics extends React.Component<DynamicsProps, DynamicsSta
             </>
           }
         >
-          <List
-            renderItem={(item: Content) => (
-              <List.Item style={{ display: 'block' }}>
-                <ContentView content={item as any} />
-              </List.Item>
-            )}
-            dataSource={list}
+          <ContentList
+            api={API.CommunityDynamicCollection}
+            initialDataSource={list}
+            initialTotal={total}
           />
         </SectionView>
       </>
