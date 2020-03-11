@@ -1194,7 +1194,7 @@ export const APIDefinitionData: APIDefinitionSet = {
     address: {
       default: `${testOrigin}/api/user/addresses/default`,
       entity: `${testOrigin}/api/user/addresses/@{address_id}`,
-      collection: `${testOrigin}/api/user/addresses?page=@{page}&limit=@{limit}`,
+      collection: `${testOrigin}/api/user/addresses?filter=null&sorter=null&page=@{page}&limit=@{limit}`,
       update: {
         url: `${testOrigin}/api/user/addresses/@{address_id}`,
         method: 'post',
@@ -1203,6 +1203,13 @@ export const APIDefinitionData: APIDefinitionSet = {
           region: null,
           receiver: null,
           postcode: null
+        }
+      },
+      makeDefault: {
+        url: `${testOrigin}/api/user/addresses/default`,
+        method: 'post',
+        body: {
+          addressId: null
         }
       },
       create: {
