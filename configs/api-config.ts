@@ -1053,7 +1053,12 @@ export const APIDefinitionData: APIDefinitionSet = {
         collection: `${testOrigin}/api/user/notifications/unreads?page=@{page}&limit=@{limit}`
       },
       markAsRead: {
-        url: `${testOrigin}/api/user/notifications/@{notification_id}/read`
+        url: `${testOrigin}/api/user/notifications/@{notification_id}/read`,
+        method: 'post',
+        query: {
+          notification_id: null
+        },
+        body: {}
       }
     },
     space: {
@@ -1075,6 +1080,64 @@ export const APIDefinitionData: APIDefinitionSet = {
       }
     },
     community: {
+      review: {
+        create: {
+          url: `${testOrigin}/api/user/community/reviews`,
+          method: 'post',
+          body: {
+            title: null,
+            content: {
+              type: 'html',
+              source: ''
+            },
+            references: []
+          }
+        },
+        update: {
+          url: `${testOrigin}/api/user/community/reviews/@{review_id}`,
+          method: 'put',
+          query: {
+            review_id: null
+          },
+          body: {
+            title: null,
+            content: {
+              type: 'html',
+              source: ''
+            },
+            references: []
+          }
+        },
+      },
+      topic: {
+        create: {
+          url: `${origin}/api/user/community/topics`,
+          method: 'post',
+          body: {
+            title: null,
+            content: {
+              type: 'html',
+              source: ''
+            },
+            references: []
+          }
+        },
+        update: {
+          url: `${origin}/api/user/community/topics/@{topic_id}`,
+          method: 'put',
+          query: {
+            topic_id: null
+          },
+          body: {
+            title: null,
+            content: {
+              type: 'html',
+              source: ''
+            },
+            references: []
+          }
+        },
+      },
       dynamic: {
         collection: `${testOrigin}/api/user/community/dynamics?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`
       }
@@ -1098,11 +1161,11 @@ export const APIDefinitionData: APIDefinitionSet = {
       }
     },
     address: {
-      default: `${origin}/api/user/addresses/default`,
-      entity: `${origin}/api/user/addresses/@{address_id}`,
-      collection: `${origin}/api/user/addresses?page=@{page}&limit=@{limit}`,
+      default: `${testOrigin}/api/user/addresses/default`,
+      entity: `${testOrigin}/api/user/addresses/@{address_id}`,
+      collection: `${testOrigin}/api/user/addresses?page=@{page}&limit=@{limit}`,
       update: {
-        url: `${origin}/api/user/addresses/@{address_id}`,
+        url: `${testOrigin}/api/user/addresses/@{address_id}`,
         method: 'post',
         body: {
           address: null,
@@ -1112,7 +1175,7 @@ export const APIDefinitionData: APIDefinitionSet = {
         }
       },
       create: {
-        url: `${origin}/api/user/addresses`,
+        url: `${testOrigin}/api/user/addresses`,
         method: 'post',
         body: {
           address: null,
@@ -1122,15 +1185,15 @@ export const APIDefinitionData: APIDefinitionSet = {
         }
       },
       delete: {
-        url: `${origin}/api/user/addresses/@{address_id}`,
+        url: `${testOrigin}/api/user/addresses/@{address_id}`,
         method: 'delete'
       }
     },
     order: {
-      collection: `${origin}/api/user/orders?filter=@{filter}&page=@{page}&limit=@{limit}`,
-      entity: `${origin}/api/user/orders/@{order_number}`,
+      collection: `${testOrigin}/api/user/orders?filter=@{filter}&page=@{page}&limit=@{limit}`,
+      entity: `${testOrigin}/api/user/orders/@{order_number}`,
       pay: {
-        url: `${origin}/api/user/orders/pay`,
+        url: `${testOrigin}/api/user/orders/pay`,
         method: 'post',
         body: {
           order_number: null,
@@ -1138,7 +1201,7 @@ export const APIDefinitionData: APIDefinitionSet = {
         }
       },
       orderring: {
-        url: `${origin}/api/user/orders/orderring`,
+        url: `${testOrigin}/api/user/orders/orderring`,
         body: {
           addressId: null,
           items: null
@@ -1146,9 +1209,9 @@ export const APIDefinitionData: APIDefinitionSet = {
       }
     },
     cart: {
-      collection: `${origin}/api/user/cart?page=@{page}&limit=@{limit}`,
+      collection: `${testOrigin}/api/user/cart?page=@{page}&limit=@{limit}`,
       join: {
-        url: `${origin}/api/user/cart/join`,
+        url: `${testOrigin}/api/user/cart/join`,
         body: {
           book_id: null
         }
@@ -1166,10 +1229,17 @@ export const APIDefinitionData: APIDefinitionSet = {
       }
     },
     subscribe: {
-      collection: `${origin}/api/user/subscribes?page=@{page}&limit=@{limit}`,
-      unsubscribe: `${origin}/api/user/subscribes/@{subscribe_id}`,
+      collection: `${testOrigin}/api/user/subscribes?page=@{page}&limit=@{limit}`,
+      unsubscribe: {
+        url: `${testOrigin}/api/user/subscribes/@{subscribe_id}/unsubscribe`,
+        method: 'post',
+        query: {
+          subscribe_id: null
+        },
+        body: {}
+      },
       create: {
-        url: `${origin}/api/user/subscribes`,
+        url: `${testOrigin}/api/user/subscribes`,
         method: 'post',
         body: {
           type: '',

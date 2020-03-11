@@ -1,5 +1,5 @@
 import React from 'react';
-import { Book } from '../types/book';
+import { Book, BookType } from '../types/book';
 import { Comment } from '../types/comment';
 import { Article, ContentType } from '../types/content';
 import { Review } from '../types/review';
@@ -28,8 +28,8 @@ export default class ContentView extends React.Component<ContentViewProps, Conte
       if (content.type == ContentType.Comment) {
         view = <CommentView comment={content as Comment} />;
       }
-      if (content.type == ContentType.Book) {
-        view = <BookView book={content as unknown as Book} />;
+      if (Object.values(BookType).includes(content.type as BookType)) {
+        view = <BookView book={content as any as Book} />;
       }
     }
     if (view == null) {
