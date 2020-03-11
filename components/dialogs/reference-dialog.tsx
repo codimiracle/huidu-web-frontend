@@ -1,12 +1,12 @@
-import { message, Checkbox, Modal, Tabs, Input, List } from "antd";
+import { Checkbox, Input, List, message, Modal, Tabs } from "antd";
 import React from "react";
 import { API } from "../../configs/api-config";
+import { AudioBookListJSON } from "../../pages/api/audio-books";
 import { ElectronicBookListJSON } from "../../pages/api/electronic-books";
 import { AudioBook } from "../../types/audio-book";
+import { Book } from "../../types/book";
 import { ElectronicBook } from "../../types/electronic-book";
 import { fetchDataByGet } from "../../util/network-util";
-import { AudioBookListJSON } from "../../pages/api/audio-books";
-import { Book } from "../../types/book";
 import BookPreviewView from "../book-preview-view";
 
 const { Search } = Input;
@@ -108,7 +108,7 @@ export class ReferenceDialog extends React.Component<ReferenceDialogProps, Refer
             <List
               loading={searchingElectronicBook}
               renderItem={(item) => (
-                <List.Item>
+                <List.Item key={item.id} style={{justifyContent: 'start'}}>
                   <Checkbox
                     style={{ paddingRight: '2em' }}
                     onChange={(e) => this.onBookSelected(e.target.checked, item)}
@@ -123,7 +123,7 @@ export class ReferenceDialog extends React.Component<ReferenceDialogProps, Refer
             <List
               loading={searchingAudioBook}
               renderItem={(item) => (
-                <List.Item>
+                <List.Item key={item.id} style={{justifyContent: 'start'}}>
                   <Checkbox
                     style={{ paddingRight: '2em' }}
                     onChange={(e) => this.onBookSelected(e.target.checked, item)}

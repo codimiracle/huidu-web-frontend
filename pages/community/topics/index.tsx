@@ -1,24 +1,29 @@
-import React from 'react';
-import SectionView from '../../../components/section-view';
-import { List, Card, Button } from 'antd';
-import { Topic } from '../../../types/topic';
-import TopicView from '../../../components/topic-view';
-import { fetchDataByGet } from '../../../util/network-util';
-import { API } from '../../../configs/api-config';
+import { Button } from 'antd';
 import Link from 'next/link';
+import React from 'react';
 import ContentList from '../../../components/content-list-view';
+import WrappedUserSigninDialog from '../../../components/dialogs/user-signin-dialog';
+import { UserContext } from '../../../components/hooks/with-user';
+import SectionView from '../../../components/section-view';
+import { API } from '../../../configs/api-config';
 import { ListJSON } from '../../../types/api';
+import { Topic } from '../../../types/topic';
+import { fetchDataByGet } from '../../../util/network-util';
 
 export interface TopicsProps {
   list: Array<Topic>;
   total: number;
 };
 export interface TopicsState {
+  signInDialogVisible: boolean;
 };
 
 export default class Topics extends React.Component<TopicsProps, TopicsState> {
   constructor(props: TopicsProps) {
     super(props);
+    this.state = {
+      signInDialogVisible: false
+    }
   }
   static async getInitialProps() {
     let data = await fetchDataByGet<ListJSON<Topic>>(API.CommunityTopicCollection, {
@@ -39,10 +44,17 @@ export default class Topics extends React.Component<TopicsProps, TopicsState> {
         <SectionView
           aside={
             <>
-              <Link href="/contents/topics/topic-writer"><a><Button icon="plus" block style={{ marginBottom: '8px' }}>发话题</Button></a></Link>
-              <Card>
-                <h3>本周最多参与</h3>
-              </Card>
+              <UserContext.Consumer>
+                {(user) =>
+                  <>
+                    {
+                      user ?
+                        (<Link href="/contents/topics/topic-writer"><a><Button icon="plus" block style={{ marginBottom: '8px' }}>发话题</Button></a></Link>) :
+                        <Button onClick={() => this.setState({ signInDialogVisible: true })}>登录发布话题</Button>
+                    }
+                  </>
+                }
+              </UserContext.Consumer>
             </>
           }
         >
@@ -52,6 +64,7 @@ export default class Topics extends React.Component<TopicsProps, TopicsState> {
             initialDataSource={list}
           />
         </SectionView>
+        <WrappedUserSigninDialog visible={this.state.signInDialogVisible} onCancel={() => this.setState({ signInDialogVisible: false })} />
       </>
     )
   }

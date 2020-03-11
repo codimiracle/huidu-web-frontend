@@ -1,12 +1,11 @@
-import { Tooltip, List } from 'antd';
+import { Tooltip } from 'antd';
+import Link from 'next/link';
 import React from 'react';
 import { Topic } from '../types/topic';
 import DatetimeUtil from '../util/datetime-util';
 import AvatarView from './avatar-view';
 import ContentInteractor from './content-interactor';
 import ReferenceDisplayer from './reference-view';
-import Link from 'next/link';
-import { Content } from '../types/content';
 
 interface TopicViewProps {
   topic: Topic

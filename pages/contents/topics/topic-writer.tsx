@@ -54,7 +54,7 @@ export default class TopicWriter extends React.Component<TopicWriterProps, Topic
   }
   onContentSave() {
     const { topic } = this.state;
-    if (!(topic && topic.title && topic.content.source)) {
+    if (!(topic && topic.title && topic.content && topic.content.source)) {
       message.error('不好意思，标题和内容是必须的。');
       return;
     }
@@ -86,9 +86,9 @@ export default class TopicWriter extends React.Component<TopicWriterProps, Topic
         <Col span={8}>
           <ContentSubmitter
             onStatusChange={(status) => {
-              let topic = this.state.topic;
+              let topic: any = this.state.topic || {};
               topic.status = status;
-              this.setState({topic: topic});
+              this.setState({ topic: topic as Topic });
             }}
             extra={
               <div>
