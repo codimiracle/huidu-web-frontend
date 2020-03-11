@@ -30,10 +30,6 @@ export default class AddressView extends React.Component<AddressViewProps, Addre
             </tbody>
           </table>
         }
-        {
-          !address &&
-          <p>地址无法显示</p>
-        }
       </div>
     )
   }

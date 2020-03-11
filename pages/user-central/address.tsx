@@ -199,10 +199,10 @@ export class AddressEditorDialog extends React.Component<AddressEditorDialogProp
     const { form, onCancel, onModified } = this.props;
     this.setState({ modifying: true });
     fetchDataByPut<EntityJSON<Address>>(API.UserAddressUpdate, { address_id: address.id, ...address }).then((data) => {
-        message.info('修改成功！');
-        form.resetFields();
-        onCancel();
-        onModified(data.entity);
+      message.info('修改成功！');
+      form.resetFields();
+      onCancel();
+      onModified(data.entity);
     }).catch((err) => {
       message.error(`修改失败：${err}`);
     }).finally(() => {
@@ -317,7 +317,7 @@ export class AddressManageAction extends React.Component<AddressManageActionProp
             <Button
               type="link"
               loading={makingDefault}
-              disabled={defaultAddress.id == address.id}
+              disabled={defaultAddress && defaultAddress.id == address.id}
               style={{ padding: '0' }}
             >设为默认</Button>
           </Popconfirm>
@@ -423,7 +423,11 @@ export default class AddressManage extends React.Component<AddressManageProps, A
             <h3>默认收货地址</h3>
             <div>
               <LoadingView loading={fetchingDefault}>
-                <AddressView address={defaultAddress} />
+                {
+                  defaultAddress ?
+                    <AddressView address={defaultAddress} /> :
+                    <span>无默认地址</span>
+                }
               </LoadingView>
             </div>
             <Divider type="horizontal" />
