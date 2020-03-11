@@ -36,8 +36,8 @@ export default class ContentList extends React.Component<ContentListProps, Conte
   fetchList(page, limit) {
     this.setState({ loading: true });
     fetchDataByGet<ListJSON<Article>>(this.props.api, {
-      filter: this.props.filter,
-      sorter: this.props.sorter,
+      filter: this.props.filter || null,
+      sorter: this.props.sorter || null,
       page: page,
       limit: limit,
     }).then((data) => {
