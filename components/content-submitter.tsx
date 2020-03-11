@@ -17,6 +17,12 @@ export interface ContentSubmitterState {
 };
 
 export default class ContentSubmitter extends React.Component<ContentSubmitterProps, ContentSubmitterState> {
+  constructor(props: ContentSubmitterProps) {
+    super(props);
+    this.state = {
+      status: null
+    }
+  }
   render() {
     const { saved, content, manager, extra } = this.props;
     let statusDescriptors = [];
