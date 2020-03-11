@@ -879,17 +879,17 @@ export const APIDefinitionData: APIDefinitionSet = {
   community: {
     dynamic: {
       collection: {
-        url: `${testOrigin}/api/community/dynamics?page=@{page}&limit=@{limit}`
+        url: `${testOrigin}/api/community/dynamics?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`
       }
     },
     topic: {
       collection: {
-        url: `${testOrigin}/api/community/topics?page=@{page}&limit=@{limit}`
+        url: `${testOrigin}/api/community/topics?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`
       }
     },
     review: {
       collection: {
-        url: `${testOrigin}/api/community/reviews?page=@{page}&limit=@{limit}`
+        url: `${testOrigin}/api/community/reviews?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`
       }
     },
   },
@@ -1076,7 +1076,7 @@ export const APIDefinitionData: APIDefinitionSet = {
     },
     community: {
       dynamic: {
-        collection: `${testOrigin}/api/user/community/dynamics?page=@{page}&limit=@{limit}`
+        collection: `${testOrigin}/api/user/community/dynamics?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`
       }
     },
     logout: `${origin}/api/user/logout`,

@@ -18,6 +18,8 @@ export interface ReviewsState {
 export default class Reviews extends React.Component<ReviewsProps, ReviewsState> {
   static async getInitialProps() {
     let data = await fetchDataByGet<ListJSON<Review>>(API.CommunityReviewCollection, {
+      filter: null,
+      sorter: null,
       page: 1,
       limit: 10
     });

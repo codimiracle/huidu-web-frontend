@@ -9,7 +9,7 @@ import ContentView from './content-view';
 export interface ContentListProps {
   api: API;
   initialDataSource?: Array<Article>;
-  initialTotal: number;
+  initialTotal?: number;
   style?: CSSProperties;
 };
 export interface ContentListState {

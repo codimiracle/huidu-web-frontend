@@ -16,6 +16,8 @@ interface DynamicsState { }
 export default class Dynamics extends React.Component<DynamicsProps, DynamicsState> {
   static async getInitialProps() {
     let data = await fetchDataByGet<ListJSON<Article>>(API.CommunityDynamicCollection, {
+      filter: null,
+      sorter: null,
       page: 1,
       limit: 10
     })

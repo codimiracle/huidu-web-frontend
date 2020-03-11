@@ -22,6 +22,8 @@ export default class Topics extends React.Component<TopicsProps, TopicsState> {
   }
   static async getInitialProps() {
     let data = await fetchDataByGet<ListJSON<Topic>>(API.CommunityTopicCollection, {
+      filter: null,
+      sorter: null,
       page: 1,
       limit: 10
     });
