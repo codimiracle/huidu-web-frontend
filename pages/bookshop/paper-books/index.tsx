@@ -7,9 +7,10 @@ import { NextPageContext } from 'next';
 import { fetchDataByGet } from '../../../util/network-util';
 import { API } from '../../../configs/api-config';
 import { Category } from '../../../types/category'
-import { Book } from '../../../types/book';
+import { Book, BookType } from '../../../types/book';
 import { PaperBook } from '../../../types/paper-book';
 import Link from 'next/link';
+import { ListJSON } from '../../../types/api';
 
 export interface BookShopProps {
   categories: Array<Category>,
@@ -28,11 +29,13 @@ export interface BookShopState {
 
 export default class BookShop extends React.Component<BookShopProps, BookShopState> {
   static async getInitialProps(context: NextPageContext) {
-    let categoryData = await fetchDataByGet<any>(API.CategoryCollection);
-    let yearsData = await fetchDataByGet<any>(API.PaperBookPublishYears);
+    let categoryData = await fetchDataByGet<Category[]>(API.CategoryBookTypeRelated,{
+      type: BookType.PaperBook
+    });
+    let yearsData = await fetchDataByGet<Array<string>>(API.PaperBookPublishYears);
     return {
-      categories: categoryData.categories,
-      years: yearsData.years,
+      categories: categoryData,
+      years: yearsData,
     };
   }
   constructor(props: BookShopProps) {

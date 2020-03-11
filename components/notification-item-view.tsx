@@ -1,13 +1,12 @@
+import { Badge, Col, Row } from 'antd';
 import React from 'react';
-import { Row, Col, Badge, message } from 'antd';
-import AvatarView from './avatar-view';
 import { Notification } from '../types/notification';
 import DatetimeUtil from '../util/datetime-util';
-import { fetchMessageByPost } from '../util/network-util';
-import { API } from '../configs/api-config';
+import AvatarView from './avatar-view';
 
 export interface NotificationItemViewProps {
-  notification: Notification
+  notification: Notification;
+  onMarkAsRead: (notification: Notification) => void;
 };
 export interface NotificationItemViewState { };
 
@@ -29,24 +28,11 @@ export default class NotificationItemView extends React.Component<NotificationIt
               <p>{notification.message}</p>
             </Col>
             <Col>
-              <a onClick={() => this.markAsRead() }>已读</a>
+              <a onClick={() => this.props.onMarkAsRead && this.props.onMarkAsRead(notification) }>已读</a>
             </Col>
           </Row>
         </Badge>
       </>
     )
-  }
-  markAsRead(): void {
-    fetchMessageByPost(API.UserNotificationMarkAsRead, {
-      notification_id: this.props.notification.id
-    }).then((msg) => {
-      if (msg.code == 200) {
-        message.success("已标记为已读！");
-      } else {
-        message.error(`标记失败：${msg.message}`)
-      }
-    }).catch((err) => {
-      message.error(`标记失败：网络错误！`);
-    })
   }
 }

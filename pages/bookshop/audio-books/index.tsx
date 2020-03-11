@@ -7,7 +7,7 @@ import { NextPageContext } from 'next';
 import { fetchDataByGet } from '../../../util/network-util';
 import { API } from '../../../configs/api-config';
 import { Category } from '../../../types/category'
-import { Book } from '../../../types/book';
+import { Book, BookType } from '../../../types/book';
 import { AudioBook } from '../../../types/audio-book';
 import Link from 'next/link';
 
@@ -28,11 +28,13 @@ export interface BookShopState {
 
 export default class BookShop extends React.Component<BookShopProps, BookShopState> {
   static async getInitialProps(context: NextPageContext) {
-    let categoryData = await fetchDataByGet<any>(API.CategoryCollection);
-    let yearsData = await fetchDataByGet<any>(API.AudioBookPublishYears);
+    let categoryData = await fetchDataByGet<Category[]>(API.CategoryBookTypeRelated, {
+      type: BookType.AudioBook
+    });
+    let yearsData = await fetchDataByGet<string[]>(API.AudioBookPublishYears);
     return {
-      categories: categoryData.categories,
-      years: yearsData.years,
+      categories: categoryData,
+      years: yearsData,
     };
   }
   constructor(props: BookShopProps) {

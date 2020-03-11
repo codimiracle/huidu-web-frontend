@@ -1,11 +1,10 @@
-import { List, Tabs, message, Button } from 'antd';
+import { Button, List, message, Tabs, notification } from 'antd';
 import React from 'react';
-import NotificationItemView from './notification-item-view';
 import { API } from '../configs/api-config';
-import { fetchDataByGet } from '../util/network-util';
-import useSWR from 'swr';
 import { ListJSON } from '../types/api';
 import { Notification } from '../types/notification';
+import { fetchDataByGet, fetchMessageByPost } from '../util/network-util';
+import NotificationItemView from './notification-item-view';
 
 const { TabPane } = Tabs;
 
@@ -37,6 +36,24 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
       loading: false
     }
   }
+  onMarkAsRead(notification: Notification, index: number) {
+    fetchMessageByPost(API.UserNotificationMarkAsRead, {
+      notification_id: notification.id
+    }).then((msg) => {
+      if (msg.code == 200) {
+        notification.read = true;
+        this.setState((state) => ({
+          list: state.list.filter((n) => n.id != notification.id)
+        }))
+        message.success("已标记为已读！");
+      } else {
+        message.error(`标记失败：${msg.message}`)
+      }
+    }).catch((err) => {
+      console.log(err);
+      message.error(`标记失败：网络错误！`);
+    })
+  }
   fetchNotification(page?: number) {
     fetchDataByGet<ListJSON<Notification>>(this.props.api, {
       page: page || 1,
@@ -54,7 +71,7 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
     const { list, loading } = this.state;
     return (
       <List
-        renderItem={(item) => <List.Item><NotificationItemView notification={item} /></List.Item>}
+        renderItem={(item, index) => <List.Item><NotificationItemView notification={item} onMarkAsRead={() => this.onMarkAsRead(item, index)} /></List.Item>}
         loading={loading}
         loadMore={<div style={{ textAlign: 'center' }}><Button type="link" loading={this.state.loading} onClick={() => this.fetchNotification(this.state.page + 1)}>更多...</Button></div>}
         dataSource={list}

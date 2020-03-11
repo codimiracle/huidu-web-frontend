@@ -8,6 +8,7 @@ import BookView from './book-view';
 import CommentView from './comment-view';
 import ReviewView from './review-view';
 import TopicView from './topic-view';
+import BookPreviewView from './book-preview-view';
 
 export interface ContentViewProps {
   content: Article | Book
@@ -29,7 +30,7 @@ export default class ContentView extends React.Component<ContentViewProps, Conte
         view = <CommentView comment={content as Comment} />;
       }
       if (Object.values(BookType).includes(content.type as BookType)) {
-        view = <BookView book={content as any as Book} />;
+        view = <BookPreviewView book={content as any as Book} />;
       }
     }
     if (view == null) {
