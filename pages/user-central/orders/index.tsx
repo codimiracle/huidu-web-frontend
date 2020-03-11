@@ -34,6 +34,7 @@ export default class AllOrderList extends React.Component<AllOrderListProps, All
   static async getInitialProps() {
     let data = await fetchDataByGet<ListJSON<Order>>(API.UserOrderCollection, {
       filter: null,
+      sorter: null,
       page: 1,
       limit: 10,
     });

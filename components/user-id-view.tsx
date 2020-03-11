@@ -1,6 +1,7 @@
 import { Button } from 'antd';
 import React, { CSSProperties } from 'react';
 import { UserContext } from './hooks/with-user';
+import AvatarView from './avatar-view';
 
 export interface UserIdViewProps {
   style?: CSSProperties
@@ -24,6 +25,9 @@ export default class UserIdView extends React.Component<UserIdViewProps, UserIdV
         <UserContext.Consumer>
           {user =>
             <>
+              <div>
+                <AvatarView size={128} user={user} />
+              </div>
               <div><strong>昵称：{user && user.nickname}</strong></div>
               <div><strong>UID：{user && user.id}</strong></div>
               <div style={{ paddingTop: '8px' }}><Button>退出登录</Button></div>

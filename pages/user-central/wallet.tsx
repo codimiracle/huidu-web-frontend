@@ -1,10 +1,12 @@
 import React from 'react';
 import { Row, Col, Form, Tabs, List, Select, DatePicker, Button, message } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
-import { Order } from '../../types/order';
+import { Order, Money } from '../../types/order';
 import { fetchDataByGet } from '../../util/network-util';
 import { API } from '../../configs/api-config';
 import { OrderListJSON } from '../api/user/orders';
+import EntityManager from '../../components/backend/entity-manager';
+import useSWR from 'swr';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -20,9 +22,9 @@ const RECHARGE_QUOTA = [
   { rmb: '30', hb: '3000' },
   { rmb: '50', hb: '5000' },
 
-  { rmb: '100', hb: '100' },
-  { rmb: '300', hb: '300' },
-  { rmb: '500', hb: '500' },
+  { rmb: '100', hb: '10000' },
+  { rmb: '300', hb: '30000' },
+  { rmb: '500', hb: '50000' },
 ]
 
 export interface OrderRecordFilterProps {
@@ -41,27 +43,37 @@ const WrappedOrderRecordFilter = Form.create<OrderRecordFilterProps>({ name: 'or
 export interface UserCentralWalletProps {
 };
 export interface UserCentralWalletState {
-  orderList: Array<Order>,
+  list: Array<Order>,
   page: number,
   limit: number,
   total: number,
-  loadingOrderList: boolean,
+  loading: boolean,
 };
+
+interface UserAccount {
+  userId: string;
+  balance: Money;
+}
+
+function UserAccountBalance() {
+  const { data } = useSWR<UserAccount>(API.UserAccountBalance, fetchDataByGet);
+  return <span>HC {data.balance.amountMinorLong}</span>
+}
 
 export default class UserCentralWallet extends React.Component<UserCentralWalletProps, UserCentralWalletState> {
   constructor(props: UserCentralWalletProps) {
     super(props);
     this.state = {
-      orderList: [],
+      list: [],
       page: 1,
       limit: 10,
       total: 0,
-      loadingOrderList: false
+      loading: false
     }
   }
   
   render() {
-    const { orderList } = this.state;
+    const { list } = this.state;
     return (
       <>
         <div>
@@ -70,7 +82,7 @@ export default class UserCentralWallet extends React.Component<UserCentralWallet
             <Col span={6}>
               <h3>余额</h3>
               <FormItem label="绘币">
-                <strong>{1100}</strong>
+                <strong><UserAccountBalance /></strong>
               </FormItem>
             </Col>
             <Col span={10}>
@@ -93,10 +105,6 @@ export default class UserCentralWallet extends React.Component<UserCentralWallet
           </Row>
           <h3>交易记录</h3>
           <div className="hightline">统计：{}绘币（约合 {} 元）</div>
-          <WrappedOrderRecordFilter />
-          <List
-            dataSource={orderList}
-          />
         </div>
         <style jsx>{`
           .hightline {

@@ -25,7 +25,6 @@ interface NotificationListState {
   loading: boolean;
 }
 
-
 class NotificationList extends React.Component<NotificationListProps, NotificationListState> {
   constructor(props) {
     super(props);
@@ -35,6 +34,23 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
       limit: 10,
       loading: false
     }
+  }
+  onMarkAllRead() {
+    let unreadList = this.state.list.filter((n) => !n.read);
+    fetchMessageByPost(API.UserNotificationMarkAsReadBulk, {
+      ids: unreadList.map((n) => n.id)
+    }).then((msg) => {
+      if (msg.code == 200) {
+        unreadList.forEach((n) => n.read = true);
+        this.setState((state) => ({
+          list: state.list.filter((n) => n.read).concat(unreadList)
+        }));
+      } else {
+        message.error(`标记全部已读失败：${msg.message}`);
+      }
+    }).catch((err) => {
+      message.error(`标记全部已读失败：${err}`)
+    })
   }
   onMarkAsRead(notification: Notification, index: number) {
     fetchMessageByPost(API.UserNotificationMarkAsRead, {
@@ -70,12 +86,17 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
   render() {
     const { list, loading } = this.state;
     return (
-      <List
-        renderItem={(item, index) => <List.Item><NotificationItemView notification={item} onMarkAsRead={() => this.onMarkAsRead(item, index)} /></List.Item>}
-        loading={loading}
-        loadMore={<div style={{ textAlign: 'center' }}><Button type="link" loading={this.state.loading} onClick={() => this.fetchNotification(this.state.page + 1)}>更多...</Button></div>}
-        dataSource={list}
-      />
+      <>
+        <List
+          renderItem={(item, index) => <List.Item><NotificationItemView notification={item} onMarkAsRead={() => this.onMarkAsRead(item, index)} /></List.Item>}
+          loading={loading}
+          loadMore={<div style={{ textAlign: 'center' }}>
+            <Button type="link" loading={this.state.loading} onClick={() => this.fetchNotification(this.state.page + 1)}>更多...</Button>
+            <Button onClick={() => this.onMarkAllRead()}>标记全部为已读</Button>
+          </div>}
+          dataSource={list}
+        />
+      </>
     );
   }
 }
@@ -101,7 +122,7 @@ export default class NotificationContentView extends React.Component<Notificatio
         </Tabs>
         <style jsx>{`
         .notification-content-view {
-          width: 168px;
+          width: 256px;
         }
       `}</style>
       </div>

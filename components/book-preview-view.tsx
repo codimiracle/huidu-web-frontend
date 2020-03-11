@@ -12,14 +12,14 @@ export interface BookPreviewViewState { };
 export default class BookPreviewView extends React.Component<BookPreviewViewProps, BookPreviewViewState> {
   render() {
     const { book } = this.props;
-    const href = `/bookshop/${book.type}/${book.id}`;
-    const asPath = `/bookshop/${book.type}/[book_id]`;
+    const href = `/bookshop/${book.type}/[book_id]`;
+    const asPath = `/bookshop/${book.type}/${book.id}`;
     const bookPreview = BookPreview.valueOf(book);
     return (
       <div className="book-preview-view">
         <img src={bookPreview.cover || EMPTY_IMAGE} />
         <div className="body">
-          <div><Link href={href} as={asPath}><strong>{bookPreview.name}</strong></Link> <span>{bookPreview.author}</span></div>
+          <div><Link href={href} as={asPath}><a><strong>{bookPreview.name}</strong></a></Link> <span>{bookPreview.author}</span></div>
           <p>{bookPreview.description}</p>
         </div>
         <style jsx>{`

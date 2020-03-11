@@ -21,14 +21,23 @@ export default class NotificationItemView extends React.Component<NotificationIt
               <AvatarView user={notification.sender} />
             </Col>
             <Col>
-              <strong>{notification.sender.nickname}</strong>
-              <div>{DatetimeUtil.fromNow(notification.updateTime)}</div>
+              <Row type="flex">
+                <Col>
+                  <strong>{notification.sender.nickname}</strong>
+                </Col>
+                <Col>
+                  <div>{DatetimeUtil.fromNow(notification.updateTime)}</div>
+                </Col>
+              </Row>
+              <Row>
+                <p>{notification.message}</p>
+              </Row>
             </Col>
             <Col>
-              <p>{notification.message}</p>
-            </Col>
-            <Col>
-              <a onClick={() => this.props.onMarkAsRead && this.props.onMarkAsRead(notification) }>已读</a>
+              {
+                !notification.read &&
+                <a onClick={() => this.props.onMarkAsRead && this.props.onMarkAsRead(notification)}>已读</a>
+              }
             </Col>
           </Row>
         </Badge>

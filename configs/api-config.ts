@@ -34,6 +34,24 @@ export interface APIDefinitionSet {
 /**
  * for using API in netwok-util
  */
+/**
+ * for using API in netwok-util
+ */
+/**
+ * for using API in netwok-util
+ */
+/**
+ * for using API in netwok-util
+ */
+/**
+ * for using API in netwok-util
+ */
+/**
+ * for using API in netwok-util
+ */
+/**
+ * for using API in netwok-util
+ */
 export enum API {
   UserCollection = "user.collection",
   LoggedUserData = "user.logged",
@@ -241,7 +259,9 @@ export enum API {
   CommunityDynamicCollection = "community.dynamic.collection",
   CommunityTopicCollection = "community.topic.collection",
   CommunityReviewCollection = "community.review.collection",
-  UserDynamicCollection = "user.community.dynamic.collection"
+  UserDynamicCollection = "user.community.dynamic.collection",
+  UserNotificationMarkAsReadBulk = "user.notification.markAllRead",
+  UserAccountBalance = "user.account.balance"
 }
 
 // const address = '192.168.1.150';
@@ -905,7 +925,7 @@ export const APIDefinitionData: APIDefinitionSet = {
     url: `${origin}/api/search?kw=@{keyword}&type=@{type}`
   },
   electronicBook: {
-    search: `${origin}/api/electronic-books/search?q=@{keyword}`,
+    search: `${testOrigin}/api/electronic-books/search?q=@{keyword}`,
     entity: `${testOrigin}/api/electronic-books/@{book_id}`,
     lastUpdate: `${testOrigin}/api/electronic-books/@{book_id}/last-updated-episode`,
     comments: `${origin}/api/electronic-books/@{book_id}/comments?page=@{page}&limit=@{limit}`,
@@ -920,33 +940,33 @@ export const APIDefinitionData: APIDefinitionSet = {
     publishYears: `${testOrigin}/api/electronic-books/publish-years`
   },
   audioBook: {
-    search: `${origin}/api/audio-books/search?q=@{keyword}`,
-    entity: `${origin}/api/audio-books/@{book_id}`,
-    catalogs: `${origin}/api/audio-books/@{book_id}/catalogs`,
-    lastUpdate: `${origin}/api/audio-books/@{book_id}/last-update`,
-    comments: `${origin}/api/audio-books/@{book_id}/comments?page=@{page}&limit=@{limit}`,
+    search: `${testOrigin}/api/audio-books/search?q=@{keyword}`,
+    entity: `${testOrigin}/api/audio-books/@{book_id}`,
+    catalogs: `${testOrigin}/api/audio-books/@{book_id}/catalogs`,
+    lastUpdate: `${testOrigin}/api/audio-books/@{book_id}/last-update`,
+    comments: `${testOrigin}/api/audio-books/@{book_id}/comments?page=@{page}&limit=@{limit}`,
     episode: {
-      first: `${origin}/api/audio-books/@{book_id}/episodes/first`,
-      collection: `${origin}/api/audio-books/@{book_id}/episodes?page=@{page}&limit=@{limit}`,
-      entity: `${origin}/api/audio-books/@{book_id}/episodes/@{episode_id}`,
+      first: `${testOrigin}/api/audio-books/@{book_id}/episodes/first`,
+      collection: `${testOrigin}/api/audio-books/@{book_id}/episodes?page=@{page}&limit=@{limit}`,
+      entity: `${testOrigin}/api/audio-books/@{book_id}/episodes/@{episode_id}`,
     },
     collection: {
-      url: `${origin}/api/audio-books?filter=@{filter}&page=@{page}&limit=@{limit}`,
+      url: `${testOrigin}/api/audio-books?filter=@{filter}&page=@{page}&limit=@{limit}`,
       query: {
         filter: null
       }
     },
-    publishYears: `${origin}/api/audio-books/publish-years`
+    publishYears: `${testOrigin}/api/audio-books/publish-years`
   },
   paperBook: {
-    entity: `${origin}/api/paper-books/@{book_id}`,
+    entity: `${testOrigin}/api/paper-books/@{book_id}`,
     collection: {
-      url: `${origin}/api/paper-books?filter=@{filter}&page=@{page}&limit=@{limit}`,
+      url: `${testOrigin}/api/paper-books?filter=@{filter}&page=@{page}&limit=@{limit}`,
       query: {
         filter: null
       }
     },
-    publishYears: `${origin}/api/paper-books/publish-years`
+    publishYears: `${testOrigin}/api/paper-books/publish-years`
   },
   bookMetadata: {
     suggestion: {
@@ -1059,13 +1079,24 @@ export const APIDefinitionData: APIDefinitionSet = {
           notification_id: null
         },
         body: {}
-      }
+      },
+      markAllRead: {
+        url: `${testOrigin}/api/user/notifications/mark-as-read-bulk`,
+        method: 'post',
+        body: {
+          ids: []
+        }
+      },
     },
-    space: {
-      dynamicCollection: `${origin}/api/users/@{user_id}/space/dynamics?page=@{page}&limit=@{limit}`,
-      topicCollection: `${origin}/api/users/@{user_id}/space/topics?page=@{page}&limit=@{limit}`,
-      reviewCollection: `${origin}/api/users/@{user_id}/space/reviews?page=@{page}&limit=@{limit}`,
-      relativedContents: `${origin}/api/users/@{user_id}/space/relatived-contents?page=@{page}&limit=@{limit}`,
+    account: {
+      balance: `${testOrigin}/api/user/account`,
+      recharge: {
+        url: `${testOrigin}/api/user/recharge`,
+        method: 'post',
+        body: {
+          charge: null
+        }
+      }
     },
     arrive: {
       signin: {
@@ -1144,7 +1175,7 @@ export const APIDefinitionData: APIDefinitionSet = {
     },
     logout: `${origin}/api/user/logout`,
     logged: `${testOrigin}/api/user/logged`,
-    profile: `${origin}/api/user/profile`,
+    profile: `${testOrigin}/api/user/profile`,
     bookNotes: {
       entity: `${origin}/api/user/book-notes/@{book_id}`,
       collection: `${origin}/api/user/book-notes?page=@{page}&limit=@{limit}`,
@@ -1190,7 +1221,7 @@ export const APIDefinitionData: APIDefinitionSet = {
       }
     },
     order: {
-      collection: `${testOrigin}/api/user/orders?filter=@{filter}&page=@{page}&limit=@{limit}`,
+      collection: `${testOrigin}/api/user/orders?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
       entity: `${testOrigin}/api/user/orders/@{order_number}`,
       pay: {
         url: `${testOrigin}/api/user/orders/pay`,
