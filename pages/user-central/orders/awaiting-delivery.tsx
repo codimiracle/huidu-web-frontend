@@ -6,6 +6,7 @@ import DatetimeUtil from '../../../util/datetime-util';
 import { API } from '../../../configs/api-config';
 import { List, Button, message, Tag, Divider } from 'antd';
 import OrderView from '../../../components/order-view';
+import { ListJSON } from '../../../types/api';
 
 export interface AwaitingDeliveryProps extends OrderListJSON {
 };
@@ -31,10 +32,11 @@ export default class AwaitingDelivery extends React.Component<AwaitingDeliveryPr
     }
   }
   static async getInitialProps() {
-    let data = await fetchDataByGet<OrderListJSON>(API.UserOrderCollection, {
-      filter: JSON.stringify({
-        status: OrderStatus.AwaitingDelivery
-      }),
+    let data = await fetchDataByGet<ListJSON<Order>>(API.UserOrderCollection, {
+      filter: {
+        status: [OrderStatus.AwaitingDelivery]
+      },
+      sorter: null,
       page: 1,
       limit: 10,
     });

@@ -5,6 +5,7 @@ import { fetchDataByGet } from '../../../util/network-util';
 import { API } from '../../../configs/api-config';
 import { List, Button, message } from 'antd';
 import OrderView from '../../../components/order-view';
+import { ListJSON } from '../../../types/api';
 
 export interface AwaitingEvaluationProps extends OrderListJSON {
 };
@@ -30,10 +31,11 @@ export default class AwaitingEvaluation extends React.Component<AwaitingEvaluati
     }
   }
   static async getInitialProps() {
-    let data = await fetchDataByGet<OrderListJSON>(API.UserOrderCollection, {
-      filter: JSON.stringify({
-        status: OrderStatus.AwaitingEvaluation
-      }),
+    let data = await fetchDataByGet<ListJSON<Order>>(API.UserOrderCollection, {
+      filter: {
+        status: [OrderStatus.AwaitingEvaluation]
+      },
+      sorter: null,
       page: 1,
       limit: 10,
     });

@@ -5,6 +5,7 @@ import { fetchDataByGet } from '../../../util/network-util';
 import { API } from '../../../configs/api-config';
 import { List, Button, message } from 'antd';
 import OrderView from '../../../components/order-view';
+import { ListJSON } from '../../../types/api';
 
 export interface AwaitingPaymentProps extends OrderListJSON {
 };
@@ -30,10 +31,11 @@ export default class AwaitingPayment extends React.Component<AwaitingPaymentProp
     }
   }
   static async getInitialProps() {
-    let data = await fetchDataByGet<OrderListJSON>(API.UserOrderCollection, {
-      filter: JSON.stringify({
-        status: OrderStatus.AwaitingPayment
-      }),
+    let data = await fetchDataByGet<ListJSON<Order>>(API.UserOrderCollection, {
+      filter: {
+        status: [OrderStatus.AwaitingPayment]
+      },
+      sorter: null,
       page: 1,
       limit: 10,
     });

@@ -92,7 +92,7 @@ export default class OrderView extends React.Component<OrderViewProps, OrderView
           <div className="statistics-area">
             <div className="total"><strong>总价：<span className="money">{order.totalMoney}</span></strong></div>
             <div>(运费：<span className="money">{order.shipmentMoney}</span>)</div>
-            <div>共 <span>{order.detailsList.map((details) => details.quantity).reduce((pre, cur) => pre + cur, 0)}</span> 个商品</div>
+            <div>共 <span>{(order.detailsList || []).map((details) => details.quantity).reduce((pre, cur) => pre + cur, 0)}</span> 个商品</div>
           </div>
           <div className="order-actions">
             <OrderActionView status={order.status} orderNumber={order.orderNumber} />

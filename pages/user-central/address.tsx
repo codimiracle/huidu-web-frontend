@@ -3,13 +3,14 @@ import React from 'react';
 import AddressView from '../../components/address-view';
 import { API } from '../../configs/api-config';
 import { Address } from '../../types/address';
-import { fetchDataByGet, fetchMessageByPost, fetchMessageByDelete } from '../../util/network-util';
+import { fetchDataByGet, fetchMessageByPost, fetchMessageByDelete, fetchMessageByPut, fetchDataByPut } from '../../util/network-util';
 import { AddressListJSON } from '../api/user/addresses';
 import { AddressJSON } from '../api/user/addresses/[address_id]';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import fetch from 'isomorphic-unfetch';
 import { CascaderOptionType } from 'antd/lib/cascader';
 import { EntityJSON, ListJSON } from '../../types/api';
+import LoadingView from '../../components/loading-view';
 
 interface AddressFormProps {
   form: WrappedFormUtils,
@@ -197,15 +198,13 @@ export class AddressEditorDialog extends React.Component<AddressEditorDialogProp
   fetchModifyMessage(address: Address) {
     const { form, onCancel, onModified } = this.props;
     this.setState({ modifying: true });
-    fetchMessageByPost(API.UserAddressUpdate, { address_id: address.id, ...address }).then((msg) => {
-      if (msg.code == 200) {
+    fetchDataByPut<EntityJSON<Address>>(API.UserAddressUpdate, { address_id: address.id, ...address }).then((data) => {
         message.info('修改成功！');
         form.resetFields();
         onCancel();
-        onModified(address);
-      } else {
-        message.error(`修改失败：${msg.message}`);
-      }
+        onModified(data.entity);
+    }).catch((err) => {
+      message.error(`修改失败：${err}`);
     }).finally(() => {
       this.setState({ modifying: false });
     });
@@ -292,7 +291,7 @@ export class AddressManageAction extends React.Component<AddressManageActionProp
     const { onDefault } = this.props;
     this.setState({ makingDefault: true });
     fetchMessageByPost(API.UserAddressDefault, {
-      address_id: address.id
+      addressId: address.id
     }).then((msg) => {
       if (msg.code == 200) {
         message.success('成功设置为默认！');
@@ -423,7 +422,9 @@ export default class AddressManage extends React.Component<AddressManageProps, A
           <div>
             <h3>默认收货地址</h3>
             <div>
-              <AddressView address={defaultAddress} />
+              <LoadingView loading={fetchingDefault}>
+                <AddressView address={defaultAddress} />
+              </LoadingView>
             </div>
             <Divider type="horizontal" />
             <h3>地址管理</h3>

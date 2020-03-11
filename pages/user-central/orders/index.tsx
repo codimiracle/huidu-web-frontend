@@ -44,6 +44,7 @@ export default class AllOrderList extends React.Component<AllOrderListProps, All
     this.setState({ loading: true });
     fetchDataByGet<ListJSON<Order>>(API.UserOrderCollection, {
       filter: null,
+      sorter: null,
       page: page,
       limit: limit,
     }).then((data) => {
