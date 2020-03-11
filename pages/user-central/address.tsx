@@ -106,9 +106,10 @@ class AddressForm extends React.Component<AddressFormProps, AddressFormState> {
 }
 
 export interface AddressCreatorDialogProps {
-  form: WrappedFormUtils,
-  visible: boolean,
-  onCancel: () => void
+  form: WrappedFormUtils;
+  visible: boolean;
+  onCreated: () => void;
+  onCancel: () => void;
 }
 export interface AddressCreatorDialogState {
   postting: boolean
@@ -122,12 +123,13 @@ export class AddressCreatorDialog extends React.Component<AddressCreatorDialogPr
     }
   }
   fetchCreateMessage(address: Address) {
-    const { form, onCancel } = this.props;
+    const { form, onCancel, onCreated } = this.props;
     this.setState({ postting: true });
     fetchMessageByPost(API.UserAddressCreate, address).then((msg) => {
       if (msg.code == 200) {
-        message.info('创建成功！');
+        message.success('创建成功！');
         form.resetFields();
+        onCreated();
         onCancel();
       } else {
         message.error(`创建失败：${msg.message}`);
@@ -359,13 +361,14 @@ export interface AddressManageProps {
   total: number,
 };
 export interface AddressManageState {
-  page: number,
-  limit: number,
-  list: Array<Address>,
-  total: number,
-  defaultAddress: Address,
-  fetching: boolean,
-  createDialogVisible: boolean,
+  page: number;
+  limit: number;
+  list: Array<Address>;
+  total: number;
+  defaultAddress: Address;
+  fetching: boolean;
+  fetchingDefault: boolean;
+  createDialogVisible: boolean;
 }
 
 export default class AddressManage extends React.Component<AddressManageProps, AddressManageState> {
@@ -377,17 +380,19 @@ export default class AddressManage extends React.Component<AddressManageProps, A
       list: props.addressList,
       total: props.total,
       fetching: false,
+      fetchingDefault: false,
       defaultAddress: props.defaultAddress,
       createDialogVisible: false,
     }
   }
   fetchDefaulAddress() {
+    this.setState({ fetchingDefault: true });
     fetchDataByGet<EntityJSON<Address>>(API.UserAddressDefault).then((data) => {
-      this.setState({defaultAddress: data.entity});
+      this.setState({ defaultAddress: data.entity });
     }).catch((err) => {
-      message.error(`读取默认地址失败：${err}`);
+      message.error(`读取默认地址失败F：${err}`);
     }).finally(() => {
-
+      this.setState({ fetchingDefault: false });
     });
   }
   fetchAddressList(page: number, limit: number) {
@@ -405,9 +410,12 @@ export default class AddressManage extends React.Component<AddressManageProps, A
       this.setState({ fetching: false });
     })
   }
+  componentDidMount() {
+    this.fetchDefaulAddress();
+    this.fetchAddressList(1, 10);
+  }
   render() {
-    const { page, limit, list, total, defaultAddress, fetching, createDialogVisible } = this.state;
-    console.log(this.state);
+    const { page, limit, list, total, defaultAddress, fetching, fetchingDefault, createDialogVisible } = this.state;
     return (
       <>
         <div>
@@ -458,6 +466,7 @@ export default class AddressManage extends React.Component<AddressManageProps, A
             />
             <WrappedAddressCreatorDialog
               visible={createDialogVisible}
+              onCreated={() => this.fetchAddressList(this.state.page, this.state.limit)}
               onCancel={() => this.setState({ createDialogVisible: false })}
             />
           </div>
