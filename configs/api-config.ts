@@ -98,6 +98,7 @@ export enum API {
   UserOrderring = "user.order.orderring",
   UserCartJoin = "user.cart.join",
   UserAddressDefault = "user.address.default",
+  UserAddressMakeDefault = "user.address.makeDefault",
   UserOrderPay = "user.order.pay",
   AudioBookLastUpdate = "audioBook.lastUpdate",
   UserShelfJoin = "user.shelf.join",

@@ -290,7 +290,7 @@ export class AddressManageAction extends React.Component<AddressManageActionProp
   onMakeDefault(address: Address): void {
     const { onDefault } = this.props;
     this.setState({ makingDefault: true });
-    fetchMessageByPost(API.UserAddressDefault, {
+    fetchMessageByPost(API.UserAddressMakeDefault, {
       addressId: address.id
     }).then((msg) => {
       if (msg.code == 200) {
