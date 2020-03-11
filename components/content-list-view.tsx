@@ -1,13 +1,15 @@
+import { Button, List, message } from 'antd';
 import React, { CSSProperties } from 'react';
-import { List, message, Button } from 'antd';
 import { API } from '../configs/api-config';
 import { ListJSON } from '../types/api';
-import { fetchDataByGet } from '../util/network-util';
 import { Article } from '../types/content';
+import { fetchDataByGet } from '../util/network-util';
 import ContentView from './content-view';
 
 export interface ContentListProps {
   api: API;
+  filter?: any;
+  sorter: any;
   initialDataSource?: Array<Article>;
   initialTotal?: number;
   style?: CSSProperties;
@@ -26,7 +28,7 @@ export default class ContentList extends React.Component<ContentListProps, Conte
     this.state = {
       loading: false,
       list: props.initialDataSource || [],
-      page: 0,
+      page: props.initialDataSource ? 1 : 0,
       limit: 10,
       total: props.initialTotal || 0
     }
@@ -34,6 +36,8 @@ export default class ContentList extends React.Component<ContentListProps, Conte
   fetchList(page, limit) {
     this.setState({ loading: true });
     fetchDataByGet<ListJSON<Article>>(this.props.api, {
+      filter: this.props.filter,
+      sorter: this.props.sorter,
       page: page,
       limit: limit,
     }).then((data) => {
@@ -50,7 +54,7 @@ export default class ContentList extends React.Component<ContentListProps, Conte
     });
   }
   componentDidMount() {
-    if (this.props.initialDataSource && this.props.initialTotal) { 
+    if (!this.props.initialDataSource && !this.props.initialTotal) {
       this.fetchList(1, 10);
     }
   }
