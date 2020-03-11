@@ -4,8 +4,8 @@ import { Router, withRouter } from 'next/router';
 import React from 'react';
 import UserSigninForm from '../components/form/user-signin-from';
 import { API } from '../configs/api-config';
-import { fetchMessageByPost, fetchDataByPost } from '../util/network-util';
-import { User } from '../types/user';
+import AuthenticationUtil, { UserToken } from '../util/authentication-util';
+import { fetchDataByPost } from '../util/network-util';
 
 export interface SignInProps {
   form: WrappedFormUtils,
@@ -26,12 +26,9 @@ export class SignIn extends React.Component<SignInProps, SignInState> {
     const { form, router } = this.props;
     form.validateFields((errors, values) => {
       if (!errors) {
-        type UserToken = {
-          token: string,
-          user: User
-        };
+        this.setState({ signing: true });
         fetchDataByPost<UserToken>(API.SystemSignIn, values).then((data) => {
-          window.localStorage.setItem('token', data.token);
+          AuthenticationUtil.save(data);
           router.replace('/');
         }).catch((err) => {
           message.error(`登录失败：${err}`);

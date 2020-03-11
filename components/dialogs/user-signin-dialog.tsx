@@ -7,6 +7,7 @@ import { User } from '../../types/user';
 import { fetchDataByPost } from '../../util/network-util';
 import UserSigninForm from '../form/user-signin-from';
 import { EntityJSON } from '../../types/api';
+import AuthenticationUtil, { UserToken } from '../../util/authentication-util';
 
 export interface UserSignInDialogProps {
   form: WrappedFormUtils;
@@ -28,18 +29,11 @@ export class UserSignInDialog extends React.Component<UserSignInDialogProps, Use
   }
   onSignIn() {
     const { form, onLogged, onCancel } = this.props;
-    this.setState({ signing: true });
     form.validateFieldsAndScroll((errors, values) => {
       if (!errors) {
-        type UserToken = {
-          token: string,
-          expireTime: string,
-          user: User
-        };
-
+        this.setState({ signing: true });
         fetchDataByPost<UserToken>(API.SystemSignIn, values).then((data) => {
-          window.localStorage.setItem('token', data.token);
-          window.localStorage.setItem('expired', data.expireTime);
+          AuthenticationUtil.save(data);
           onCancel();
           if (onLogged) {
             onLogged(data.user);

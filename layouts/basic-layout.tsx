@@ -69,7 +69,10 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
                 (user: User) =>
                   <div className="user-tools">
                     <SearchView />
-                    <NotificationView style={{ color: 'white' }} />
+                    {
+                      user &&
+                      <NotificationView style={{ color: 'white' }} />
+                    }
                     {
                       user ? (
                         <Menu

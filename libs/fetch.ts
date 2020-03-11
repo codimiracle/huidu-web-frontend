@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-unfetch';
 import { APIDefinitionSet, APIDefinitionData, API } from '../configs/api-config';
 import { useEffect } from 'react';
+import AuthenticationUtil from '../util/authentication-util';
 
 interface APIDefinition {
   url: string,
@@ -56,10 +57,9 @@ export function bodyPlaceholderReplacer(apiDefinition: APIDefinition, data: any)
 
 export function requestAuthorization(init?: RequestInit): RequestInit {
   if (typeof window == 'object') {
-    let token = window.localStorage.getItem("token");
-    if (token) {
+    if (AuthenticationUtil.isValidated()) {
       init = init || {};
-      init.headers = { ...init.headers, 'Authorization': `Bearer ${token}` };
+      init.headers = { ...init.headers, 'Authorization': `Bearer ${AuthenticationUtil.getToken()}` };
     }
   }
   return init;
@@ -91,7 +91,7 @@ export default async function (api: API, init?: RequestInit): Promise<Response> 
     init.body = JSON.stringify(bodyPlaceholderReplacer(apiDefinition, data));
   }
   init = requestAuthorization(init);
-  console.log(init);
+  console.debug("calling api with: %s", JSON.stringify(init));
   // will normally call fetch if not satisfied conditions. 
   return await fetch(url, init);
 }

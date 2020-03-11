@@ -104,7 +104,7 @@ export default class BackendLayout extends React.Component<BackendLayoutProps, B
                 <UserContext.Consumer>
                   {
                     (user: User) => <>
-                      <NotificationView />
+                      {user && <NotificationView />}
                       <AvatarView user={user} />
                     </>
                   }
