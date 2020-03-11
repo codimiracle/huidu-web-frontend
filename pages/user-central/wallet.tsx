@@ -7,6 +7,7 @@ import { API } from '../../configs/api-config';
 import { OrderListJSON } from '../api/user/orders';
 import EntityManager from '../../components/backend/entity-manager';
 import useSWR from 'swr';
+import { EntityJSON } from '../../types/api';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -56,8 +57,8 @@ interface UserAccount {
 }
 
 function UserAccountBalance() {
-  const { data } = useSWR<UserAccount>(API.UserAccountBalance, fetchDataByGet);
-  return <span>HC {data.balance.amountMinorLong}</span>
+  const { data } = useSWR<EntityJSON<UserAccount>>(API.UserAccountBalance, fetchDataByGet);
+  return <span>HC {data && data.entity && data.entity.balance.amountMinorLong}</span>
 }
 
 export default class UserCentralWallet extends React.Component<UserCentralWalletProps, UserCentralWalletState> {
