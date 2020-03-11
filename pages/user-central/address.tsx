@@ -312,7 +312,7 @@ export class AddressManageAction extends React.Component<AddressManageActionProp
           <Popconfirm
             title="设置为默认收货地址吗？"
             onConfirm={() => this.onMakeDefault(address)}
-            disabled={defaultAddress.id == address.id}
+            disabled={defaultAddress && defaultAddress.id == address.id}
           >
             <Button
               type="link"
