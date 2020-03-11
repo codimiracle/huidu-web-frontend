@@ -9,6 +9,7 @@ import { AddressJSON } from '../api/user/addresses/[address_id]';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import fetch from 'isomorphic-unfetch';
 import { CascaderOptionType } from 'antd/lib/cascader';
+import { EntityJSON, ListJSON } from '../../types/api';
 
 interface AddressFormProps {
   form: WrappedFormUtils,
@@ -368,18 +369,6 @@ export interface AddressManageState {
 }
 
 export default class AddressManage extends React.Component<AddressManageProps, AddressManageState> {
-  static async getInitialProps() {
-    let defaultAddress = await fetchDataByGet<AddressJSON>(API.UserAddressDefault);
-    let data = await fetchDataByGet<AddressListJSON>(API.UserAddressCollection, {
-      page: 1,
-      limit: 10,
-    });
-    return {
-      total: data.total,
-      addressList: data.list,
-      defaultAddress: defaultAddress.address
-    }
-  }
   constructor(props: AddressManageProps) {
     super(props);
     this.state = {
@@ -392,9 +381,20 @@ export default class AddressManage extends React.Component<AddressManageProps, A
       createDialogVisible: false,
     }
   }
+  fetchDefaulAddress() {
+    fetchDataByGet<EntityJSON<Address>>(API.UserAddressDefault).then((data) => {
+      this.setState({defaultAddress: data.entity});
+    }).catch((err) => {
+      message.error(`读取默认地址失败：${err}`);
+    }).finally(() => {
+
+    });
+  }
   fetchAddressList(page: number, limit: number) {
     this.setState({ fetching: true });
-    fetchDataByGet<AddressListJSON>(API.UserAddressCollection, {
+    fetchDataByGet<ListJSON<Address>>(API.UserAddressCollection, {
+      filter: null,
+      sorter: null,
       page: page,
       limit: limit
     }).then((data) => {
