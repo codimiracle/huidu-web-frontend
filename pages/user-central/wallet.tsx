@@ -1,13 +1,14 @@
-import React from 'react';
-import { Row, Col, Form, Tabs, List, Select, DatePicker, Button, message } from 'antd';
+import { Button, Col, DatePicker, Form, List, Row, Select, message } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
-import { Order, Money } from '../../types/order';
-import { fetchDataByGet } from '../../util/network-util';
-import { API } from '../../configs/api-config';
-import { OrderListJSON } from '../api/user/orders';
-import EntityManager from '../../components/backend/entity-manager';
+import React from 'react';
 import useSWR from 'swr';
+import { API } from '../../configs/api-config';
 import { EntityJSON } from '../../types/api';
+import { Money, Order } from '../../types/order';
+import { fetchDataByGet, fetchDataByPost } from '../../util/network-util';
+import MoneyUtil from '../../util/money-util';
+import OrderringDialog from '../../components/dialogs/orderring-dialog';
+import WrappedPaymentDialog from '../../components/dialogs/payment-dialog';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -49,6 +50,10 @@ export interface UserCentralWalletState {
   limit: number,
   total: number,
   loading: boolean,
+
+  orderring: boolean;
+  rechargeOrder: Order;
+  paymentDialogVisible: boolean;
 };
 
 interface UserAccount {
@@ -58,7 +63,7 @@ interface UserAccount {
 
 function UserAccountBalance() {
   const { data } = useSWR<EntityJSON<UserAccount>>(API.UserAccountBalance, fetchDataByGet);
-  return <span>HC {data && data.entity && data.entity.balance.amountMinorLong}</span>
+  return <span>{MoneyUtil.formatHC(data && data.entity && data.entity.balance)}</span>
 }
 
 export default class UserCentralWallet extends React.Component<UserCentralWalletProps, UserCentralWalletState> {
@@ -69,10 +74,29 @@ export default class UserCentralWallet extends React.Component<UserCentralWallet
       page: 1,
       limit: 10,
       total: 0,
+      orderring: false,
+      rechargeOrder: null,
+      paymentDialogVisible: false,
       loading: false
     }
   }
-  
+
+  onCreateRechargeOrder(charge: number) {
+    this.setState({ orderring: true });
+    fetchDataByPost<EntityJSON<Order>>(API.UserAccountRecharge, {
+      charge: charge
+    }).then((data) => {
+      this.setState({
+        rechargeOrder: data.entity,
+        paymentDialogVisible: true
+      });
+    }).catch((err) => {
+      message.error(`订单创建失败：${err}`);
+    }).finally(() => {
+      this.setState({ orderring: false });
+    });
+  }
+
   render() {
     const { list } = this.state;
     return (
@@ -86,14 +110,20 @@ export default class UserCentralWallet extends React.Component<UserCentralWallet
                 <strong><UserAccountBalance /></strong>
               </FormItem>
             </Col>
-            <Col span={10}>
+            <Col span={18}>
               <h3>充值<span className="hint-text">1元 = 100绘币</span></h3>
               <List
                 grid={{ gutter: 8, column: 3 }}
                 renderItem={(data: { rmb: string, hb: string }) =>
                   <>
                     <List.Item>
-                      <Button size="large" style={{ width: '110px', height: 'inherit', padding: '8px' }}>
+                      <Button
+                      onClick={() => this.onCreateRechargeOrder(parseInt(data.hb))}
+
+                      size="large" 
+                      style={{ width: '110px', height: 'inherit', padding: '8px' }}
+                      
+                      >
                         <div className="recharge">{data.hb} 绘币</div>
                         <div className="recharge-assist" style={{ float: 'right', color: 'rgba(0,0,0,0.45)', textAlign: 'right' }}>￥{data.rmb}</div>
                       </Button>
@@ -107,6 +137,8 @@ export default class UserCentralWallet extends React.Component<UserCentralWallet
           <h3>交易记录</h3>
           <div className="hightline">统计：{}绘币（约合 {} 元）</div>
         </div>
+        <OrderringDialog orderring={this.state.orderring} />
+        <WrappedPaymentDialog recharge order={this.state.rechargeOrder} onCancel={() => this.setState({paymentDialogVisible: false})} visible={this.state.paymentDialogVisible}/>
         <style jsx>{`
           .hightline {
             color: #ff2f00; 
