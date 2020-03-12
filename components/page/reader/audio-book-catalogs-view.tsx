@@ -6,7 +6,6 @@ import AudioBookMiniView from '../../audio-book-miniview';
 import { fetchDataByGet } from '../../../util/network-util';
 import Link from 'next/link';
 import { API } from '../../../configs/api-config';
-import { AudioCatalogsJSON } from '../../../pages/api/audio-books/[book_id]/catalogs';
 import { withRouter, Router } from 'next/router';
 
 export interface AudioBookReaderCatalogsViewProps {
@@ -31,10 +30,10 @@ class AudioBookReaderCatalogsView extends React.Component<AudioBookReaderCatalog
   fetchCatalogs() {
     const { book } = this.props;
     this.setState({ loading: true });
-    fetchDataByGet<AudioCatalogsJSON>(API.AudioBookCatalogs, {
+    fetchDataByGet<Array<AudioCatalogs>>(API.AudioBookCatalogs, {
       book_id: book.id
     }).then((data) => {
-      this.setState({ catalogs: data.catalogs });
+      this.setState({ catalogs: data });
     }).catch((err) => {
       message.error(`获取目录数据失败：${err}`)
     }).finally(() => {
@@ -80,6 +79,10 @@ class AudioBookReaderCatalogsView extends React.Component<AudioBookReaderCatalog
               }
             </Menu>
           </LoadingView>
+          {
+            !catalogs || catalogs.length == 0 &&
+            <p>无目录</p>
+          }
         </Drawer>
       </>
     )
