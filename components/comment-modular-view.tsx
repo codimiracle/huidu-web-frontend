@@ -64,17 +64,18 @@ class CommentItem extends React.Component<CommentItemProps, CommentItemState> {
 }
 
 export interface CommentModularViewProps {
-  content: Content,
-  rate?: boolean,
-  replay?: boolean
+  content: Content;
+  rate?: boolean;
+  evaluation?: boolean;
+  replay?: boolean;
 };
 export interface CommentModularViewState {
-  list: Array<Comment>,
-  hasMoreComments: boolean,
-  loading: boolean,
-  page: number,
-  limit: number,
-  total: number,
+  list: Array<Comment>;
+  hasMoreComments: boolean;
+  loading: boolean;
+  page: number;
+  limit: number;
+  total: number;
 };
 
 export default class CommentModularView extends React.Component<CommentModularViewProps, CommentModularViewState> {
@@ -113,13 +114,16 @@ export default class CommentModularView extends React.Component<CommentModularVi
     this.fetchCommentList(page, limit);
   }
   render() {
-    const { content, rate, replay } = this.props;
+    const { content, rate, replay, evaluation } = this.props;
     const { hasMoreComments, page, limit, total, list, loading } = this.state;
     const loadMore = (hasMoreComments ? <div style={{ textAlign: 'center', padding: '1em' }}><Button type={replay ? 'link' : 'default'} loading={loading} onClick={() => this.fetchCommentList(page + 1, limit)}>加载更多...</Button></div> : null)
     const hasComments = list && list.length > 0;
     return (
       <div className="comment-modular-view">
-        <CommentEditorView replay={replay} mention={replay ? content.owner : undefined} rate={rate} contentId={content.contentId} />
+        {
+          !evaluation &&
+          <CommentEditorView replay={replay} mention={replay ? content.owner : undefined} rate={rate} contentId={content.contentId} />
+        }
         {
           hasComments &&
           <List
@@ -139,10 +143,10 @@ export default class CommentModularView extends React.Component<CommentModularVi
         }
         {
           !hasComments &&
-          <p className="empty-comments">暂无评论</p>
+          <p className="empty-comments">暂无{evaluation ? '评价' : '评论'}</p>
         }
         {
-          hasComments && list.length > 20 &&
+          hasComments && list.length > 20 && !evaluation &&
           <CommentEditorView replay={replay} mention={replay ? content.owner : undefined} rate={rate} contentId={content.contentId} />
         }
         <style jsx>{`
