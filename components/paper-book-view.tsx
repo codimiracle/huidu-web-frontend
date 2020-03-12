@@ -4,6 +4,7 @@ import { Tag, Button, Rate, message } from 'antd';
 import DirectLink from './direct-link';
 import { API } from '../configs/api-config';
 import { fetchDataByPost, fetchMessageByPost } from '../util/network-util';
+import Link from 'next/link';
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
@@ -53,7 +54,7 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
           <img src={book.metadata.cover || EMPTY_IMAGE} />
         </div>
         <div className="body">
-          <div><strong>{book.metadata.name}</strong> <Tag>{book.commodity.status}</Tag> <span className="author">{book.metadata.author}</span></div>
+          <div><Link href="/bookshop/paper-books/[book_id]" as={`/bookshop/paper-books/${book.id}`}><a><strong>{book.metadata.name}</strong></a></Link> <Tag>{book.commodity.status}</Tag> <span className="author">{book.metadata.author}</span></div>
           <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
           <p className="description">{book.metadata.description}</p>
           <div className="money">{book.commodity.prices}</div>
