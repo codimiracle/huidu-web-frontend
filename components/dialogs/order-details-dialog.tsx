@@ -1,6 +1,6 @@
 import { Modal } from 'antd';
 import React from 'react';
-import OrderDetails from '../../pages/user/orders/[order_number]';
+import OrderDetails from '../../pages/user-central/order-details/[order_number]';
 import { Order } from '../../types/order';
 
 export interface OrderDetailsDialogProps {

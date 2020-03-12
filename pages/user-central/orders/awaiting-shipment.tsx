@@ -31,17 +31,6 @@ export default class AwaitingShipment extends React.Component<AwaitingShipmentPr
       hasMore: false,
     }
   }
-  static async getInitialProps() {
-    let data = await fetchDataByGet<ListJSON<Order>>(API.UserOrderCollection, {
-      filter: {
-        status: [OrderStatus.AwaitingShipment]
-      },
-      sorter: null,
-      page: 1,
-      limit: 10,
-    });
-    return data;
-  }
   fetchOrderList(page: number, limit: number) {
     this.setState({ loading: true });
     fetchDataByGet<ListJSON<Order>>(API.UserOrderCollection, {

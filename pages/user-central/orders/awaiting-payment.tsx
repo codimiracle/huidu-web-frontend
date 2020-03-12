@@ -30,17 +30,6 @@ export default class AwaitingPayment extends React.Component<AwaitingPaymentProp
       hasMore: false,
     }
   }
-  static async getInitialProps() {
-    let data = await fetchDataByGet<ListJSON<Order>>(API.UserOrderCollection, {
-      filter: {
-        status: [OrderStatus.AwaitingPayment]
-      },
-      sorter: null,
-      page: 1,
-      limit: 10,
-    });
-    return data;
-  }
   fetchOrderList(page: number, limit: number) {
     this.setState({ loading: true });
     fetchDataByGet<OrderListJSON>(API.UserOrderCollection, {

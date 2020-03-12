@@ -30,17 +30,6 @@ export default class AwaitingEvaluation extends React.Component<AwaitingEvaluati
       hasMore: false,
     }
   }
-  static async getInitialProps() {
-    let data = await fetchDataByGet<ListJSON<Order>>(API.UserOrderCollection, {
-      filter: {
-        status: [OrderStatus.AwaitingEvaluation]
-      },
-      sorter: null,
-      page: 1,
-      limit: 10,
-    });
-    return data;
-  }
   fetchOrderList(page: number, limit: number) {
     this.setState({ loading: true });
     fetchDataByGet<OrderListJSON>(API.UserOrderCollection, {

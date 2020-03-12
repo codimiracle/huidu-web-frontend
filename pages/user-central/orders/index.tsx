@@ -1,10 +1,10 @@
+import { Button, List, message } from 'antd';
 import React from 'react';
-import { Order, OrderStatus } from '../../../types/order';
-import { fetchDataByGet } from '../../../util/network-util';
-import { API } from '../../../configs/api-config';
-import { List, Button, message } from 'antd';
 import OrderView from '../../../components/order-view';
+import { API } from '../../../configs/api-config';
 import { ListJSON } from '../../../types/api';
+import { Order } from '../../../types/order';
+import { fetchDataByGet } from '../../../util/network-util';
 
 export interface AllOrderListProps {
   list: Array<Order>;
@@ -25,20 +25,11 @@ export default class AllOrderList extends React.Component<AllOrderListProps, All
     this.state = {
       page: 1,
       limit: 10,
-      list: props.list,
+      list: [],
       total: 0,
       loading: false,
       hasMore: false,
     }
-  }
-  static async getInitialProps() {
-    let data = await fetchDataByGet<ListJSON<Order>>(API.UserOrderCollection, {
-      filter: null,
-      sorter: null,
-      page: 1,
-      limit: 10,
-    });
-    return data;
   }
   fetchOrderList(page: number, limit: number) {
     this.setState({ loading: true });
@@ -66,6 +57,9 @@ export default class AllOrderList extends React.Component<AllOrderListProps, All
   next() {
     const { page, limit } = this.state;
     this.fetchOrderList(page + 1, limit);
+  }
+  componentDidMount() {
+    this.fetchOrderList(1, 10);
   }
   render() {
     const { loading, hasMore, list } = this.state;

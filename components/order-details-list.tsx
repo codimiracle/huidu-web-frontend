@@ -55,25 +55,31 @@ export default class OrderDetailsList extends React.Component<OrderDetailsListPr
     return (
       <div className="order-details-list">
         {
-          collapse &&
-          <a className="fold-toggle-button" onClick={() => this.onFoldToggle()}>{fold ? '收缩' : '展开'} <Icon type={fold ? 'up' : 'down'} /></a>
-        }
-        {
-          collapse && !fold &&
-          <div className="ant-list-item" style={{ justifyContent: 'space-between' }}>
-            <DetailsItemView details={firstDetails} />
-          </div>
-        }
-        {
-          ((collapse && fold) || !collapse) &&
-          < List
-            renderItem={(item) => (
-              <List.Item key={item.commodity.id} style={{ justifyContent: 'space-between' }}>
-                <DetailsItemView details={item} />
-              </List.Item>
-            )}
-            dataSource={dataSource}
-          />
+        firstDetails ?
+          (<>
+            {
+              collapse &&
+              <a className="fold-toggle-button" onClick={() => this.onFoldToggle()}>{fold ? '收缩' : '展开'} <Icon type={fold ? 'up' : 'down'} /></a>
+            }
+            {
+              collapse && !fold &&
+              <div className="ant-list-item" style={{ justifyContent: 'space-between' }}>
+                <DetailsItemView details={firstDetails} />
+              </div>
+            }
+            {
+              ((collapse && fold) || !collapse) &&
+              < List
+                renderItem={(item) => (
+                  <List.Item key={item.commodity.id} style={{ justifyContent: 'space-between' }}>
+                    <DetailsItemView details={item} />
+                  </List.Item>
+                )}
+                dataSource={dataSource}
+              />
+            }
+          </>) :
+          <span>无订单详情</span>
         }
         <style jsx>{`
           .order-details-list {

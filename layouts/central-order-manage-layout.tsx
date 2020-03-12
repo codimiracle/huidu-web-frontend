@@ -47,33 +47,21 @@ class CentralOrderManageLayout extends React.Component<CentralOrderManageLayoutP
         <UserCentralLayout>
           <div>
             <h2>订单</h2>
-            <Tabs animated={false} defaultActiveKey={this.getCurrentKey()} tabBarExtraContent={<Search placeholder="搜索订单..."/>}>
+            <Tabs animated={false} defaultActiveKey={this.getCurrentKey()} tabBarExtraContent={<Search placeholder="搜索订单..." />}>
               <TabPane tab={<DirectLink href="/user-central/orders">全 部</DirectLink>} key="all">
-                <Skeleton loading={loading} active>
-                  {children}
-                </Skeleton>
               </TabPane>
               <TabPane tab={<DirectLink href="/user-central/orders/awaiting-payment">待付款</DirectLink>} key="awaiting-payment">
-                <Skeleton loading={loading} active>
-                  {children}
-                </Skeleton>
               </TabPane>
               <TabPane tab={<DirectLink href="/user-central/orders/awaiting-shipment">待发货</DirectLink>} key="awaiting-shipment">
-                <Skeleton loading={loading} active>
-                  {children}
-                </Skeleton>
               </TabPane>
               <TabPane tab={<DirectLink href="/user-central/orders/awaiting-delivery">待收货</DirectLink>} key="awaiting-delivery">
-                <Skeleton loading={loading} active>
-                  {children}
-                </Skeleton>
               </TabPane>
               <TabPane tab={<DirectLink href="/user-central/orders/awaiting-evaluation">待评价</DirectLink>} key="awaiting-evaluation">
-                <Skeleton loading={loading} active>
-                  {children}
-                </Skeleton>
               </TabPane>
             </Tabs>
+            <Skeleton loading={loading} active>
+              {children}
+            </Skeleton>
           </div>
         </UserCentralLayout>
       </>

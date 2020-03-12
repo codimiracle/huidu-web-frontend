@@ -1,11 +1,10 @@
-import React from 'react';
-import { Order, OrderStatus } from '../types/order';
-import DatetimeUtil from '../util/datetime-util';
-import { Tag, Divider, Button } from 'antd';
-import { API } from '../configs/api-config';
-import OrderDetailsList from './order-details-list';
-import DirectLink from './direct-link';
+import { Button, Divider, Tag } from 'antd';
 import Link from 'next/link';
+import React from 'react';
+import { Order, OrderStatus, ORDER_STATUS_TEXTS, ORDER_STATUS_COLORS } from '../types/order';
+import DatetimeUtil from '../util/datetime-util';
+import OrderDetailsList from './order-details-list';
+import MoneyUtil from '../util/money-util';
 
 export interface OrderViewProps {
   order: Order
@@ -19,23 +18,14 @@ const ORDER_TYPE_TEXTS = {
   'recharge': '充值',
 }
 
-const ORDER_STATUS_TEXTS = {
-  'cancel': '订单取消',
-  'finish': '交易完成',
-  'awaiting-payment': '等待支付',
-  'awaiting-shipment': '等待发货',
-  'awaiting-delivery': '等待收货',
-  'awaiting-evaluation': '等待评价'
-}
+const ORDER_ACTIONS_TEXTS = {}
+ORDER_ACTIONS_TEXTS[OrderStatus.Canceled] = [];
+ORDER_ACTIONS_TEXTS[OrderStatus.Completed] = [];
+ORDER_ACTIONS_TEXTS[OrderStatus.AwaitingPayment] = ['付款', '取消'];
+ORDER_ACTIONS_TEXTS[OrderStatus.AwaitingShipment] = ['催单', '取消'];
+ORDER_ACTIONS_TEXTS[OrderStatus.AwaitingDelivery] = ['物流', '收货'];
+ORDER_ACTIONS_TEXTS[OrderStatus.AwaitingEvaluation] = ['评价'];
 
-const ORDER_ACTIONS_TEXTS = {
-  'cancel': [],
-  'finish': [],
-  'awaiting-payment': ['付款', '取消'],
-  'awaiting-shipment': ['催单', '取消'],
-  'awaiting-delivery': ['物流', '收货'],
-  'awaiting-evaluation': ['评价']
-}
 
 interface OrderActionViewProps {
   status: OrderStatus,
@@ -59,7 +49,7 @@ class OrderActionView extends React.Component<OrderActionViewProps> {
     const buttons: Array<string> = ORDER_ACTIONS_TEXTS[status];
     return (
       <>
-        <div style={{paddingBottom: '1em'}}><Link href="/user/orders/[order_number]" as={`/user/orders/${orderNumber}`}><a>查看订单</a></Link></div>
+        <div style={{paddingBottom: '1em'}}><Link href="/user-central/order-details/[order_number]" as={`/user-central/order-details/${orderNumber}`}><a>查看订单</a></Link></div>
         {
           buttons.map((text: string, index: number) => <Button key={text} {...(index == 0 ? { type: "primary" } : {})} onClick={() => triggers[index]} style={{ marginLeft: '0.5em' }}>{text}</Button>)
         }
@@ -80,18 +70,18 @@ export default class OrderView extends React.Component<OrderViewProps, OrderView
           <ul>
             <li>订单编号：{order.orderNumber}</li>
             <li>创建时间：{DatetimeUtil.format(order.createTime)}</li>
-            <li>订单状态：<Tag>{ORDER_STATUS_TEXTS[order.status]}</Tag></li>
+            <li>订单状态：<Tag color={ORDER_STATUS_COLORS[order.status]}>{ORDER_STATUS_TEXTS[order.status]}</Tag></li>
           </ul>
         </div>
         <Divider type="vertical" style={{ height: 'inherit' }} />
         <div className="order-details">
-          <OrderDetailsList collapse dataSource={order.detailsList} />
+          <OrderDetailsList collapse dataSource={order.detailsList || []} />
         </div>
         <Divider type="vertical" style={{ height: 'inherit' }} />
         <div>
           <div className="statistics-area">
-            <div className="total"><strong>总价：<span className="money">{order.totalMoney}</span></strong></div>
-            <div>(运费：<span className="money">{order.shipmentMoney}</span>)</div>
+            <div className="total"><strong>总价：<span className="money">{MoneyUtil.format(order.totalMoney)}</span></strong></div>
+            <div>(运费：<span className="money">{MoneyUtil.format(order.shipmentMoney)}</span>)</div>
             <div>共 <span>{(order.detailsList || []).map((details) => details.quantity).reduce((pre, cur) => pre + cur, 0)}</span> 个商品</div>
           </div>
           <div className="order-actions">
@@ -130,9 +120,6 @@ export default class OrderView extends React.Component<OrderViewProps, OrderView
           .money {
             font-size: 1em;
             color: #f30000;
-          }
-          .money::before {
-            content: '￥';
           }
         `}</style>
       </div>
