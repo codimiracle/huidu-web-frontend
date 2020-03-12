@@ -8,7 +8,6 @@ import ReaderNotesView from '../../../components/page/reader/reader-notes-view';
 import ThemingSettingsView from '../../../components/page/reader/theming-settings-view';
 import { API } from '../../../configs/api-config';
 import { EntityJSON } from "../../../types/api";
-import { AudioBook } from "../../../types/audio-book";
 import { Book } from '../../../types/book';
 import { Catalogs, ElectronicBook } from '../../../types/electronic-book';
 import { Episode } from '../../../types/episode';
@@ -23,6 +22,7 @@ const ListItem = List.Item;
 export interface ReaderProps {
   episode: Episode,
   book: Book,
+  history: History;
   bookNotes: BookNotes,
   router: Router
 }
@@ -45,7 +45,7 @@ enum DrawerKey {
 class Reader extends React.Component<ReaderProps, ReaderState> {
   static async getInitialProps(context: NextPageContext) {
     const { book_id, episode_id } = context.query;
-    let bookData = await fetchDataByGet<EntityJSON<AudioBook>>(API.ElectronicBookEntity, {
+    let bookData = await fetchDataByGet<EntityJSON<ElectronicBook>>(API.ElectronicBookEntity, {
       book_id: book_id
     });
     let data: any = {

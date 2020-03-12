@@ -1,4 +1,4 @@
-import { Affix, Button, message } from "antd";
+import { Affix, Button, message, Empty, List } from "antd";
 import { NextPageContext } from 'next';
 import { Router, withRouter } from 'next/router';
 import React from 'react';
@@ -14,12 +14,14 @@ import { Book } from '../../../types/book';
 import { BookNotes } from "../../../types/notes";
 import { DEAULT_THEME, PROTECT_EYE_THEME, Theme } from '../../../types/theme';
 import { fetchDataByGet } from '../../../util/network-util';
+import { History } from "../../../types/history";
 
 export interface ReaderProps {
-  episode: AudioEpisode,
-  book: Book,
-  bookNotes: BookNotes,
-  router: Router
+  episode: AudioEpisode;
+  book: Book;
+  history: History;
+  bookNotes: BookNotes;
+  router: Router;
 }
 
 export interface ReaderState {
@@ -46,28 +48,33 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     let data: any = {
       book_id: book_id
     }
-    let api = API.AudioBookFirstEpisode;
+    let episodeData = null;
+    let historyData = null;
     if (episode_id) {
       data.episode_id = episode_id;
-      api = API.AudioBookEpisodeEntity;
+      episodeData = await fetchDataByGet<EntityJSON<AudioEpisode>>(API.AudioBookEpisodeEntity, data);
+    } else {
+      historyData = await fetchDataByGet<EntityJSON<History>>(API.AudioBookLastReadEpisode, data);
     }
-    let episodeData = await fetchDataByGet<EntityJSON<AudioEpisode>>(api, data);
     let bookNotesData = await fetchDataByGet<EntityJSON<BookNotes>>(API.UserBookNotesEntity, {
       book_id: book_id
     });
+
     return {
       book: bookData.entity,
-      episode: episodeData.entity,
+      history: historyData && historyData.entity,
+      episode: episodeData && episodeData.entity,
       bookNotes: bookNotesData.entity
     }
   }
   constructor(props) {
     super(props);
+    let episode = props.episode || props.history && props.history.audioEpisode;
     this.state = {
       theme: DEAULT_THEME,
-      episode: props.episode,
-      drawer: null,
+      episode: episode,
       bookNotes: props.bookNotes,
+      drawer: null,
       backup: DEAULT_THEME,
       protectEye: false,
       catalogs: [],
@@ -146,19 +153,25 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     const { book } = this.props;
     const { episode, theme, bookNotes, drawer, protectEye, loadingNextEpisode } = this.state;
     const onDrawerClose = () => this.setState({ drawer: null });
-    const hasMore = episode.next;
+    const hasMore = episode && episode.next;
     return (
       <>
         <div className="reader">
           <div className="content">
-            <div className="player">
-              <Affix offsetTop={32} style={{ position: 'absolute', right: 0 }}>
-                <AudioPlayerView src={episode.streamUrl} />
-              </Affix>
-            </div>
-            <div className="episode-list">
-              <ReaderEpisodeView notable bookNotes={bookNotes} episode={episode.episode} theme={theme} />
-            </div>
+            <List
+              renderItem={(item) => <>
+                <div className="player">
+                  <Affix offsetTop={32} style={{ position: 'absolute', right: 0 }}>
+                    <AudioPlayerView src={episode.streamUrl} />
+                  </Affix>
+                </div>
+                <div className="episode-list">
+                  <ReaderEpisodeView notable bookNotes={bookNotes} episode={episode.episode} theme={theme} />
+                </div>
+              </>
+              }
+              dataSource={episode ? [episode] : []}
+            />
           </div>
           <div className="reader-actions">
             <Button shape="circle" disabled={!hasMore} loading={loadingNextEpisode} size="large" icon="right" title="下一章" onClick={() => this.fetchNextEpisode()} />
@@ -182,7 +195,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           onClose={onDrawerClose}
         />
         <ReaderNotesView
-          episode={episode.episode}
+          episode={episode && episode.episode}
           bookNotes={bookNotes}
           visible={drawer == DrawerKey.notes}
           onClose={onDrawerClose}
