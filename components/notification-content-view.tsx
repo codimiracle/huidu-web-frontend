@@ -23,6 +23,7 @@ interface NotificationListState {
   limit: number;
   page: number;
   loading: boolean;
+  changingBulk: boolean;
 }
 
 class NotificationList extends React.Component<NotificationListProps, NotificationListState> {
@@ -32,10 +33,12 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
       list: [],
       page: 1,
       limit: 10,
-      loading: false
+      loading: false,
+      changingBulk: false
     }
   }
   onMarkAllRead() {
+    this.setState({ changingBulk: true })
     let unreadList = this.state.list.filter((n) => !n.read);
     fetchMessageByPost(API.UserNotificationMarkAsReadBulk, {
       ids: unreadList.map((n) => n.id)
@@ -46,10 +49,12 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
           list: state.list.filter((n) => n.read).concat(unreadList)
         }));
       } else {
-        message.error(`标记全部已读失败：${msg.message}`);
+        message.error(`全部已读失败：${msg.message}`);
       }
     }).catch((err) => {
-      message.error(`标记全部已读失败：${err}`)
+      message.error(`全部已读失败：${err}`)
+    }).finally(() => {
+      this.setState({ changingBulk: false });
     })
   }
   onMarkAsRead(notification: Notification, index: number) {
@@ -71,13 +76,16 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
     })
   }
   fetchNotification(page?: number) {
+    this.setState({ loading: true });
     fetchDataByGet<ListJSON<Notification>>(this.props.api, {
       page: page || 1,
       limit: this.state.limit
     }).then((data) => {
-      this.setState({ list: data.list, page: data.page, limit: data.limit })
+      this.setState((state) => ({ list: state.list.concat(data.list), page: data.page, limit: data.limit }))
     }).catch((err) => {
       message.error(`读取通知消息失败：${err}`);
+    }).finally(() => {
+      this.setState({ loading: false });
     });
   }
   componentDidMount() {
@@ -91,8 +99,8 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
           renderItem={(item, index) => <List.Item><NotificationItemView notification={item} onMarkAsRead={() => this.onMarkAsRead(item, index)} /></List.Item>}
           loading={loading}
           loadMore={<div style={{ textAlign: 'center' }}>
-            <Button type="link" loading={this.state.loading} onClick={() => this.fetchNotification(this.state.page + 1)}>更多...</Button>
-            <Button onClick={() => this.onMarkAllRead()}>标记全部为已读</Button>
+            <Button type="link" loading={this.state.loading} onClick={() => this.fetchNotification(this.state.page + 1)}>更多</Button>
+            <Button type="link" loading={this.state.changingBulk} onClick={() => this.onMarkAllRead()}>全部已读</Button>
           </div>}
           dataSource={list}
         />
@@ -112,7 +120,7 @@ export default class NotificationContentView extends React.Component<Notificatio
   render() {
     return (
       <div className="notification-content-view">
-        <Tabs size="small" onChange={(activeKey) => this.setState({ currentKey: activeKey })}>
+        <Tabs tabBarStyle={{ textAlign: 'center' }} size="small" onChange={(activeKey) => this.setState({ currentKey: activeKey })}>
           <TabPane tab="未读" key="unread">
             <NotificationList api={API.UserNotificationUnreadCollection} />
           </TabPane>
