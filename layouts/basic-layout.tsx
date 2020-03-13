@@ -1,20 +1,19 @@
-import { Avatar, BackTop, Col, Layout, Menu, message, Row } from 'antd';
+import { BackTop, Col, Layout, Menu, Row, message } from 'antd';
 import SubMenu from "antd/lib/menu/SubMenu";
 import Link from 'next/link';
 import { Router, withRouter } from 'next/router';
 import React from "react";
+import AvatarView from '../components/avatar-view';
 import DirectLink from "../components/direct-link";
+import { UserContext } from '../components/hooks/with-user';
 import NotificationView from '../components/notification-view';
 import SearchView from "../components/search-view";
-import { API } from "../configs/api-config";
 import { Authority } from '../configs/backend-config';
-import { EntityJSON } from '../types/api';
 import { User } from '../types/user';
 import AuthorityUtil from '../util/authority-util';
-import { fetchDataByGet } from "../util/network-util";
-import AvatarView from '../components/avatar-view';
-import { UserContext } from '../components/hooks/with-user';
-import WrappedUserSigninDialog from '../components/dialogs/user-signin-dialog';
+import { fetchMessageByPost } from '../util/network-util';
+import { API } from '../configs/api-config';
+import AuthenticationUtil from '../util/authentication-util';
 
 const { Header, Footer, Content } = Layout;
 
@@ -22,12 +21,14 @@ export interface BasicLayoutProps {
   router: Router
 }
 export interface BasicLayoutState {
+  signingOut
 }
 
 class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
   constructor(props: Readonly<BasicLayoutProps>) {
     super(props);
     this.state = {
+      signingOut: false
     }
   }
   private getCurrentNavKey() {
@@ -40,6 +41,26 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
       currentKey = path.substring('/bookshop'.length + 1, rightIndex == -1 ? path.length : rightIndex)
     }
     return currentKey === '' ? 'home' : currentKey;
+  }
+  onLogout() {
+    if (this.state.signingOut) {
+      message.loading('正在注销....');
+      return;
+    }
+    this.setState({signingOut: true});
+    fetchMessageByPost(API.SystemSignOut).then((msg) => {
+      if (msg.code == 200) {
+        message.success(`退出登录成功！`);
+        AuthenticationUtil.destroy();
+        this.props.router.replace("/");
+      } else {
+        message.error(`退出登录失败：${msg.message}`)
+      }
+    }).catch((err) => {
+      message.error(`退出登录失败：${err}`)
+    }).finally(() => {
+      this.setState({ signingOut: false });
+    })
   }
   render() {
     const { children } = this.props;
@@ -91,7 +112,7 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
                             }
                             <Menu.Item><Link href="/user-central/profile"><a>个人中心</a></Link></Menu.Item>
                             <Menu.Divider />
-                            <Menu.Item>退出登录</Menu.Item>
+                            <Menu.Item onClick={() => this.onLogout()}>退出登录</Menu.Item>
                           </SubMenu>
                         </Menu>
                       ) : (
