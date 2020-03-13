@@ -5,6 +5,11 @@ import DirectLink from './direct-link';
 import { API } from '../configs/api-config';
 import { fetchDataByPost, fetchMessageByPost } from '../util/network-util';
 import Link from 'next/link';
+import CommodityStatusView from './commodity-status-view';
+import WrappedUserSigninDialog from './dialogs/user-signin-dialog';
+import { UserContext } from './hooks/with-user';
+import { User } from '../types/user';
+import LoginRequiredView from './user/login-required-view';
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
@@ -54,12 +59,18 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
           <img src={book.metadata.cover || EMPTY_IMAGE} />
         </div>
         <div className="body">
-          <div><Link href="/bookshop/paper-books/[book_id]" as={`/bookshop/paper-books/${book.id}`}><a><strong>{book.metadata.name}</strong></a></Link> <Tag>{book.commodity.status}</Tag> <span className="author">{book.metadata.author}</span></div>
+          <div><Link href="/bookshop/paper-books/[book_id]" as={`/bookshop/paper-books/${book.id}`}><a><strong>{book.metadata.name}</strong></a></Link> <CommodityStatusView status={book.commodity.status} /> <span className="author">{book.metadata.author}</span></div>
           <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
           <p className="description">{book.metadata.description}</p>
           <div className="money">{book.commodity.prices}</div>
           <div className="actions">
-            <DirectLink href={`/user/orderring?book_id=${book.id}`}><Button size="small">立即购买</Button></DirectLink> <Button size="small" loading={joining} disabled={joinedCart} onClick={() => this.onJoinCartClick()}>{joinedCart ? '已加入' : '加入购物车'}</Button>
+            <LoginRequiredView
+              renderNonlogin={
+                (opener) => <a onClick={opener}>登录购买</a>
+              }
+            >
+              <DirectLink href={`/user/orderring?book_id=${book.id}`}><Button size="small">立即购买</Button></DirectLink> <Button size="small" loading={joining} disabled={joinedCart} onClick={() => this.onJoinCartClick()}>{joinedCart ? '已加入' : '加入购物车'}</Button>
+            </LoginRequiredView>
           </div>
         </div>
         <style jsx>{`

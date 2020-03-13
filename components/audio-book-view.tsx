@@ -6,6 +6,7 @@ import DirectLink from './direct-link';
 import Link from 'next/link';
 import { fetchMessageByPost } from '../util/network-util';
 import { API } from '../configs/api-config';
+import AudioBookStatusView from './audio-book-status-view';
 
 const EMPTY_IMAGE = '/assets/empty-audio.png';
 
@@ -65,7 +66,7 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
             <img src={book.cover || book.metadata.cover || EMPTY_IMAGE} />
           </div>
           <div className="body">
-            <div><strong><Link href="/bookshop/audio-books/[book_id]" as={`/bookshop/audio-books/${book.id}`}><a>{book.title || book.metadata.name}</a></Link></strong> <Tag>{book.status}</Tag> <span className="author">{book.teller}</span></div>
+            <div><strong><Link href="/bookshop/audio-books/[book_id]" as={`/bookshop/audio-books/${book.id}`}><a>{book.title || book.metadata.name}</a></Link></strong> <AudioBookStatusView status={book.status} /> <span className="author">{book.teller}</span></div>
             <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
             <p className="description">{book.description || book.metadata.description}</p>
             <div className="actions">
