@@ -19,8 +19,13 @@ export default class AvatarView extends React.Component<AvatarViewProps, AvatarV
     return (
       <>
         <span onClick={this.props.onClick}>
-          <Avatar size={size} src={user && user.avatar || undefined} icon={!user && 'user' || undefined} />
+          <Avatar className="avatar-view" size={size || 'default'} src={user && user.avatar || undefined} icon={!user && 'user' || undefined} />
         </span>
+        <style jsx global>{`
+            .avatar-view > i{
+              margin-right: 0!important;
+            }
+        `}</style>
       </>
     )
   }
