@@ -21,7 +21,7 @@ function BookPreviewView(props: BookPreviewViewProps) {
         <div>
           <DirectLink href={`/bookshop/${book.type}/${book.id}`}><strong>{bookPreview.name}</strong></DirectLink> <BookStatusView book={book} />
         </div>
-        <p>{bookPreview.description}</p>
+        <p title={bookPreview.description}>{bookPreview.description}</p>
       </div>
       <style jsx>{`
         .book-preview-view {

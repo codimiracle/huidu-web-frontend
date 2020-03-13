@@ -16,7 +16,7 @@ export default function BookMiniView(props: BookMiniViewProps) {
       <div className="body">
         <strong><Link href={`/bookshop/${book.type}/[book_id]`} as={`/bookshop/${book.type}/${book.id}`}><a>{bookPreview.name}</a></Link></strong>
         <Rate disabled defaultValue={book.rate} style={{ fontSize: '1.2em' }} />
-        <p>{bookPreview.description}</p>
+        <p title={bookPreview.description}>{bookPreview.description}</p>
         <div>
           <DirectLink href={`/${book.type == BookType.ElectronicBook ? 'reader' : 'player'}/[book_id]`} as={`/${book.type == BookType.ElectronicBook ? 'reader' : 'player'}/${book.id}`}><Button>{book.type == BookType.ElectronicBook ? '在线阅读' : '在线听书'}</Button></DirectLink>
         </div>

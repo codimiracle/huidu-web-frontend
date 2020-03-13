@@ -26,7 +26,7 @@ function BookPreviewView(props: BookPreviewViewProps) {
       <img src={bookPreview.cover || EMPTY_IMAGE} />
       <div className="body">
         <div><strong>{bookPreview.name}</strong> <span className="help-text">{bookPreview.author}</span></div>
-        <p>{bookPreview.description}</p>
+        <p title={bookPreview.description}>{bookPreview.description}</p>
       </div>
       <style jsx>{`
         .book-reference-view {
