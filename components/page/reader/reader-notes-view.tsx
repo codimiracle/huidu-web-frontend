@@ -1,7 +1,8 @@
 import { Drawer, List } from 'antd';
 import React from 'react';
 import { Episode } from '../../../types/episode';
-import { BookNotes, Note } from '../../../types/notes';
+import { Note, BookNotes } from '../../../types/notes';
+import LoginRequiredView from '../../user/login-required-view';
 
 interface NoteViewPorps {
   note: Note,
@@ -11,13 +12,17 @@ function NoteView(props: NoteViewPorps) {
   const { note } = props;
   return (
     <>
-      <div>
+      <div className="note-view">
         <div>{note.content.source}</div>
         <div className="ref">
           {note.ref}
         </div>
       </div>
       <style jsx>{`
+        .note-view {
+          width: 256px;
+          word-break: break-all;
+        }
         .ref {
           display: inline-block;
           padding: 0.5em;
@@ -30,13 +35,13 @@ function NoteView(props: NoteViewPorps) {
 }
 
 export interface ReaderNotesViewProps {
-  episode: Episode,
-  bookNotes: BookNotes,
-  visible: boolean,
-  onClose: () => void,
+  episode: Episode;
+  bookNotes: BookNotes;
+  visible: boolean;
+  onClose: () => void;
 };
 export interface ReaderNotesViewState {
-};
+}
 
 export default class ReaderNotesView extends React.Component<ReaderNotesViewProps, ReaderNotesViewState> {
   constructor(props: ReaderNotesViewProps) {
@@ -45,8 +50,7 @@ export default class ReaderNotesView extends React.Component<ReaderNotesViewProp
     }
   }
   render() {
-    const { visible, episode, onClose, bookNotes } = this.props;
-    let notes = bookNotes && bookNotes.notes || [];
+    const { visible, episode, bookNotes, onClose } = this.props;
     return (
       <>
         <Drawer
@@ -58,14 +62,18 @@ export default class ReaderNotesView extends React.Component<ReaderNotesViewProp
           width="312px"
           onClose={onClose}
         >
-          <List
-            renderItem={(note) => (
-              <List.Item>
-                <NoteView note={note} />
-              </List.Item>
-            )}
-            dataSource={notes}
-          />
+          <LoginRequiredView
+            renderNonlogin={(opener) => <a onClick={opener}>登录并显示笔记</a>}
+          >
+            <List
+              renderItem={(note) => (
+                <List.Item>
+                  <NoteView note={note} />
+                </List.Item>
+              )}
+              dataSource={bookNotes && bookNotes.notes || []}
+            />
+          </LoginRequiredView>
         </Drawer>
       </>
     )

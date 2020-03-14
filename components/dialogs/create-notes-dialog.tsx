@@ -31,20 +31,24 @@ export default class CreateNotesDialog extends React.Component<CreateNotesDialog
     const { episode, dommark, form, onCancel } = this.props;
     this.setState({ creating: true });
     fetchMessageByPost(API.UserBookNotesCreate, {
-      book_id: episode.book.id,
+      bookId: episode.book.id,
       episodeId: episode.id,
       ref: range.toString(),
       content: {
         type: 'plaintext',
         source: notes,
       },
-      domMark: dommark
+      dommark: dommark
     }).then((msg) => {
       if (msg.code == 200) {
         message.success('添加笔记成功!');
         form.resetFields();
         onCancel();
+      } else {
+        message.error(`添加笔记失败：${msg.message}`);
       }
+    }).catch((err) => {
+      message.error(`添加笔记失败：${err.message}`);
     }).finally(() => {
       this.setState({ creating: false });
     })

@@ -29,6 +29,7 @@ export interface ReaderEpisodeViewState {
   markVisible: boolean,
   dommark: Dommark,
   createNotesVisible: boolean,
+  dommarkedKey: string,
   dommarkedNotes: Array<DommarkedNote>,
 }
 
@@ -44,6 +45,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
       markVisible: false,
       dommark: null,
       createNotesVisible: false,
+      dommarkedKey: null,
       dommarkedNotes: []
     }
     this.pageViewRef = React.createRef();
@@ -53,9 +55,15 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
     if (!this.props.bookNotes) {
       return;
     }
+    let dommarkedNoteIdSet = new Set();
+    this.state.dommarkedNotes.forEach((e) => dommarkedNoteIdSet.add(e.note.id));
     let relativeNotes = this.props.bookNotes.notes.filter((notes) => notes.episodeId == this.props.episode.id);
     console.log(relativeNotes);
     let ranges = relativeNotes.map((note) => {
+      //跳过已经标记的 Dommark
+      if (dommarkedNoteIdSet.has(note.id)) {
+        return null;
+      }
       let container = this.pageViewRef.current;
       let range = DommarkUtil.getRange(note.dommark, container);
       let selection = window.getSelection();
@@ -93,7 +101,16 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
   }
   componentDidMount() {
     document.addEventListener('selectionchange', this.onSelectionChange);
-    this.showMarkedNotes();
+  }
+  componentDidUpdate() {
+    const { dommarkedKey } = this.state;
+    if (!this.props.bookNotes) {
+      return;
+    }
+    let newDommarkedKey = this.props.bookNotes.notes.filter((notes) => notes.episodeId == this.props.episode.id).map((n) => n.id).join('-');
+    if (newDommarkedKey != dommarkedKey) {
+      this.setState({dommarkedKey: newDommarkedKey}, () => this.showMarkedNotes());
+    }
   }
   componentWillUnmount() {
     document.removeEventListener("selectionchange", this.onSelectionChange);
