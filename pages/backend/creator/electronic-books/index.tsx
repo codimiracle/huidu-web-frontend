@@ -37,29 +37,14 @@ function MyBookView(props: MyBookViewProps) {
 }
 
 export interface MyBooksProps {
-  books: Array<ElectronicBook>,
-  total: number
+  books?: Array<ElectronicBook>,
+  total?: number
 };
 export interface MyBooksState {
 };
 
 
 export default class MyBooks extends React.Component<MyBooksProps, MyBooksState> {
-  static async getInitialProps() {
-    let data = await fetchDataByGet<ListJSON<ElectronicBook>>(API.CreatorElectronicBookCollection, {
-      page: 1,
-      limit: 10,
-    });
-    return {
-      total: data.total,
-      books: data.list
-    }
-  }
-  constructor(props: MyBooksProps) {
-    super(props);
-    this.state = {
-    }
-  }
   render() {
     const { books, total } = this.props;
     return (

@@ -6,6 +6,7 @@ import { BookPreview, BookType } from '../../types/book';
 import { Cell } from '../../types/shelf';
 import { fetchDataByGet } from '../../util/network-util';
 import { CellListJSON } from '../api/user/shelf/cells';
+import { ListJSON } from '../../types/api';
 
 export interface CellViewProps {
   cell: Cell
@@ -56,25 +57,37 @@ export interface BookShelfState {
 };
 
 export default class BookShelf extends React.Component<BookShelfProps, BookShelfState> {
-  static async getInitialProps() {
-    let data = await fetchDataByGet<CellListJSON>(API.UserShelfCells, {
-      page: 1,
-      limit: 10,
-    });
-    return {
-      cells: data.list,
-      total: data.total
-    };
-  }
   constructor(props: BookShelfProps) {
     super(props);
     this.state = {
       page: 1,
       limit: 10,
-      list: props.cells,
-      total: props.total,
+      list: [],
+      total: 0,
       fetching: false
     }
+  }
+  
+  fetchShelfCells(page: number, limit: number): void {
+    this.setState({ fetching: true });
+    fetchDataByGet<CellListJSON>(API.UserShelfCells, {
+      page: page,
+      limit: limit
+    }).then((data) => {
+      this.setState({
+        page: data.page,
+        limit: data.limit,
+        list: data.list,
+        total: data.total
+      })
+    }).catch((err) => {
+      message.error(`获取书架数据失败：${err}`);
+    }).finally(() => {
+      this.setState({ fetching: false });
+    });
+  }
+  componentDidMount() {
+    this.fetchShelfCells(1, 10);
   }
   render() {
     const { fetching, page, limit, list, total } = this.state;
@@ -110,23 +123,5 @@ export default class BookShelf extends React.Component<BookShelfProps, BookShelf
         `}</style>
       </>
     )
-  }
-  fetchShelfCells(page: number, limit: number): void {
-    this.setState({ fetching: true });
-    fetchDataByGet<CellListJSON>(API.UserShelfCells, {
-      page: page,
-      limit: limit
-    }).then((data) => {
-      this.setState({
-        page: data.page,
-        limit: data.limit,
-        list: data.list,
-        total: data.total
-      })
-    }).catch((err) => {
-      message.error(`获取书架数据失败：${err}`);
-    }).finally(() => {
-      this.setState({ fetching: false });
-    });
   }
 }

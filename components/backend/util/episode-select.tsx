@@ -20,8 +20,9 @@ export interface EpisodeSelectState {
 export default class EpisodeSelect extends React.Component<EpisodeSelectProps, EpisodeSelectState> {
   constructor(props: EpisodeSelectProps) {
     super(props);
+    console.log(props);
     this.state = {
-      list: props.initialEpisode ? [props.initialEpisode] : [],
+      list: undefined,
       value: undefined,
       fetching: false
     }
@@ -45,8 +46,17 @@ export default class EpisodeSelect extends React.Component<EpisodeSelectProps, E
     onChange && onChange(value);
   }
   render() {
-    const { list, fetching } = this.state;
+    const { fetching } = this.state;
     let value = this.props.value || this.state.value;
+    let list = this.state.list || [];
+    if (list && this.props.initialEpisode) {
+      let exists = new Set(list.map((e) => e.id));
+      let count = exists.size
+      exists.add(this.props.initialEpisode.id);
+      if (exists.size > count) {
+        list = list.concat(this.props.initialEpisode);
+      }
+    }
     return (
       <Select
         placeholder="搜索选择对应章节"

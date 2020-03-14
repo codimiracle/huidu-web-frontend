@@ -2,11 +2,11 @@ import React from 'react';
 import { List, Pagination, message, Tag } from 'antd';
 import { fetchDataByGet } from '../../util/network-util';
 import { API } from '../../configs/api-config';
-import { BookNotesListJSON } from '../api/user/book-notes';
 import { BookNotes } from '../../types/notes';
 import { ElectronicBook } from '../../types/electronic-book';
 import DatetimeUtil from '../../util/datetime-util';
 import Link from 'next/link';
+import { ListJSON } from '../../types/api';
 
 
 interface BookNotesViewProps {
@@ -61,16 +61,6 @@ export interface NotesState {
 };
 
 export default class Notes extends React.Component<NotesProps, NotesState> {
-  static async getInitialProps() {
-    let data = await fetchDataByGet<BookNotesListJSON>(API.UserBookNotesCollection, {
-      page: 1,
-      limit: 10
-    });
-    return {
-      total: data.total,
-      bookNotesList: data.list
-    }
-  }
   constructor(props: NotesProps) {
     super(props);
     this.state = {
@@ -83,7 +73,7 @@ export default class Notes extends React.Component<NotesProps, NotesState> {
   }
   fetchNotesList(page: number, limit: number) {
     this.setState({ fetching: true });
-    fetchDataByGet<BookNotesListJSON>(API.UserBookNotesCollection, {
+    fetchDataByGet<ListJSON<BookNotes>>(API.UserBookNotesCollection, {
       page: page,
       limit: limit
     }).then((data) => {

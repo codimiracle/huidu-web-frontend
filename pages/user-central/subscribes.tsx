@@ -1,11 +1,11 @@
 import React from 'react';
 import { List, Tabs, Pagination, message, Button, Divider } from 'antd';
 import { Subscribe } from '../../types/subscribe';
-import { SubscribeListJSON } from '../api/user/subscribes';
 import { fetchDataByGet, fetchMessageByPost, fetchMessageByDelete } from '../../util/network-util';
 import { API } from '../../configs/api-config';
 import Link from 'next/link';
 import { BookType, BookPreview, Book } from '../../types/book';
+import { ListJSON } from '../../types/api';
 
 const { TabPane } = Tabs;
 
@@ -127,16 +127,6 @@ export interface SubscribesState {
 };
 
 export default class Subscribes extends React.Component<SubscribesProps, SubscribesState> {
-  static async getInitialProps() {
-    let listData = await fetchDataByGet<SubscribeListJSON>(API.UserSubscribeCollection, {
-      page: 1,
-      limit: 10
-    });
-    return {
-      subscribes: listData.list,
-      total: listData.total
-    }
-  }
   constructor(props: SubscribesProps) {
     super(props);
     this.state = {
@@ -149,7 +139,7 @@ export default class Subscribes extends React.Component<SubscribesProps, Subscri
   }
   fetchSubscribeList(page: number, limit: number) {
     this.setState({ fetching: true });
-    fetchDataByGet<SubscribeListJSON>(API.UserSubscribeCollection, {
+    fetchDataByGet<ListJSON<Subscribe>>(API.UserSubscribeCollection, {
       page: page,
       limit: limit
     }).then((data) => {
@@ -164,6 +154,9 @@ export default class Subscribes extends React.Component<SubscribesProps, Subscri
     }).finally(() => {
       this.setState({ fetching: false });
     })
+  }
+  componentDidMount() {
+    this.fetchSubscribeList(1, 10);
   }
   render() {
     const { page, limit, list, total, fetching } = this.state;

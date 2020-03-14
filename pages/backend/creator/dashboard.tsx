@@ -1,24 +1,24 @@
 import { Col, Divider, Icon, Row, Statistic } from 'antd';
 import React from 'react';
+import HeaderBar from '../../../components/backend/header-bar';
+import useSWR from 'swr';
 import { API } from '../../../configs/api-config';
 import { fetchDataByGet } from '../../../util/network-util';
 import { StatisticsJSON } from '../../api/author/statistics';
-import HeaderBar from '../../../components/backend/header-bar';
 
-export interface CreatorDashboardProps {
-  statistics: StatisticsJSON
-};
-export interface CreatorDashboardState { };
-
-export default class CreatorDashboard extends React.Component<CreatorDashboardProps, CreatorDashboardState> {
-  static async getInitialProps() {
-    let statistics = await fetchDataByGet<StatisticsJSON>(API.AuthorStatistics);
-    return {
-      statistics: statistics
-    };
+export default function CreatorDashboard(props) {
+  const { data, error } = useSWR<StatisticsJSON>(API.AuthorStatistics, fetchDataByGet);
+  if (error) {
+    return <div>加载作者数据页失败！</div>
   }
-  render() {
-    const { statistics } = this.props;
+  if (!data) {
+    return <>
+      <h2>创作面板</h2>
+      <div>加载中...</div>
+    </>
+  }
+  if (data) {
+    let statistics = data;
     return (
       <div>
         <HeaderBar

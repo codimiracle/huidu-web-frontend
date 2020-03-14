@@ -101,9 +101,13 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
     this.fetchList(filters, sorter, pagination.current, pagination.pageSize);
   }
   componentDidMount() {
-    setTimeout(() => {
-      this.setState({ dataSource: this.props.initialDataSource, total: this.props.initialTotal, loading: false });
-    }, 1000);
+    if (!(this.props.initialDataSource && this.props.initialTotal)) {
+      this.fetchList(null, null, 1, 10);
+    } else {
+      setTimeout(() => {
+        this.setState({ dataSource: this.props.initialDataSource, total: this.props.initialTotal, loading: false });
+      }, 1000);
+    }
   }
   render() {
     const { filter, sorter } = this.state;

@@ -17,18 +17,6 @@ export interface ElectronicBookManagerProps {
 export interface ElectronicBookManagerState { };
 
 export default class ElectronicBookManager extends React.Component<ElectronicBookManagerProps, ElectronicBookManagerState> {
-  static async getInitialProps() {
-    let electronicBooksData = await fetchDataByGet<ListJSON<ElectronicBook>>(API.BackendElectronicBookCollection, {
-      filter: null,
-      sorter: null,
-      page: 1,
-      limit: 10,
-    })
-    return {
-      list: electronicBooksData.list,
-      total: electronicBooksData.total
-    }
-  }
   constructor(props: ElectronicBookManagerProps) {
     super(props);
     this.state = {

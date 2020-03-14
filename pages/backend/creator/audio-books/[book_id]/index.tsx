@@ -83,7 +83,7 @@ export default class MyBookDetails extends React.Component<MyBookDetailsProps, M
           </Row>
           <div>
             <div>
-              <strong>最后编辑章节</strong> {lastEditedEpisode && <Link href={`./[book_id]/episode-player?episode_id=${lastEditedEpisode.id}`} as={`./${book.id}/episode-player?episode_id=${lastEditedEpisode.id}`}><a>继续编辑</a></Link>}
+              <strong>最后编辑章节</strong> {lastEditedEpisode && <Link href={`./[book_id]/episode-creator?episode_id=${lastEditedEpisode.id}`} as={`./${book.id}/episode-creator?episode_id=${lastEditedEpisode.id}`}><a>继续编辑</a></Link>}
             </div>
             <div className="episode-preview">
               {

@@ -1,15 +1,14 @@
-import { Button, Calendar, Card, Col, Divider, List, message, Row } from 'antd';
+import { Button, Calendar, Card, Col, Divider, List, message, Row, Spin } from 'antd';
 import moment from 'moment';
 import React, { CSSProperties } from 'react';
 import AvatarView from '../../components/avatar-view';
+import { UserContext } from '../../components/hooks/with-user';
 import { API } from '../../configs/api-config';
 import { EntityJSON } from '../../types/api';
 import { ArrivedData } from '../../types/arriveddata';
 import { Book, BookPreview } from '../../types/book';
-import { User } from '../../types/user';
 import DatetimeUtil from '../../util/datetime-util';
 import { fetchDataByGet, fetchMessageByPost } from '../../util/network-util';
-import { UserContext } from '../../components/hooks/with-user';
 
 const EMPTY_IMAGE = "/assets/empty.png";
 
@@ -25,7 +24,7 @@ function BookView(props: BookViewProps) {
       <img src={bookPreview.cover || EMPTY_IMAGE} />
       <div className="body">
         <strong>{bookPreview.name}</strong>
-        <p>{bookPreview.description}</p>
+        <p title={bookPreview.description}>{bookPreview.description}</p>
       </div>
       <style jsx>{`
         .book-view {
@@ -49,26 +48,32 @@ function BookView(props: BookViewProps) {
 }
 
 export interface ArrivedProps {
-  arriveddata: ArrivedData
+  arriveddata: ArrivedData;
 };
 export interface ArrivedState {
-  signing: boolean
-  arriveddata: ArrivedData
+  signing: boolean;
+  loadingToday: boolean;
+  arriveddata: ArrivedData;
 };
 
 export default class Arrived extends React.Component<ArrivedProps, ArrivedState> {
-  static async getInitialProps() {
-    let arrived = await fetchDataByGet<EntityJSON<ArrivedData>>(API.UserArriveToday);
-    return {
-      arriveddata: arrived.entity
-    }
-  }
   constructor(props: ArrivedProps) {
     super(props);
     this.state = {
       signing: false,
-      arriveddata: props.arriveddata
+      loadingToday: false,
+      arriveddata: props.arriveddata || null
     }
+  }
+  fetchTodayArrivingData() {
+    this.setState({ loadingToday: true });
+    fetchDataByGet<EntityJSON<ArrivedData>>(API.UserArriveToday).then((data) => {
+      this.setState({ arriveddata: data.entity });
+    }).catch((err) => {
+      message.error(`获取今天签到情况失败：${err}`);
+    }).finally(() => {
+      this.setState({ loadingToday: false });
+    });
   }
   onArrived() {
     this.setState({ signing: true });
@@ -92,6 +97,9 @@ export default class Arrived extends React.Component<ArrivedProps, ArrivedState>
     }).finally(() => {
       this.setState({ signing: false });
     });
+  }
+  componentDidMount() {
+    this.fetchTodayArrivingData();
   }
   render() {
     const { signing, arriveddata } = this.state;
@@ -125,54 +133,61 @@ export default class Arrived extends React.Component<ArrivedProps, ArrivedState>
     }
     return (
       <div>
-        <div className="summary-info">
-          <UserContext.Consumer>
-            {
-              (user) =>
-                <AvatarView size={128} user={user} />
-            }
-          </UserContext.Consumer>
-          <div className="motto-view">{arriveddata.motto}</div>
-        </div>
-        <Row type="flex" gutter={32} style={{ marginLeft: '128px' }}>
-          <Col>
-            <Row type="flex" gutter={32}>
-              <Col style={{ fontSize: '1.5em', textAlign: 'center' }}>
-                <div>已连续打卡</div>
-                <div><strong className="arrived-days">{arriveddata.days}</strong> 天</div>
-              </Col>
-              <Col>
-                <div>
-                  <Button type="primary" size="large" style={buttonTopStyle}>{moment(arriveddata.today).format('D')}日</Button>
-                  <Button onClick={() => this.onArrived()} loading={signing} disabled={arriveddata.signed} size="large" style={buttonBottomStyle}>{arriveddata.signed ? '已打卡' : '打卡'}</Button>
-                </div>
-              </Col>
-            </Row>
-          </Col>
-          <Col>
-            <Divider type="vertical" style={{ height: '100%' }} />
-          </Col>
-          <Col>
-            <div>今天我读了</div>
-            <List
-              renderItem={(item) => (
-                <List.Item>
-                  <BookView book={item} />
-                </List.Item>
-              )}
-              dataSource={arriveddata.reads}
-            />
-          </Col>
-        </Row>
-        <div className="calendar-view">
-          <h3>打卡记录</h3>
-          <Card>
-            <Calendar
-              fullscreen={false}
-              dateCellRender={dateCellRender}
-            />
-          </Card>
-        </div>
+        <Spin spinning={this.state.loadingToday}>
+          {
+            arriveddata && <>
+              <div className="summary-info">
+
+                <UserContext.Consumer>
+                  {
+                    (user) =>
+                      <AvatarView size={128} user={user} />
+                  }
+                </UserContext.Consumer>
+                <div className="motto-view">{arriveddata.motto}</div>
+              </div>
+              <Row type="flex" gutter={32} style={{ marginLeft: '128px' }}>
+                <Col>
+                  <Row type="flex" gutter={32}>
+                    <Col style={{ fontSize: '1.5em', textAlign: 'center' }}>
+                      <div>已连续打卡</div>
+                      <div><strong className="arrived-days">{arriveddata.days}</strong> 天</div>
+                    </Col>
+                    <Col>
+                      <div>
+                        <Button type="primary" size="large" style={buttonTopStyle}>{moment(arriveddata.today).format('D')}日</Button>
+                        <Button onClick={() => this.onArrived()} loading={signing} disabled={arriveddata.signed} size="large" style={buttonBottomStyle}>{arriveddata.signed ? '已打卡' : '打卡'}</Button>
+                      </div>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col>
+                  <Divider type="vertical" style={{ height: '100%' }} />
+                </Col>
+                <Col>
+                  <div>今天我读了</div>
+                  <List
+                    renderItem={(item) => (
+                      <List.Item>
+                        <BookView book={item} />
+                      </List.Item>
+                    )}
+                    dataSource={arriveddata.reads}
+                  />
+                </Col>
+              </Row>
+              <div className="calendar-view">
+                <h3>打卡记录</h3>
+                <Card>
+                  <Calendar
+                    fullscreen={false}
+                    dateCellRender={dateCellRender}
+                  />
+                </Card>
+              </div>
+            </>
+          }
+        </Spin>
         <style jsx>{`
           .calendar-view {
             width: 512px;

@@ -3,15 +3,14 @@ import { WrappedFormUtils } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import TextArea from 'antd/lib/input/TextArea';
 import React from 'react';
-import { AudioBookStatus, AudioBook } from '../../../types/audio-book';
+import { AudioBook, AudioBookStatus } from '../../../types/audio-book';
 import { ELECTRONIC_BOOK_STATUS_TEXTS } from '../../../types/electronic-book';
-import MetadataForm from './metadata-form';
-import SelectableFormItem from './selectable-form-item';
+import { ImageUpload } from '../../image-upload';
 import CategorySelect from '../util/category-select';
 import MetadataSelect from '../util/metadata-select';
 import TagSelect from '../util/tag-select';
-import { ImageUpload } from '../../image-upload';
 import CategoryForm from './category-form';
+import SelectableFormItem from './selectable-form-item';
 
 
 export interface AudioBookFromProps {
@@ -129,7 +128,7 @@ export default class AudioBookFrom extends React.Component<AudioBookFromProps, A
           form={form}
           renderForm={(form) => <CategoryForm form={form} category={book && book.category || undefined} />}
           renderSelect={(form) => form.getFieldDecorator('categoryId', {
-            initialValue: book && book.category.id || undefined,
+            initialValue: book && book.category && book.category.id || undefined,
             rules: [{ required: true, message: '请选择一个类别' }]
           })(<CategorySelect initialDataSource={book && [book.category] || undefined} />)}
         />

@@ -1,4 +1,6 @@
 import App from 'next/app';
+import zhCN from 'antd/lib/locale/zh_CN';
+
 import { withRouter, Router } from 'next/router';
 import BasicLayout from '../layouts/basic-layout';
 import NProgress from 'nprogress';
@@ -12,6 +14,7 @@ import CreatorLayout from '../layouts/creator-layout';
 import BackendLayout from '../layouts/backend-layout';
 import withUser from '../components/hooks/with-user';
 import { User } from '../types/user';
+import { ConfigProvider } from 'antd';
 
 Router.events.on('routeChangeStart', url => {
   console.log(`Loading: ${url}`);
@@ -58,9 +61,11 @@ class HuiduWebApp extends App<HuiduWebAppProps> {
           {/* Import CSS for nprogress */}
           <link rel="stylesheet" type="text/css" href="/nprogress.css" />
         </Head>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <ConfigProvider locale={zhCN}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ConfigProvider>
       </>
     );
   }

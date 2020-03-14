@@ -17,18 +17,6 @@ export interface AudioBookManagerProps {
 export interface AudioBookManagerState { };
 
 export default class AudioBookManager extends React.Component<AudioBookManagerProps, AudioBookManagerState> {
-  static async getInitialProps() {
-    let audioBooksData = await fetchDataByGet<ListJSON<AudioBook>>(API.BackendAudioBookCollection, {
-      filter: null,
-      sorter: null,
-      page: 1,
-      limit: 10
-    });
-    return {
-      list: audioBooksData.list,
-      total: audioBooksData.total
-    }
-  }
   constructor(props: AudioBookManagerProps) {
     super(props);
     this.state = {
@@ -37,6 +25,12 @@ export default class AudioBookManager extends React.Component<AudioBookManagerPr
   }
   getColumns(filter: Partial<Record<keyof AudioBook, string[]>>, sorter: SorterResult<AudioBook>): Array<ColumnProps<AudioBook>> {
     return [
+      {
+        title: '电子书封面',
+        key: 'cover',
+        dataIndex: 'cover',
+        render: (cover) => <img src={cover} style={{ width: '7em', height: '9.4em' }} />
+      },
       {
         title: '有声书标题',
         key: 'title',

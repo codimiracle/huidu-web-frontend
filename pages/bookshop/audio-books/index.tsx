@@ -62,7 +62,8 @@ export default class BookShop extends React.Component<BookShopProps, BookShopSta
   private fetchBooks(filter: Filter, page: number, limit: number) {
     this.setState({ loading: true });
     fetchDataByGet(API.AudioBookCollection, {
-      filter: JSON.stringify(filter),
+      filter: filter,
+      sorter: null,
       page: page,
       limit: limit,
     }).then((data: any) => {

@@ -1,159 +1,20 @@
-import React from 'react';
-import { List, Divider, Button, Icon, Tooltip, message, Modal, Form, Result } from 'antd';
-import AddressView from '../../components/address-view';
-import BookView from '../../components/book-view';
-import { Address } from '../../types/address';
-import { ElectronicBook } from '../../types/electronic-book';
-import { AudioBook } from '../../types/audio-book';
-import { PaperBook } from '../../types/paper-book';
-import { Commodity } from '../../types/commodity';
-import { fetchDataByGet, fetchDataByPost, fetchMessageByPost } from '../../util/network-util';
-import { withRouter, Router } from 'next/router';
-import { API } from '../../configs/api-config';
-import { PaperBookListJSON } from '../api/paper-books';
-import ShoppingCommodityView from '../../components/shopping-commodity-view';
+import { Button, Divider, Icon, List, message, Modal, Tooltip } from 'antd';
 import { NextPageContext } from 'next';
-import { AddressJSON } from '../api/user/addresses/default';
-import { Order } from '../../types/order';
+import React from 'react';
+import AddressView from '../../components/address-view';
 import LoadingView from '../../components/loading-view';
-import Password from 'antd/lib/input/Password';
-import FormItem from 'antd/lib/form/FormItem';
-import { WrappedFormUtils } from 'antd/lib/form/Form';
+import ShoppingCommodityView from '../../components/shopping-commodity-view';
+import { API } from '../../configs/api-config';
+import { Address } from '../../types/address';
 import { EntityJSON } from '../../types/api';
-
-export interface PaymentDialogProps {
-  visible: boolean,
-  form: WrappedFormUtils<any>,
-  order: Order,
-  router: Router,
-}
-
-export interface PaymentDialogState {
-  paying: boolean,
-  canceling: boolean,
-  triggered: boolean,
-  result: number,
-}
-
-
-export class PaymentDialog extends React.Component<PaymentDialogProps, PaymentDialogState> {
-  constructor(props: PaymentDialogProps) {
-    super(props);
-    this.state = {
-      paying: false,
-      canceling: false,
-      triggered: false,
-      result: 0,
-    }
-  }
-  onPay() {
-    const { order, form, router } = this.props;
-    form.validateFields((errors) => {
-      if (!errors) {
-        this.setState({ paying: true });
-        fetchMessageByPost(API.UserOrderPay, {
-          orderNumber: order.orderNumber,
-          password: form.getFieldValue('password')
-        }).then((msg) => {
-          if (msg.code == 200) {
-            this.setState({ triggered: true, result: 1 });
-            router.replace('/user/orders/[order_number]', `/user/orders/${order.orderNumber}`);
-          } else {
-            message.error(`错误代码：${msg.code}: ${msg.message}`);
-          }
-        }).catch((err) => {
-          message.error(`网络连接失败：${err}`);
-        }).finally(() => {
-          this.setState({ paying: false });
-          form.resetFields();
-        });
-      }
-    })
-  }
-  onCancel() {
-    const { router } = this.props;
-    this.setState({ triggered: true, result: 2 });
-    message.info('订单尚未支付，请前往我的订单处理！');
-    router.back();
-  }
-  render() {
-    const { order, form } = this.props;
-    const { paying, canceling, triggered, result } = this.state;
-    return (
-      <>{
-        order &&
-        <Modal
-          title="付款"
-          visible={this.props.visible}
-          closable={null}
-          footer={null}
-          width="415px"
-          centered
-        >
-          {result == 0 &&
-            <div className="container">
-              <div>订单编号：{order.orderNumber}</div>
-              <div>支付金额：</div>
-              <div className="power"><strong className="money">{order.totalMoney}</strong></div>
-              <Form>
-                <FormItem label="账户密码">
-                  {
-                    form.getFieldDecorator('password', {
-                      rules: [
-                        { required: true, message: '请输入密码!' }
-                      ]
-                    })(
-                      <Password placeholder="请输入账户密码" />
-                    )
-                  }
-                </FormItem>
-              </Form>
-              <Button type="primary" loading={paying} disabled={canceling || triggered} size="large" onClick={() => this.onPay()}>支付</Button> <Button size="large" loading={canceling} disabled={paying || triggered} onClick={() => this.onCancel()}>取消</Button>
-            </div>
-          }
-          {
-            result == 1 &&
-            <div className="container">
-              <Result
-                status="success"
-                title="订单已成功支付"
-                subTitle={`订单编号：${order.orderNumber}, 正在前往 订单信息 页，请稍等...`}
-              />
-            </div>
-          }
-          {
-            result == 2 && 
-            <div className="container">
-              <Result
-                status="info"
-                title="您的订单尚未支付"
-                subTitle={`订单编号：${order.orderNumber}, 正在回到之前的页面，请稍等...`}
-              />
-            </div>
-          }
-        </Modal>
-      }
-        <style jsx>{`
-          .container {
-            text-align: center;
-          }
-          .power {
-            padding: 1em 0;
-          }
-          .money {
-            font-size: 3rem;
-            color: #f30000;
-          }
-          .money::before {
-            content: '￥';
-          }
-          `}</style>
-      </>
-    )
-  }
-}
-
-export const WrappedPaymentDialog = withRouter(Form.create<PaymentDialogProps>({ name: 'payment-dialog' })(PaymentDialog));
+import { Commodity } from '../../types/commodity';
+import { Order } from '../../types/order';
+import { PaperBook } from '../../types/paper-book';
+import { fetchDataByGet, fetchDataByPost } from '../../util/network-util';
+import { PaperBookListJSON } from '../api/paper-books';
+import { AddressJSON } from '../api/user/addresses/default';
+import WrappedPaymentDialog from '../../components/dialogs/payment-dialog';
+import OrderringDialog from '../../components/dialogs/orderring-dialog';
 
 export interface OrderringProps {
   commodityList: Array<Commodity<any>>
@@ -205,10 +66,8 @@ export default class Orderring extends React.Component<OrderringProps, Orderring
       });
       commodityList = commodityList.concat(data.list.map((item) => item.commodity));
     }
-    let defaultAddress = await fetchDataByGet<AddressJSON>(API.UserAddressDefault);
     return {
-      commodityList: commodityList,
-      defaultAddress: defaultAddress.address
+      commodityList: commodityList
     };
   }
   onOrderring() {
@@ -275,15 +134,7 @@ export default class Orderring extends React.Component<OrderringProps, Orderring
             </div>
           </div>
         </div>
-        <Modal
-          title={null}
-          closable={false}
-          footer={null}
-          centered
-          visible={orderring}
-        >
-          {orderring ? <div><LoadingView loading={orderring} /> 结算中...</div> : <div><Icon type="check-circle" style={{ color: '#52c41a' }} /> 结算完成</div>}
-        </Modal>
+        <OrderringDialog orderring={orderring} />
         <WrappedPaymentDialog visible={paymentDialogVisible} order={createdOrder} />
         <style jsx>{`
           .footer {

@@ -24,31 +24,19 @@ export interface APIDefinition {
   body: any,
 }
 
+// const address = '192.168.1.150';
+// const address = '192.168.43.195';
+
+var origin: string = browserWindow.location.origin;
+// var origin = `http://${address}:3000`;
+
+var testOrigin = `http://192.168.43.178:4000`;
+
 export interface APIDefinitionSet {
   [x: string]: any | APIDefinition | APIDefinitionSet;
 }
 
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
+
 /**
  * for using API in netwok-util
  */
@@ -74,10 +62,9 @@ export enum API {
   ElectronicBookEpisodeEntity = "electronicBook.episode.entity",
   ElectronicBookLastReadEpisode = "electronicBook.episode.lastRead",
   ElectronicBookCatalogs = "electronicBook.catalogs",
-  ElectronicBookCreate = "ElectronicBookCreate",
   ElectronicBookEpisodeCreate = "ElectronicBookEpisodeCreate",
   ElectronicBookLastEditedEpisode = "electronicBook.lastUpdate",
-  AudioBookFirstEpisode = "audioBook.episode.first",
+  AudioBookLastReadEpisode = "audioBook.episode.lastRead",
   AudioBookEpisodeEntity = "audioBook.episode.entity",
   AudioBookEntity = "audioBook.entity",
   AudioBookCollection = "audioBook.collection",
@@ -142,9 +129,10 @@ export enum API {
   SystemSignUp = "system.signUp",
   Search = "search",
   AuthorStatistics = "creator.statistics",
-  Upload = "http://192.168.43.178:4000/api/reference-data/upload",
-  UploadSource = "http://192.168.43.178:4000/api/reference-data/source",
-  AvatarSource = "http://192.168.43.178:4000/api/user/avatar",
+  Upload = `http://192.168.43.178:4000/api/reference-data/upload`,
+  UploadSource = `http://192.168.43.178:4000/api/reference-data/source`,
+  AvatarSource = `http://192.168.43.178:4000/api/user/avatar`,
+  CoverSource = `http://192.168.43.178:4000/api/books/cover`,
   CategorySuggetion = "category.suggestion",
   TagSuggetion = "tag.suggestion",
   ElectronicBookEpisodeUpdate = "ElectronicBookEpisodeUpdate",
@@ -262,16 +250,11 @@ export enum API {
   CommunityReviewCollection = "community.review.collection",
   UserDynamicCollection = "user.community.dynamic.collection",
   UserNotificationMarkAsReadBulk = "user.notification.markAllRead",
-  UserAccountBalance = "user.account.balance"
+  UserAccountBalance = "user.account.balance",
+  UserAccountRecharge = "user.account.recharge",
+  UserAccountRechargePay = "user.account.rechargePay",
+  SystemSignOut = "system.signOut"
 }
-
-// const address = '192.168.1.150';
-// const address = '192.168.43.195';
-
-var origin: string = browserWindow.location.origin;
-// var origin = `http://${address}:3000`;
-
-var testOrigin = `http://192.168.43.178:4000`;
 
 /**
  * API definitions, it is url plus placeholder really.
@@ -947,14 +930,15 @@ export const APIDefinitionData: APIDefinitionSet = {
     lastUpdate: `${testOrigin}/api/audio-books/@{book_id}/last-update`,
     comments: `${testOrigin}/api/audio-books/@{book_id}/comments?page=@{page}&limit=@{limit}`,
     episode: {
-      first: `${testOrigin}/api/audio-books/@{book_id}/episodes/first`,
+      lastRead: `${testOrigin}/api/audio-books/@{book_id}/episodes/last-read`,
       collection: `${testOrigin}/api/audio-books/@{book_id}/episodes?page=@{page}&limit=@{limit}`,
       entity: `${testOrigin}/api/audio-books/@{book_id}/episodes/@{episode_id}`,
     },
     collection: {
-      url: `${testOrigin}/api/audio-books?filter=@{filter}&page=@{page}&limit=@{limit}`,
+      url: `${testOrigin}/api/audio-books?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
       query: {
-        filter: null
+        filter: null,
+        sorter: null
       }
     },
     publishYears: `${testOrigin}/api/audio-books/publish-years`
@@ -962,7 +946,7 @@ export const APIDefinitionData: APIDefinitionSet = {
   paperBook: {
     entity: `${testOrigin}/api/paper-books/@{book_id}`,
     collection: {
-      url: `${testOrigin}/api/paper-books?filter=@{filter}&page=@{page}&limit=@{limit}`,
+      url: `${testOrigin}/api/paper-books?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
       query: {
         filter: null
       }
@@ -1092,24 +1076,30 @@ export const APIDefinitionData: APIDefinitionSet = {
     account: {
       balance: `${testOrigin}/api/user/account`,
       recharge: {
-        url: `${testOrigin}/api/user/recharge`,
+        url: `${testOrigin}/api/user/account/recharge`,
         method: 'post',
         body: {
           charge: null
+        }
+      },
+      rechargePay: {
+        url: `${testOrigin}/api/user/account/pay`,
+        method: 'post',
+        body: {
+          orderNumber: null,
+          type: null
         }
       }
     },
     arrive: {
       signin: {
-        url: `${origin}/api/user/arrive/signin`,
+        url: `${testOrigin}/api/user/arrive/signin`,
         method: 'post',
         body: {
           date: null
         }
       },
-      today: {
-        url: `${origin}/api/user/arrive/today`,
-      }
+      today: `${testOrigin}/api/user/arrive/today`
     },
     community: {
       review: {
@@ -1232,10 +1222,11 @@ export const APIDefinitionData: APIDefinitionSet = {
       collection: `${testOrigin}/api/user/orders?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
       entity: `${testOrigin}/api/user/orders/@{order_number}`,
       pay: {
-        url: `${testOrigin}/api/user/orders/pay`,
+        url: `${testOrigin}/api/user/account/pay`,
         method: 'post',
         body: {
-          order_number: null,
+          orderNumber: null,
+          type: null,
           password: null
         }
       },
@@ -1284,9 +1275,6 @@ export const APIDefinitionData: APIDefinitionSet = {
           type: '',
           book_id: null,
         }
-      },
-      update: {
-
       }
     }
   },
@@ -1300,11 +1288,16 @@ export const APIDefinitionData: APIDefinitionSet = {
   system: {
     signIn: {
       url: `${testOrigin}/api/system/sign-in`,
+      method: 'post',
       body: {
         username: null,
         password: null,
         rememberMe: false
       }
+    },
+    signOut: {
+      url: `${testOrigin}/api/system/sign-out`,
+      method: 'post',
     },
     signUp: `${testOrigin}/api/system/sign-up`,
     usernameExists: `${testOrigin}/api/system/username-exists?username=@{username}`,

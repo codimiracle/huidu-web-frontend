@@ -42,6 +42,11 @@ export default class PaginationList<T> extends React.Component<PaginationListPro
       searchTotal: 0,
     }
   }
+  componentDidMount() {
+    if (!(this.props.initialDataSource && this.props.initialTotal)) {
+      this.fetchList(1, 10);
+    }
+  }
   onSearch(keyword: string) {
     if (keyword.length == 0) {
       this.setState({ mode: 'list' });

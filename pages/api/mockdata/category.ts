@@ -8,6 +8,9 @@ export const getMockCategory = (id?: number): Category => {
     name: '类别 1',
     description: '类别描述',
     tags: tags,
-    extra: null
+    extra: {
+      url: '/assets/huidu.png',
+      asideTitle: 'asideTitle'
+    }
   };
 }

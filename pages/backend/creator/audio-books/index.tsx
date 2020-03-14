@@ -1,12 +1,10 @@
-import { List, Button } from 'antd';
+import { Button, List } from 'antd';
 import Link from 'next/link';
 import React from 'react';
+import HeaderBar from '../../../../components/backend/header-bar';
 import PaginationList from '../../../../components/pagination-list';
 import { API } from '../../../../configs/api-config';
-import { ListJSON } from '../../../../types/api';
 import { AudioBook } from '../../../../types/audio-book';
-import { fetchDataByGet } from '../../../../util/network-util';
-import HeaderBar from '../../../../components/backend/header-bar';
 
 const EMPTY_IMAGE = "/assets/empty.png";
 
@@ -45,16 +43,6 @@ export interface MyBooksState {
 
 
 export default class MyBooks extends React.Component<MyBooksProps, MyBooksState> {
-  static async getInitialProps() {
-    let data = await fetchDataByGet<ListJSON<AudioBook>>(API.CreatorAudioBookCollection, {
-      page: 1,
-      limit: 10,
-    });
-    return {
-      total: data.total,
-      books: data.list
-    }
-  }
   constructor(props: MyBooksProps) {
     super(props);
     this.state = {

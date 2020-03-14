@@ -73,12 +73,16 @@ export default async function (api: API, init?: RequestInit): Promise<Response> 
   if (!apiDefinition) {
     throw new Error(`API definition not found: \`${api}\``);
   }
-  console.debug(`API definition: ${JSON.stringify(apiDefinition)}`)
+  console.debug(`API definition: ${JSON.stringify(apiDefinition)}`);
   const { body, ...other } = init || { method: 'get' };
   let url = apiDefinition.url;
   let data = {};
   if (body) {
     data = JSON.parse(body.toString());
+  }
+  // check api calling method
+  if (apiDefinition.method != (init && init.method || '').toLowerCase()) {
+    console.warn(`API calling method [use ${init && init.method} but ${apiDefinition.method}] doesn't match API definition.`);
   }
   // for simple query or url includes placeholder '@'
   if (apiDefinition.query || url.includes('@')) {
