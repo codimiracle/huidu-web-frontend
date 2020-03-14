@@ -11,6 +11,12 @@ export interface LoginRequiredViewState {
 };
 
 export default class LoginRequiredView extends React.Component<LoginRequiredViewProps, LoginRequiredViewState> {
+  constructor(props: LoginRequiredViewProps) {
+    super(props);
+    this.state = {
+      visible: false
+    }
+  }
   render() {
     return (
       <>
