@@ -1,6 +1,7 @@
 import { message } from 'antd'
 import fetch from "../libs/fetch";
 import { API } from "../configs/api-config";
+import AuthenticationUtil from './authentication-util';
 
 export interface APIMessage {
   code: number,
@@ -9,6 +10,9 @@ export interface APIMessage {
 
 export const fetchRaw = async function <T>(api: API, init?: RequestInit): Promise<T> {
   let response = await fetch(api, init);
+  if (response.status == 401) {
+    AuthenticationUtil.destroy();
+  }
   if (response.status == 403) {
     throw new Error(`权限不足！`);
   }
