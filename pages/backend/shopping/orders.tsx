@@ -99,18 +99,6 @@ export interface ShoppingOrdersState {
 };
 
 export default class ShoppingOrders extends React.Component<ShoppingOrdersProps, ShoppingOrdersState> {
-  static async getInitialProps() {
-    let orderData = await fetchDataByGet<ListJSON<Order>>(API.BackendOrderCollection, {
-      page: 1,
-      limit: 10,
-      filter: {},
-      sorter: null
-    });
-    return {
-      list: orderData.list,
-      total: orderData.total
-    }
-  }
   constructor(props: ShoppingOrdersProps) {
     super(props);
     this.state = {

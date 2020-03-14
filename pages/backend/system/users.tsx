@@ -26,18 +26,6 @@ export interface UserMangerState {
 };
 
 export default class UserManger extends React.Component<UserMangerProps, UserMangerState> {
-  static async getInitialProps() {
-    let usersData = await fetchDataByGet<ListJSON<User>>(API.BackendUserCollection, {
-      filter: null,
-      sorter: null,
-      page: 1,
-      limit: 10,
-    });
-    return {
-      list: usersData.list,
-      total: usersData.total
-    }
-  }
   constructor(props: UserMangerProps) {
     super(props);
     this.state = {

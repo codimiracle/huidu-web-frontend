@@ -17,18 +17,6 @@ export interface RoleManagerProps {
 export interface RoleManagerState { };
 
 export default class RoleManager extends React.Component<RoleManagerProps, RoleManagerState> {
-  static async getInitialProps() {
-    let rolesData = await fetchDataByGet<ListJSON<Role>>(API.BackendRoleCollection, {
-      filter: null,
-      sorter: null,
-      page: 1,
-      limit: 10
-    });
-    return {
-      list: rolesData.list,
-      total: rolesData.total
-    }
-  }
   constructor(props: RoleManagerProps) {
     super(props);
     this.state = {

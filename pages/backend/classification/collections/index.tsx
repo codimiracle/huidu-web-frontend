@@ -20,18 +20,6 @@ export default class CollectionManager extends React.Component<CollectionManager
     super(props);
     this.state = {};
   }
-  static async getInitialProps() {
-    let collectionsData = await fetchDataByGet<ListJSON<Category>>(API.BackendCollectionCollection, {
-      filter: null,
-      sorter: null,
-      page: 1,
-      limit: 10
-    });
-    return {
-      list: collectionsData.list,
-      total: collectionsData.total
-    }
-  }
   getColumns(): Array<ColumnProps<Category>> {
     return [
       {

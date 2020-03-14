@@ -9,8 +9,8 @@ import BookPreviewView from '../../book-preview-view';
 import DatetimeUtil from '../../../util/datetime-util';
 
 export interface ActivityManagerProps {
-  initialDataSource: Array<Activity>;
-  initialTotal: number;
+  initialDataSource?: Array<Activity>;
+  initialTotal?: number;
 };
 export interface ActivityManagerState { };
 

@@ -1,14 +1,12 @@
-import React from 'react';
-import HeaderBar from '../../../../components/backend/header-bar';
-import EntityManager from '../../../../components/backend/entity-manager';
-import { API } from '../../../../configs/api-config';
-import { fetchDataByGet } from '../../../../util/network-util';
-import { ListJSON } from '../../../../types/api';
-import { ColumnProps, SorterResult } from 'antd/lib/table';
-import { ElectronicBook, ELECTRONIC_BOOK_STATUS_TEXTS, ElectronicBookStatus, ELECTRONIC_BOOK_STATUS_COLORS } from '../../../../types/electronic-book';
 import { Tag } from 'antd';
-import ElectronicBookFrom from '../../../../components/backend/form/electronic-book-form';
+import { ColumnProps, SorterResult } from 'antd/lib/table';
 import Link from 'next/link';
+import React from 'react';
+import EntityManager from '../../../../components/backend/entity-manager';
+import ElectronicBookFrom from '../../../../components/backend/form/electronic-book-form';
+import HeaderBar from '../../../../components/backend/header-bar';
+import { API } from '../../../../configs/api-config';
+import { ElectronicBook, ElectronicBookStatus, ELECTRONIC_BOOK_STATUS_COLORS, ELECTRONIC_BOOK_STATUS_TEXTS } from '../../../../types/electronic-book';
 
 export interface ElectronicBookManagerProps {
   list: Array<ElectronicBook>;

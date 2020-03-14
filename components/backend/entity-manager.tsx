@@ -39,8 +39,8 @@ export interface EntityManagerProps<T> {
   rowSelection?: TableRowSelection<T>;
   expandedRowRender?: (record: T, index: number, indent: number, expanded: boolean) => React.ReactNode;
   columns: Array<ColumnProps<T>> | ((filter: Partial<Record<keyof T, string[]>>, sorter: SorterResult<T>) => Array<ColumnProps<T>>);
-  initialDataSource: Array<T>;
-  initialTotal: number
+  initialDataSource?: Array<T>;
+  initialTotal?: number
 };
 
 export interface EntityManagerState<T> {

@@ -2,6 +2,8 @@ import { Button, List, message } from "antd";
 import { NextPageContext } from 'next';
 import { Router, withRouter } from 'next/router';
 import React from 'react';
+import { UserContext } from "../../../components/hooks/with-user";
+import BookNotesProviderView, { BookNotesContext } from "../../../components/notes/book-notes-provider-view";
 import ElectronicBookCatalogsView from '../../../components/page/reader/electronic-book-catalogs-view';
 import ReaderEpisodeView from '../../../components/page/reader/reader-episode-view';
 import ReaderNotesView from '../../../components/page/reader/reader-notes-view';
@@ -15,6 +17,7 @@ import { History } from "../../../types/history";
 import { BookNotes } from "../../../types/notes";
 import { DEAULT_THEME, PROTECT_EYE_THEME, Theme } from '../../../types/theme';
 import { fetchDataByGet } from '../../../util/network-util';
+import LoginRequiredView from "../../../components/user/login-required-view";
 
 
 const ListItem = List.Item;
@@ -23,14 +26,12 @@ export interface ReaderProps {
   episode: Episode,
   book: Book,
   history: History;
-  bookNotes: BookNotes,
   router: Router
 }
 
 export interface ReaderState {
   theme: Theme,
   episodes: Array<Episode>,
-  bookNotes: BookNotes,
   drawer: DrawerKey,
   backup: Theme,
   protectEye: boolean,
@@ -59,15 +60,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     } else {
       historyData = await fetchDataByGet<EntityJSON<History>>(API.ElectronicBookLastReadEpisode, data);
     }
-    let bookNotesData = await fetchDataByGet<EntityJSON<BookNotes>>(API.UserBookNotesEntity, {
-      book_id: book_id
-    });
 
     return {
       book: bookData.entity,
       history: historyData && historyData.entity,
-      episode: episodeData && episodeData.entity,
-      bookNotes: bookNotesData.entity
+      episode: episodeData && episodeData.entity
     }
   }
   constructor(props) {
@@ -76,7 +73,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     this.state = {
       theme: DEAULT_THEME,
       episodes: episode ? [episode] : [],
-      bookNotes: props.bookNotes,
       drawer: null,
       backup: DEAULT_THEME,
       protectEye: false,
@@ -149,67 +145,80 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     router.events.on('routeChangeComplete', () => this.onRouterComplete());
   }
   onRouterComplete() {
-    const { episode, bookNotes } = this.props;
-    this.setState({ episodes: episode ? [episode] : [], bookNotes: bookNotes })
+    const { episode } = this.props;
+    this.setState({ episodes: episode ? [episode] : [] })
   }
   render() {
     const { book } = this.props;
-    const { episodes, theme, drawer, protectEye, bookNotes, loadingNextEpisode } = this.state;
+    const { episodes, theme, drawer, protectEye, loadingNextEpisode } = this.state;
     const onDrawerClose = () => this.setState({ drawer: null });
     const lastEpisode = episodes.length > 0 && episodes[episodes.length - 1];
     const hasMore = lastEpisode && lastEpisode.next;
     const loadMore = hasMore ? <div style={{ padding: '2em 0' }}><Button loading={loadingNextEpisode} onClick={() => this.fetchNextEpisode()} style={{ width: '128px', display: 'block', margin: '0 auto' }}>下一章</Button></div> : null
     return (
       <>
-        <div className="reader">
-          <div className="content">
-            <div className="episode-list">
-              <List
-                loadMore={loadMore}
-                dataSource={episodes}
-                renderItem={
-                  item => (
-                    <ListItem style={{ borderBottom: 'none', padding: '0' }}>
-                      <ReaderEpisodeView
-                        notable
-                        bookNotes={bookNotes}
-                        episode={item}
-                        theme={theme} />
-                    </ListItem>
-                  )
-                }
-              >
-              </List>
-            </div>
-          </div>
-          <div className="reader-actions">
-            <Button shape="circle" type={drawer == DrawerKey.catalogs ? 'primary' : 'default'} size="large" icon="bars" onClick={() => this.onDrawerChange(DrawerKey.catalogs)} />
-            <Button shape="circle" type={drawer == DrawerKey.theme ? 'primary' : 'default'} size="large" icon="font-colors" onClick={() => this.onDrawerChange(DrawerKey.theme)} />
-            <Button shape="circle" type={protectEye ? 'primary' : 'default'} size="large" icon="eye" onClick={() => this.onProtectEyeToggle()} />
-            <Button shape="circle" type={drawer == DrawerKey.notes ? 'primary' : 'default'} size="large" onClick={() => this.onDrawerChange(DrawerKey.notes)}>笔</Button>
-          </div>
-        </div>
-        <ThemingSettingsView
-          visible={drawer == DrawerKey.theme}
-          onClose={onDrawerClose}
-          theme={theme}
-          onBackgroundColorChange={(color) => this.onBackgroundColorChange(color)}
-          onFontColorChange={(color) => this.onFontColorChange(color)}
-          onFontSizeChange={(size) => this.onFontSizeChange(size)}
-        />
-        <ElectronicBookCatalogsView
-          book={book as ElectronicBook}
-          visible={drawer == DrawerKey.catalogs}
-          onClose={onDrawerClose}
-        />
-        <ReaderNotesView
-          episode={episodes.length > 0 ? episodes[episodes.length - 1] : null}
-          visible={drawer == DrawerKey.notes}
-          bookNotes={bookNotes}
-          onClose={onDrawerClose}
-        />
+        <BookNotesProviderView bookId={this.props.book.id}>
+          <BookNotesContext.Consumer>
+            {(bookNotes: BookNotes) => <>
+              <div className="reader">
+                <div className="content">
+                  <div className="episode-list">
+                    <List
+                      loadMore={loadMore}
+                      dataSource={episodes}
+                      renderItem={
+                        item => (
+                          <ListItem style={{ borderBottom: 'none', padding: '0' }}>
+                            <ReaderEpisodeView
+                              notable
+                              episode={item}
+                              bookNotes={bookNotes}
+                              theme={theme} />
+                          </ListItem>
+                        )
+                      }
+                    >
+                    </List>
+                  </div>
+                </div>
+                <div className="reader-actions">
+                  <Button shape="circle" type={drawer == DrawerKey.catalogs ? 'primary' : 'default'} size="large" icon="bars" onClick={() => this.onDrawerChange(DrawerKey.catalogs)} />
+                  <Button shape="circle" type={drawer == DrawerKey.theme ? 'primary' : 'default'} size="large" icon="font-colors" onClick={() => this.onDrawerChange(DrawerKey.theme)} />
+                  <Button shape="circle" type={protectEye ? 'primary' : 'default'} size="large" icon="eye" onClick={() => this.onProtectEyeToggle()} />
+                  <LoginRequiredView
+                    renderNonlogin={(opener) =>
+                      <Button shape="circle" type={drawer == DrawerKey.notes ? 'primary' : 'default'} size="large" onClick={opener}>笔</Button>
+                    }
+                  >
+                    <Button shape="circle" type={drawer == DrawerKey.notes ? 'primary' : 'default'} size="large" onClick={() => this.onDrawerChange(DrawerKey.notes)}>笔</Button>
+                  </LoginRequiredView>
+                </div>
+              </div>
+              <ThemingSettingsView
+                visible={drawer == DrawerKey.theme}
+                onClose={onDrawerClose}
+                theme={theme}
+                onBackgroundColorChange={(color) => this.onBackgroundColorChange(color)}
+                onFontColorChange={(color) => this.onFontColorChange(color)}
+                onFontSizeChange={(size) => this.onFontSizeChange(size)}
+              />
+              <ElectronicBookCatalogsView
+                book={book as ElectronicBook}
+                visible={drawer == DrawerKey.catalogs}
+                onClose={onDrawerClose}
+              />
+              <ReaderNotesView
+                episode={episodes.length > 0 ? episodes[episodes.length - 1] : null}
+                bookNotes={bookNotes}
+                visible={drawer == DrawerKey.notes}
+                onClose={onDrawerClose}
+              />
+            </>
+            }
+          </BookNotesContext.Consumer>
+        </BookNotesProviderView>
         <style jsx>{`
-          .reader {
+        .reader {
             position: relative;
           }
           .reader-actions {
@@ -229,16 +238,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           .episode-list {
             margin-left: ${drawer == null ? 'auto' : '256px'};
           }
-        `}</style>
+          `}</style>
         <style jsx global>{`
         .reader-actions .ant-btn {
           margin-bottom: 16px;
           box-shadow: 0 2px 12px 2px darkgrey;
         }
-      `}</style>
+        `}</style>
       </>
     )
   }
 }
+Reader.contextType = UserContext;
 
 export default withRouter(Reader);

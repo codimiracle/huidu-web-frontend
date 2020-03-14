@@ -18,18 +18,6 @@ export interface CommodityManagerProps {
 export interface CommodityManagerState { };
 
 export default class CommodityManager extends React.Component<CommodityManagerProps, CommodityManagerState> {
-  static async getInitialProps() {
-    let commoditiesData = await fetchDataByGet<ListJSON<Commodity<any>>>(API.BackendCommodityCollection, {
-      filter: null,
-      sorter: null,
-      page: 1,
-      limit: 10,
-    });
-    return {
-      list: commoditiesData.list,
-      total: commoditiesData.total
-    }
-  }
   constructor(props: CommodityManagerProps) {
     super(props);
     this.state = {

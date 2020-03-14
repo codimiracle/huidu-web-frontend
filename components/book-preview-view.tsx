@@ -25,6 +25,7 @@ export default class BookPreviewView extends React.Component<BookPreviewViewProp
         <style jsx>{`
         .book-preview-view {
           display: flex;
+          max-height: 256px;
         }
         .body {
           display: flex;

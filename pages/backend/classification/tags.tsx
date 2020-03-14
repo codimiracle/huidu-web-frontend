@@ -23,18 +23,6 @@ export default class TagManager extends React.Component<TagManagerProps, TagMana
     }
     this.getColumns = this.getColumns.bind(this);
   }
-  static async getInitialProps() {
-    let tagsData = await fetchDataByGet<ListJSON<Tag>>(API.BackendTagCollection, {
-      filter: null,
-      sorter: null,
-      page: 1,
-      limit: 10
-    });
-    return {
-      list: tagsData.list,
-      total: tagsData.total
-    }
-  }
   getColumns(): Array<ColumnProps<Tag>> {
     return [
       {

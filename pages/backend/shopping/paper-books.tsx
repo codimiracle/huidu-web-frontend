@@ -17,18 +17,6 @@ export interface PaperBookManagerProps {
 export interface PaperBookManagerState { };
 
 export default class PaperBookManager extends React.Component<PaperBookManagerProps, PaperBookManagerState> {
-  static async getInitialProps() {
-    let paperBooksData = await fetchDataByGet<ListJSON<PaperBook>>(API.BackendPaperBookCollection, {
-      filter: null,
-      sorter: null,
-      page: 1,
-      limit: 10,
-    });
-    return {
-      list: paperBooksData.list,
-      total: paperBooksData.total
-    }
-  }
   constructor(props: PaperBookManagerProps) {
     super(props);
     this.state = {

@@ -21,18 +21,6 @@ export interface CategoryManagerState {
 };
 
 export default class CategoryManager extends React.Component<CategoryManagerProps, CategoryManagerState> {
-  static async getInitialProps() {
-    let categoriesData = await fetchDataByGet<ListJSON<Category>>(API.BackendCategoryCollection, {
-      filter: null,
-      sorter: null,
-      page: 1,
-      limit: 10
-    });
-    return {
-      list: categoriesData.list,
-      total: categoriesData.total
-    }
-  }
   constructor(props: CategoryManagerProps) {
     super(props);
     this.state = {
