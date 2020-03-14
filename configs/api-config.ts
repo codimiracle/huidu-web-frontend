@@ -1052,10 +1052,18 @@ export const APIDefinitionData: APIDefinitionSet = {
   user: {
     notification: {
       read: {
-        collection: `${testOrigin}/api/user/notifications/reads?page=@{page}&limit=@{limit}`
+        collection: `${testOrigin}/api/user/notifications/reads?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+        query: {
+          filter: null,
+          sorter: null
+        }
       },
       unread: {
-        collection: `${testOrigin}/api/user/notifications/unreads?page=@{page}&limit=@{limit}`
+        collection: `${testOrigin}/api/user/notifications/unreads?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+        query: {
+          filter: null,
+          sorter: null
+        }
       },
       markAsRead: {
         url: `${testOrigin}/api/user/notifications/@{notification_id}/read`,
@@ -1168,17 +1176,17 @@ export const APIDefinitionData: APIDefinitionSet = {
     logged: `${testOrigin}/api/user/logged`,
     profile: `${testOrigin}/api/user/profile`,
     bookNotes: {
-      entity: `${origin}/api/user/book-notes/@{book_id}`,
-      collection: `${origin}/api/user/book-notes?page=@{page}&limit=@{limit}`,
+      entity: `${testOrigin}/api/user/book-notes/@{book_id}`,
+      collection: `${testOrigin}/api/user/book-notes?filter=@{filter}&@sorter=@{sorter}&page=@{page}&limit=@{limit}`,
       create: {
-        url: `${origin}/api/user/book-notes/@{book_id}`,
+        url: `${testOrigin}/api/user/book-notes`,
         method: 'post',
         body: {
-          book_id: null,
+          bookId: null,
           episodeId: null,
           ref: '',
           content: null,
-          domMark: null
+          dommark: null
         }
       }
     },
