@@ -54,7 +54,7 @@ export class PaymentDialog extends React.Component<PaymentDialogProps, PaymentDi
         }).then((msg) => {
           if (msg.code == 200) {
             this.setState({ triggered: true, result: 1 });
-            router.replace('/user/orders/[order_number]', `/user/orders/${order.orderNumber}`);
+            router.replace('/user-central/order-details/[order_number]', `/user-central/order-details/${order.orderNumber}`);
           } else {
             message.error(`错误代码：${msg.code}: ${msg.message}`);
           }

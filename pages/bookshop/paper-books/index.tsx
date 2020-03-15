@@ -3,6 +3,7 @@ import { NextPageContext } from 'next';
 import Link from 'next/link';
 import React from 'react';
 import BookView from '../../../components/book-view';
+import CartButton from '../../../components/cart/cart-button';
 import FilterCard, { Filter } from '../../../components/filter-card';
 import SectionView from '../../../components/section-view';
 import { API } from '../../../configs/api-config';
@@ -28,7 +29,7 @@ export interface BookShopState {
 
 export default class BookShop extends React.Component<BookShopProps, BookShopState> {
   static async getInitialProps(context: NextPageContext) {
-    let categoryData = await fetchDataByGet<Category[]>(API.CategoryBookTypeRelated,{
+    let categoryData = await fetchDataByGet<Category[]>(API.CategoryBookTypeRelated, {
       type: BookType.PaperBook
     });
     let yearsData = await fetchDataByGet<Array<string>>(API.PaperBookPublishYears);
@@ -76,48 +77,51 @@ export default class BookShop extends React.Component<BookShopProps, BookShopSta
   }
   render() {
     const { categories, years } = this.props;
-    const { list, page,loading, limit, total, hotBooks, recommandations } = this.state;
+    const { list, page, loading, limit, total, hotBooks, recommandations } = this.state;
     return (
       <>
-        <SectionView
-          content={
-            <>
-              <FilterCard categories={categories} years={years} onFilterChange={this.onFilterChange} />
-              <Divider type="horizontal" />
-              <div className="list-actions">
-                <Pagination size="small" total={total} defaultCurrent={1} pageSize={limit} current={page} onChange={(page, limit) => this.fetchNextBookList(page, limit)} />
-              </div>
-              <List
-                loading={loading}
-                grid={{ gutter: 16, column: 2 }}
-                renderItem={(data: Book) => <List.Item><BookView book={data} /></List.Item>}
-                dataSource={list}
-              />
-              <style jsx>{`
+        <div>
+          <SectionView
+            content={
+              <>
+                <FilterCard categories={categories} years={years} onFilterChange={this.onFilterChange} />
+                <Divider type="horizontal" />
+                <div className="list-actions">
+                  <Pagination size="small" total={total} defaultCurrent={1} pageSize={limit} current={page} onChange={(page, limit) => this.fetchNextBookList(page, limit)} />
+                </div>
+                <List
+                  loading={loading}
+                  grid={{ gutter: 16, column: 2 }}
+                  renderItem={(data: Book) => <List.Item><BookView book={data} /></List.Item>}
+                  dataSource={list}
+                />
+                <style jsx>{`
                 .list-actions {
                   text-align: right;
                   margin-bottom: 24px;
                 }
               `}</style>
-            </>
-          }
-          aside={
-            <>
-              <h3>阅读榜</h3>
-              <div>
-              </div>
-              <List
-                renderItem={(item) => <List.Item><Link href={`/bookshop/paper-books/${item.id}`}><a>{item.metadata.name} {item.metadata.author}</a></Link></List.Item>}
-                dataSource={hotBooks}
-              />
-              <Divider type="horizontal" />
-              <h3>推荐</h3>
-              <List
-                dataSource={recommandations}
-              />
-            </>
-          }
-        />
+              </>
+            }
+            aside={
+              <>
+                <h3>阅读榜</h3>
+                <div>
+                </div>
+                <List
+                  renderItem={(item) => <List.Item><Link href={`/bookshop/paper-books/${item.id}`}><a>{item.metadata.name} {item.metadata.author}</a></Link></List.Item>}
+                  dataSource={hotBooks}
+                />
+                <Divider type="horizontal" />
+                <h3>推荐</h3>
+                <List
+                  dataSource={recommandations}
+                />
+              </>
+            }
+          />
+          <CartButton />
+        </div>
       </>
     )
   }

@@ -1,10 +1,11 @@
-import React from 'react';
-import DirectLink from './direct-link';
-import { Commodity } from '../types/commodity';
 import { Rate } from 'antd';
+import React, { CSSProperties } from 'react';
+import { Commodity } from '../types/commodity';
+import MoneyUtil from '../util/money-util';
 
 export interface CommodityViewProps {
-  commodity: Commodity<any>
+  commodity: Commodity<any>;
+  style?: CSSProperties;
 };
 export interface CommodityViewState { };
 
@@ -12,20 +13,20 @@ export default class CommodityView extends React.Component<CommodityViewProps, C
   render() {
     const { commodity } = this.props;
     return (
-      <div className="commodity-view">
+      <div className="commodity-view" style={this.props.style}>
         <img />
         <div className="body">
           <div><strong>{commodity.name}</strong></div>
-          <Rate disabled defaultValue={commodity.rate} style={{fontSize: '18px'}} />
-          <p>{commodity.introduction}</p>
-          <div className="money">{commodity.prices}</div>
+          <Rate disabled defaultValue={commodity.rate} style={{ fontSize: '18px' }} />
+          <p title={commodity.introduction}>{commodity.introduction}</p>
+          <div className="money">{MoneyUtil.format(commodity.prices)}</div>
         </div>
         <style jsx>{`
           .commodity-view {
             display: flex;
           }
           img {
-            width: 108px;
+            min-width: 108px;
             height: 145px;
           }
           .body {
@@ -35,13 +36,13 @@ export default class CommodityView extends React.Component<CommodityViewProps, C
           }
           p {
             flex: 1;
+            word-break: break-all;
+            max-height: 3em;
+            overflow: hidden;
           }
           .money {
             font-size: 1em;
             color: #f30000;
-          }
-          .money::before {
-            content: '￥';
           }
         `}</style>
       </div>

@@ -16,12 +16,12 @@ export default class NotificationItemView extends React.Component<NotificationIt
     return (
       <>
         <Badge dot={!notification.read}>
-          <Row type="flex">
+          <Row type="flex" gutter={12} style={{ alignItems: 'center' }}>
             <Col>
               <AvatarView user={notification.sender} />
             </Col>
             <Col>
-              <Row type="flex">
+              <Row type="flex" gutter={8}>
                 <Col>
                   <strong>{notification.sender.nickname}</strong>
                 </Col>
@@ -30,7 +30,7 @@ export default class NotificationItemView extends React.Component<NotificationIt
                 </Col>
               </Row>
               <Row>
-                <p>{notification.message}</p>
+                <p style={{ margin: '0' }}>{notification.message}</p>
               </Row>
             </Col>
             <Col>

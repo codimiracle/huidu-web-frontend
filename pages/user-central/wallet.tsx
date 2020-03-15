@@ -62,7 +62,10 @@ interface UserAccount {
 }
 
 function UserAccountBalance() {
-  const { data } = useSWR<EntityJSON<UserAccount>>(API.UserAccountBalance, fetchDataByGet);
+  const { data, error, mutate } = useSWR<EntityJSON<UserAccount>>(API.UserAccountBalance, fetchDataByGet);
+  if (data) {
+    mutate(data);
+  }
   return <span>{MoneyUtil.formatHC(data && data.entity && data.entity.balance)}</span>
 }
 

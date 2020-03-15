@@ -1,4 +1,5 @@
 import { Category } from './category';
+import { Money } from './order';
 
 export enum CommodityStatus {
   PutOnSale = 'put-on-sale',
@@ -39,8 +40,8 @@ export interface Commodity<T> {
   stock: number,
   availableStock: number,
   sales: number,
-  shipment: number,
+  shipment: Money,
   extra: T,
-  prices: number,
+  prices: Money,
   status: CommodityStatus
 }

@@ -20,6 +20,7 @@ export default class InitializerView<T> extends React.Component<InitializerViewP
     }
   }
   private doInitialize() {
+    this.setState({ initializing: true });
     this.props.initializer().then((data) => {
       this.setState({ initialized: true });
       this.props.onInitialized && this.props.onInitialized(data)

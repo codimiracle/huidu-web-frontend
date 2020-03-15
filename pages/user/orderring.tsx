@@ -1,28 +1,32 @@
-import { Button, Divider, Icon, List, message, Modal, Tooltip } from 'antd';
-import { NextPageContext } from 'next';
+import { Button, Divider, Icon, List, message, Tooltip } from 'antd';
+import { Router, withRouter } from 'next/router';
 import React from 'react';
 import AddressView from '../../components/address-view';
-import LoadingView from '../../components/loading-view';
+import OrderringDialog from '../../components/dialogs/orderring-dialog';
+import WrappedPaymentDialog from '../../components/dialogs/payment-dialog';
 import ShoppingCommodityView from '../../components/shopping-commodity-view';
+import InitializerView from '../../components/ui/initializer-view';
 import { API } from '../../configs/api-config';
 import { Address } from '../../types/address';
-import { EntityJSON } from '../../types/api';
+import { EntityJSON, ListJSON } from '../../types/api';
+import { CartItem } from '../../types/cart';
 import { Commodity } from '../../types/commodity';
-import { Order } from '../../types/order';
+import { Order, OrderType } from '../../types/order';
 import { PaperBook } from '../../types/paper-book';
 import { fetchDataByGet, fetchDataByPost } from '../../util/network-util';
-import { PaperBookListJSON } from '../api/paper-books';
-import { AddressJSON } from '../api/user/addresses/default';
-import WrappedPaymentDialog from '../../components/dialogs/payment-dialog';
-import OrderringDialog from '../../components/dialogs/orderring-dialog';
+
+interface OrderDetails {
+  commodity: Commodity<any>;
+  quantity: number;
+  cartItemId?: string;
+}
 
 export interface OrderringProps {
-  commodityList: Array<Commodity<any>>
-  defaultAddress: Address
+  router: Router;
 };
 
 export interface OrderringState {
-  addressList: Array<Address>,
+  orderringDetails: Array<OrderDetails>,
   address: Address,
   orderring: boolean,
   totalMoney: number,
@@ -31,18 +35,13 @@ export interface OrderringState {
   paymentDialogVisible: boolean
 };
 
-export interface OrderringSelection {
-  commodity: Commodity<any>,
-  quantity: number
-}
-
-export default class Orderring extends React.Component<OrderringProps, OrderringState> {
+export class Orderring extends React.Component<OrderringProps, OrderringState> {
   private orderringDetails;
   constructor(props: OrderringProps) {
     super(props);
     this.state = {
-      addressList: [],
-      address: props.defaultAddress,
+      orderringDetails: [],
+      address: null,
       totalMoney: 0,
       shipmentMoney: 0,
       orderring: false,
@@ -51,33 +50,50 @@ export default class Orderring extends React.Component<OrderringProps, Orderring
     };
     this.orderringDetails = {}
   }
-  static async getInitialProps(context: NextPageContext) {
-    const { book_id, book_list, commodity_id, commodity_list } = context.query;
-    let commodityList: Array<Commodity<any>> = [];
+  async getClientSideProps(query) {
+    const { book_id, book_list, cart_items } = query;
+    let orderringDetails: Array<OrderDetails> = []
     if (book_id) {
       let data = await fetchDataByGet<EntityJSON<PaperBook>>(API.PaperBookEntity, {
         book_id: book_id,
       });
-      commodityList.push(data.entity.commodity);
+      orderringDetails.push({
+        commodity: data.entity.commodity,
+        quantity: 1
+      });
     }
     if (book_list) {
-      let data = await fetchDataByGet<PaperBookListJSON>(API.PaperBookCollection, {
+      let data = await fetchDataByGet<ListJSON<PaperBook>>(API.PaperBookCollectionByIds, {
         ids: book_list
       });
-      commodityList = commodityList.concat(data.list.map((item) => item.commodity));
+      orderringDetails = orderringDetails.concat(data.list.map((book) => ({
+        commodity: book.commodity,
+        quantity: 1
+      })));
     }
+    if (cart_items) {
+      let data = await fetchDataByGet<ListJSON<CartItem>>(API.UserCartItemsByIds, {
+        ids: cart_items
+      });
+      orderringDetails = orderringDetails.concat(data.list);
+    }
+    let defaultAddressData = await fetchDataByGet<EntityJSON<Address>>(API.UserAddressDefault);
     return {
-      commodityList: commodityList
+      address: defaultAddressData.entity,
+      orderringDetails: orderringDetails
     };
   }
   onOrderring() {
     const { address } = this.state;
+    if (!address) {
+      message.error('请选择收货地址！');
+      return;
+    }
     this.setState({ orderring: true });
-    let orderringInfoList: Array<OrderringSelection> = Object.values(this.orderringDetails);
-    let items = orderringInfoList.map((orderringInfo) => ({ commodityId: orderringInfo.commodity.id, quantity: orderringInfo.quantity }));
     fetchDataByPost<EntityJSON<Order>>(API.UserOrderring, {
       addressId: address.id,
-      items: items
+      type: OrderType.PaperBook,
+      items: this.state.orderringDetails
     }).then((data) => {
       this.setState({ createdOrder: data.entity });
       setTimeout(() => {
@@ -89,38 +105,53 @@ export default class Orderring extends React.Component<OrderringProps, Orderring
     })
   }
   onDetailsChange(commodity: Commodity<any>, quantity: number) {
-    this.orderringDetails[commodity.id] = { commodity: commodity, quantity: quantity };
-    let totalMoney = this.getTotalMoney();
-    let shipmentMoney = this.getShipmentMoney();
-    this.setState({ totalMoney: totalMoney, shipmentMoney: shipmentMoney });
+    let orderringDetailsIndex = this.state.orderringDetails.findIndex((o) => o.commodity.id == commodity.id);
+    if (orderringDetailsIndex > -1) {
+      let orderringDetails = this.state.orderringDetails[orderringDetailsIndex];
+      orderringDetails.quantity = quantity;
+      let orderingDetailsList = this.state.orderringDetails;
+      orderingDetailsList[orderringDetailsIndex] = orderringDetails;
+      this.setState({
+        orderringDetails: orderingDetailsList
+      }, () => {
+        let totalMoney = this.getTotalMoney();
+        let shipmentMoney = this.getShipmentMoney();
+        this.setState({ totalMoney: totalMoney, shipmentMoney: shipmentMoney });
+      })
+    }
   }
   getShipmentMoney() {
     return 10;
   }
   getTotalMoney() {
-    let selections: Array<OrderringSelection> = Object.values(this.orderringDetails);
-    return selections.map((value) => value.commodity.prices * value.quantity).reduce((a, b) => a + b, 0);
+    return this.state.orderringDetails.map((value) => value.commodity.prices.amount * value.quantity).reduce((a, b) => a + b, 0);
   }
   render() {
-    const { commodityList } = this.props;
     const { address, totalMoney, shipmentMoney, orderring, createdOrder, paymentDialogVisible } = this.state;
     return (
-      <>
+      <InitializerView
+        initializer={() => this.getClientSideProps(this.props.router.query)}
+        onInitialized={(data) => this.setState(data)}
+      >
         <h1>订单确认</h1>
         <div className="order-content">
           <h3>收货地址 <Tooltip title="修改"><Icon type="edit" /></Tooltip></h3>
           <div>
-            <AddressView address={address} />
+            {
+              address ?
+              <AddressView address={address} />
+              : <p>请选择地址</p>
+            }
           </div>
           <h3>商品</h3>
           <div>
             <List
               renderItem={(item) => (
-                <List.Item key={item.id}>
-                  <ShoppingCommodityView commodity={item} onChange={(commodity, quantity) => this.onDetailsChange(commodity, quantity)} />
+                <List.Item key={item.commodity.id} style={{ display: 'block' }}>
+                  <ShoppingCommodityView commodity={item.commodity} onChange={(commodity, quantity) => this.onDetailsChange(commodity, quantity)} />
                 </List.Item>
               )}
-              dataSource={commodityList}
+              dataSource={this.state.orderringDetails}
             />
           </div>
           <Divider type="horizontal" dashed />
@@ -153,7 +184,9 @@ export default class Orderring extends React.Component<OrderringProps, Orderring
             content: '￥';
           }
         `}</style>
-      </>
+      </InitializerView>
     )
   }
 }
+
+export default withRouter(Orderring);

@@ -36,7 +36,15 @@ export interface APIDefinitionSet {
   [x: string]: any | APIDefinition | APIDefinitionSet;
 }
 
-
+/**
+ * for using API in netwok-util
+ */
+/**
+ * for using API in netwok-util
+ */
+/**
+ * for using API in netwok-util
+ */
 /**
  * for using API in netwok-util
  */
@@ -253,7 +261,12 @@ export enum API {
   UserAccountBalance = "user.account.balance",
   UserAccountRecharge = "user.account.recharge",
   UserAccountRechargePay = "user.account.rechargePay",
-  SystemSignOut = "system.signOut"
+  SystemSignOut = "system.signOut",
+  UserCartItems = "user.cart.items",
+  UserCartItemsTotalCount = "user.cart.totalCount",
+  UserCartItemDelete = "user.cart.item.delete",
+  UserCartItemsByIds = "user.cart.itemsByIds",
+  PaperBookCollectionByIds = "paperBook.collectionByIds"
 }
 
 /**
@@ -506,6 +519,7 @@ export const APIDefinitionData: APIDefinitionSet = {
         }
       },
       collection: `${testOrigin}/api/backend/shopping/paper-books?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+      collectionByIds: `${testOrigin}/api/backend/shopping/paper-books/by-ids?ids=@{ids}`,
     },
     topic: {
       delete: {
@@ -1242,16 +1256,29 @@ export const APIDefinitionData: APIDefinitionSet = {
         url: `${testOrigin}/api/user/orders/orderring`,
         body: {
           addressId: null,
+          type: null,
           items: null
         }
       }
     },
     cart: {
-      collection: `${testOrigin}/api/user/cart?page=@{page}&limit=@{limit}`,
+      items: `${testOrigin}/api/user/cart?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+      itemsByIds: `${testOrigin}/api/user/cart/by-ids?ids=@{ids}`,
+      item: {
+        delete: {
+          url: `${testOrigin}/api/user/cart/@{cart_item_id}`,
+          method: 'delete',
+          query: {
+            cart_item_id: null
+          }
+        }
+      },
+      totalCount: `${testOrigin}/api/user/cart/total-count`,
       join: {
         url: `${testOrigin}/api/user/cart/join`,
         body: {
-          book_id: null
+          commodityId: null,
+          quantity: 1,
         }
       }
     },

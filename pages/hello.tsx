@@ -4,12 +4,13 @@ import FormItem from 'antd/lib/form/FormItem';
 import React, { useContext } from 'react';
 import CategorySelect from '../components/backend/util/category-select';
 import { UserContext } from '../components/hooks/with-user';
-import { API } from '../configs/api-config';
+import NotificationItemView from '../components/notification-item-view';
 import { Address } from '../types/address';
-import CommunityLayout from '../layouts/community-layout';
 import { ListJSON } from '../types/api';
 import { User } from '../types/user';
-import { fetchDataByGet } from '../util/network-util';
+import { getMockNotification } from './api/mockdata/notification';
+import CartItemView from '../components/cart/cart-item-view';
+import { getMockCartItem } from './api/mockdata/cart';
 
 export interface HelloProps extends ListJSON<Address> {
   form: WrappedFormUtils;
@@ -25,14 +26,6 @@ function TestUser() {
 }
 
 export class Hello extends React.Component<HelloProps, HelloState> {
-  static async getInitialProps() {
-    let data = await fetchDataByGet<ListJSON<Address>>(API.UserAddressCollection, {
-      page: 1,
-      limit: 10,
-      filter: null
-    });
-    return data;
-  }
   constructor(props: HelloProps) {
     super(props);
     this.state = {
@@ -74,9 +67,6 @@ export class Hello extends React.Component<HelloProps, HelloState> {
             })(<CategorySelect multiple />)
           }
         </FormItem>
-        <CommunityLayout>
-        <TestUser />
-        </CommunityLayout>
       </div>
     )
   }

@@ -10,6 +10,9 @@ export interface APIDefinitionSet {
 /**
  * for using API in netwok-util
  */
+/**
+ * for using API in netwok-util
+ */
 export enum API {
   UserCollection = "user.collection",
   LoggedUserData = "user.logged",
@@ -152,7 +155,6 @@ export enum API {
   BackendPaperBookCreate = "BackendPaperBookCreate",
   BackendPaperBookUpdate = "BackendPaperBookUpdate",
   BackendPaperBookDelete = "BackendPaperBookDetete",
-
   CommoditySearch = "CommoditySearch",
   CategoryExhibitedCollection = "category.exhibited.collection",
   CategorySearch = "CategorySearch",

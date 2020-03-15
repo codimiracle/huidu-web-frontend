@@ -1,14 +1,11 @@
-import React from 'react';
-import { PaperBook } from '../types/paper-book';
-import { Tag, Button, Rate, message } from 'antd';
-import DirectLink from './direct-link';
-import { API } from '../configs/api-config';
-import { fetchDataByPost, fetchMessageByPost } from '../util/network-util';
+import { Button, message, Rate } from 'antd';
 import Link from 'next/link';
+import React from 'react';
+import { API } from '../configs/api-config';
+import { PaperBook } from '../types/paper-book';
+import { fetchMessageByPost } from '../util/network-util';
 import CommodityStatusView from './commodity-status-view';
-import WrappedUserSigninDialog from './dialogs/user-signin-dialog';
-import { UserContext } from './hooks/with-user';
-import { User } from '../types/user';
+import DirectLink from './direct-link';
 import LoginRequiredView from './user/login-required-view';
 
 const EMPTY_IMAGE = '/assets/empty.png';
@@ -36,7 +33,8 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
     const { book } = this.props;
     this.setState({ joining: true });
     fetchMessageByPost(API.UserCartJoin, {
-      book_id: book.id
+      commodityId: book.commodity.id,
+      quantity: 1
     }).then((data) => {
       if (data.code == 200) {
         this.setState({ joinedCart: true });

@@ -34,6 +34,11 @@ const Groups: GroupMap = {
     key: 'contributor',
     title: '投稿中心',
   },
+  recommendation: {
+    icon: 'robot',
+    key: 'recommendation',
+    title: '搜索和推荐'
+  },
   shopping: {
     icon: 'shopping',
     key: 'shopping',
@@ -95,11 +100,19 @@ const Entries: EntryInfoMap = {
     key: 'comprehensive-page',
     link: '/comprehensive-page',
   },
-  'recommendation': {
+  'user-recommendation': {
+    group: 'recommendation',
+    key: 'user-recommendation',
     icon: 'robot',
-    key: 'recommendation',
     title: '搜索/推荐',
-    link: '/recommendation'
+    link: '/recommendation/user-recommendation'
+  },
+  'user-search': {
+    group: 'recommendation',
+    key: 'user-search',
+    icon: 'robot',
+    title: '搜索/推荐',
+    link: '/recommendation/user-search'
   },
   'content-topics': {
     group: 'content',
