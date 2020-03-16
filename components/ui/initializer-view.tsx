@@ -1,9 +1,11 @@
 import React from 'react';
 import LoadingOrRetryView from '../loading-or-retry-view';
 import { message } from 'antd';
+import { withRouter, Router } from 'next/router';
 
 export interface InitializerViewProps<T> {
-  initializer: () => Promise<T>;
+  router: Router;
+  initializer: (query) => Promise<T>;
   onInitialized: (data: T) => void;
 };
 export interface InitializerViewState {
@@ -11,17 +13,18 @@ export interface InitializerViewState {
   initializing: boolean;
 };
 
-export default class InitializerView<T> extends React.Component<InitializerViewProps<T>, InitializerViewState> {
+export class InitializerView<T> extends React.Component<InitializerViewProps<T>, InitializerViewState> {
   constructor(props: InitializerViewProps<T>) {
     super(props);
     this.state = {
       initialized: false,
       initializing: false
     }
+    this.onRouterChangeComplete = this.onRouterChangeComplete.bind(this);
   }
   private doInitialize() {
     this.setState({ initializing: true });
-    this.props.initializer().then((data) => {
+    this.props.initializer(this.props.router.query).then((data) => {
       this.setState({ initialized: true });
       this.props.onInitialized && this.props.onInitialized(data)
     }).catch((err) => {
@@ -30,8 +33,15 @@ export default class InitializerView<T> extends React.Component<InitializerViewP
       this.setState({ initializing: false })
     })
   }
+  onRouterChangeComplete() {
+    this.doInitialize();
+  }
+  componentWillUnmount() {
+    this.props.router.events.off('routeChangeComplete', this.onRouterChangeComplete);
+  }
   componentDidMount() {
     this.doInitialize();
+    this.props.router.events.on('routeChangeComplete', this.onRouterChangeComplete);
   }
   render() {
     return (
@@ -45,3 +55,4 @@ export default class InitializerView<T> extends React.Component<InitializerViewP
     )
   }
 }
+export default withRouter(InitializerView);

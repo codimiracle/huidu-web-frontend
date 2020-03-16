@@ -1,7 +1,6 @@
 import { Drawer, List } from 'antd';
 import React from 'react';
-import { Episode } from '../../../types/episode';
-import { Note, BookNotes } from '../../../types/notes';
+import { BookNotes, Note } from '../../../types/notes';
 import LoginRequiredView from '../../user/login-required-view';
 
 interface NoteViewPorps {
@@ -35,7 +34,6 @@ function NoteView(props: NoteViewPorps) {
 }
 
 export interface ReaderNotesViewProps {
-  episode: Episode;
   bookNotes: BookNotes;
   visible: boolean;
   onClose: () => void;
@@ -50,7 +48,7 @@ export default class ReaderNotesView extends React.Component<ReaderNotesViewProp
     }
   }
   render() {
-    const { visible, episode, bookNotes, onClose } = this.props;
+    const { visible, bookNotes, onClose } = this.props;
     return (
       <>
         <Drawer

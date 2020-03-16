@@ -7,6 +7,7 @@ import { fetchDataByGet } from '../../../util/network-util';
 import { withRouter, Router } from 'next/router';
 import Link from 'next/link';
 import { API } from '../../../configs/api-config';
+import InitializerView from '../../ui/initializer-view';
 
 export interface ElectronicBookReaderCatalogsViewProps {
   book: ElectronicBook,
@@ -16,7 +17,6 @@ export interface ElectronicBookReaderCatalogsViewProps {
 };
 export interface ElectronicBookReaderCatalogsViewState {
   catalogs: Array<Catalogs>,
-  loading: boolean
 };
 
 class ElectronicBookReaderCatalogsView extends React.Component<ElectronicBookReaderCatalogsViewProps, ElectronicBookReaderCatalogsViewState> {
@@ -24,28 +24,20 @@ class ElectronicBookReaderCatalogsView extends React.Component<ElectronicBookRea
     super(props);
     this.state = {
       catalogs: [],
-      loading: false
     }
   }
-  fetchCatalogs() {
+  async getClientSideProps() {
     const { book } = this.props;
-    this.setState({ loading: true });
-    fetchDataByGet<Array<Catalogs>>(API.ElectronicBookCatalogs, {
+    let catalogsData = await fetchDataByGet<Array<Catalogs>>(API.ElectronicBookCatalogs, {
       book_id: book.id
-    }).then((data) => {
-      this.setState({ catalogs: data });
-    }).catch((err) => {
-      message.error(`获取目录数据失败：${err}`)
-    }).finally(() => {
-      this.setState({ loading: false });
-    })
-  }
-  componentDidMount() {
-    this.fetchCatalogs();
+    });
+    return {
+      catalogs: catalogsData
+    }
   }
   render() {
     const { book, visible, onClose, router } = this.props;
-    const { catalogs, loading } = this.state;
+    const { catalogs } = this.state;
     let episodeId = router.query.episode_id as string;
     return (
       <>
@@ -68,11 +60,10 @@ class ElectronicBookReaderCatalogsView extends React.Component<ElectronicBookRea
           mask={false}
           maskClosable={false}
         >
-          {
-            catalogs && catalogs.length == 0 &&
-            <p>尚无发布章节</p>
-          }
-          <LoadingView loading={loading}>
+          <InitializerView
+            initializer={() => this.getClientSideProps()}
+            onInitialized={(data) => this.setState(data)}
+          >
             <Menu style={{ border: 'none' }} selectedKeys={[episodeId]}>
               {
                 catalogs.map((catalog) =>
@@ -82,7 +73,11 @@ class ElectronicBookReaderCatalogsView extends React.Component<ElectronicBookRea
                 )
               }
             </Menu>
-          </LoadingView>
+            {
+              catalogs && catalogs.length == 0 &&
+              <p>尚无发布章节</p>
+            }
+          </InitializerView>
         </Drawer>
       </>
     )

@@ -76,7 +76,9 @@ export default class AudioBookManager extends React.Component<AudioBookManagerPr
             renderCreateForm: (form) => <AudioBookForm form={form} />,
             update: API.BackendAudioBookUpdate,
             renderUpdateForm: (form, entity) => <AudioBookForm form={form} book={entity} />,
+            getUpdateRequestData: (form, entity) => ({ audio_book_id: entity.id, ...form.getFieldsValue() }),
             delete: API.BackendAudioBookDelete,
+            getDeleteRequestData: (entity) => ({ audio_book_id: entity.id })
           }}
           actionOptionsExtra={(entity, index) => <span><Link href="./audio-books/[book_id]" as={`./audio-books/${entity.id}`}><a>章节管理</a></Link></span>}
           rowKey={(audioBook) => audioBook.id}

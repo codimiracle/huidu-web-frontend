@@ -5,6 +5,7 @@ import { API } from '../configs/api-config';
 import { AudioBook } from '../types/audio-book';
 import { fetchMessageByPost } from '../util/network-util';
 import RetryView from './retry-view';
+import BookHeader from './book/book-header';
 
 const EMPTY_IMAGE = '/assets/empty-audio.png';
 
@@ -64,7 +65,7 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
             <img src={book.cover || book.metadata.cover || EMPTY_IMAGE} />
           </div>
           <div className="body">
-            <div><strong><Link href="/bookshop/audio-books/[book_id]" as={`/bookshop/audio-books/${book.id}`}><a>{book.title || book.metadata.name}</a></Link></strong> <Tag>{book.status}</Tag> <span className="author">{book.teller}</span></div>
+            <div><BookHeader book={book} status author /></div>
             <div><Rate defaultValue={2.5} disabled style={{ fontSize: '1em' }} /></div>
             <p className="description">{book.description || book.metadata.description}</p>
             <div className="actions">
