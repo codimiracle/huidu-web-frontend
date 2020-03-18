@@ -31,8 +31,8 @@ export interface SubscribeViewState {
 export class SubscribeView extends React.Component<SubscribeViewProps, SubscribeViewState> {
   render() {
     const { subscribe } = this.props;
-    const { content } = subscribe;
-    const bookPreview = BookPreview.valueOf(content as any as Book);
+    const { book } = subscribe;
+    const bookPreview = BookPreview.valueOf(book);
     return (
       <div className="subscribe-view">
         <div className="subscribe-book-view">
@@ -92,6 +92,8 @@ export class SubscribeActionView extends React.Component<SubscribeActionViewProp
       } else {
         message.error(`errcode: ${msg.code}: ${msg.message}`);
       }
+    }).catch((err) => {
+      message.error(`取消订阅失败：${err.message}`);
     }).finally(() => {
       this.setState({ unsubcribing: false });
     })
@@ -99,7 +101,7 @@ export class SubscribeActionView extends React.Component<SubscribeActionViewProp
   render() {
     const { subscribe } = this.props;
     const { unsubcribing } = this.state;
-    let book: Book = subscribe.content as Book;
+    let book = subscribe.book;
     let basePath = `${book.type == BookType.AudioBook ? 'player' : 'reader'}`;
     return (
       <>
@@ -140,6 +142,8 @@ export default class Subscribes extends React.Component<SubscribesProps, Subscri
   fetchSubscribeList(page: number, limit: number) {
     this.setState({ fetching: true });
     fetchDataByGet<ListJSON<Subscribe>>(API.UserSubscribeCollection, {
+      filter: null,
+      sorter: null,
       page: page,
       limit: limit
     }).then((data) => {
@@ -165,7 +169,7 @@ export default class Subscribes extends React.Component<SubscribesProps, Subscri
         <h1>我的订阅</h1>
         <div>
           <Tabs>
-            <TabPane tab="阅读">
+            <TabPane tab="书籍更新">
               <div style={{ paddingBottom: '0.5em', textAlign: 'right' }}>
                 <Pagination
                   size="small"

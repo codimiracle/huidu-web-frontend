@@ -47,8 +47,8 @@ export default class CategorySelect extends React.Component<CategorySelectProps,
     onChange && onChange(value);
   }
   render() {
-    const { categories } = this.state;
     let value = this.props.value || this.state.value;
+    let categories = this.props.initialDataSource || this.state.categories;
     return (
       <Select
         placeholder={`搜索选择${this.props.collection ? '榜单' : '类别'}`}

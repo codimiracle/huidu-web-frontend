@@ -1,13 +1,14 @@
-import { message, Table, Button } from 'antd';
+import { Button, message, Table } from 'antd';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import { ColumnProps, PaginationConfig, SorterResult, TableCurrentDataSource, TableRowSelection } from 'antd/lib/table';
+import { withRouter, Router } from 'next/router';
 import React, { ReactNode } from 'react';
 import { API } from '../../configs/api-config';
 import { ListJSON } from '../../types/api';
 import { fetchDataByGet } from '../../util/network-util';
-import { EntityUdAction } from './entity-ud-action';
 import { EntityCreateDialog, EntityCreateDialogProps } from './entity-create-dialog';
 import EntitySearch, { SearchableColumn } from './entity-search';
+import { EntityUdAction } from './entity-ud-action';
 
 const WrappedCreateEntityDialog = Form.create<EntityCreateDialogProps<any>>({ name: 'entity-create-dialog' })(EntityCreateDialog);
 
@@ -26,6 +27,7 @@ export interface Config<T> {
 }
 
 export interface EntityManagerProps<T> {
+  router: Router;
   config: Config<T>;
   scroll?: {
     x?: boolean | number | string;
@@ -56,7 +58,7 @@ export interface EntityManagerState<T> {
   limit: number;
 };
 
-export default class EntityManager<T> extends React.Component<EntityManagerProps<T>, EntityManagerState<T>> {
+export class EntityManager<T> extends React.Component<EntityManagerProps<T>, EntityManagerState<T>> {
   constructor(props: EntityManagerProps<T>) {
     super(props);
     this.state = {
@@ -72,6 +74,7 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
       limit: 10,
     };
     this.onChange = this.onChange.bind(this);
+    this.onRouterChangeComplete = this.onRouterChangeComplete.bind(this);
   }
   fetchList(filter: Partial<Record<keyof T, string[]>>, sorter: SorterResult<T>, page: number, limit: number) {
     this.setState({ loading: true });
@@ -100,7 +103,11 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
     this.setState({ filter: filters, sorter: sorter });
     this.fetchList(filters, sorter, pagination.current, pagination.pageSize);
   }
+  onRouterChangeComplete() {
+    this.fetchList(null, null, 1, 10);
+  }
   componentDidMount() {
+    this.props.router.events.on('routeChangeComplete', this.onRouterChangeComplete);
     if (!(this.props.initialDataSource && this.props.initialTotal)) {
       this.fetchList(null, null, 1, 10);
     } else {
@@ -108,6 +115,9 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
         this.setState({ dataSource: this.props.initialDataSource, total: this.props.initialTotal, loading: false });
       }, 1000);
     }
+  }
+  componentWillUnmount() {
+    this.props.router.events.off('routeChangeComplete', this.onRouterChangeComplete);
   }
   render() {
     const { filter, sorter } = this.state;
@@ -216,3 +226,5 @@ export default class EntityManager<T> extends React.Component<EntityManagerProps
     )
   }
 }
+
+export default withRouter(EntityManager);

@@ -37,7 +37,7 @@ const Groups: GroupMap = {
   recommendation: {
     icon: 'robot',
     key: 'recommendation',
-    title: '搜索和推荐'
+    title: '搜索推荐'
   },
   shopping: {
     icon: 'shopping',
@@ -103,15 +103,15 @@ const Entries: EntryInfoMap = {
   'user-recommendation': {
     group: 'recommendation',
     key: 'user-recommendation',
-    icon: 'robot',
-    title: '搜索/推荐',
+    icon: 'heart',
+    title: '用户推荐',
     link: '/recommendation/user-recommendation'
   },
   'user-search': {
     group: 'recommendation',
     key: 'user-search',
-    icon: 'robot',
-    title: '搜索/推荐',
+    icon: 'search',
+    title: '用户搜索',
     link: '/recommendation/user-search'
   },
   'content-topics': {
@@ -223,6 +223,8 @@ export enum Authority {
   ClassificationCategories = "classification-categories",
   ClassificationTags = "classification-tags",
   ClassificationCollection = "classification-collection",
+  UserRecommendation = "user-recommendation",
+  UserSearch = "user-search",
   ShoppingCommodities = "shopping-commodities",
   ShoppingOrders = "shopping-orders",
   ShoppingPaperBooks = "shopping-paper-books",

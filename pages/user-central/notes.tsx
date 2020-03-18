@@ -74,6 +74,8 @@ export default class Notes extends React.Component<NotesProps, NotesState> {
   fetchNotesList(page: number, limit: number) {
     this.setState({ fetching: true });
     fetchDataByGet<ListJSON<BookNotes>>(API.UserBookNotesCollection, {
+      filter: null,
+      sorter: null,
       page: page,
       limit: limit
     }).then((data) => {
@@ -88,6 +90,9 @@ export default class Notes extends React.Component<NotesProps, NotesState> {
     }).finally(() => {
       this.setState({ fetching: false });
     })
+  }
+  componentDidMount() {
+    this.fetchNotesList(1, 10)
   }
   render() {
     const { } = this.props;
@@ -108,7 +113,7 @@ export default class Notes extends React.Component<NotesProps, NotesState> {
           <List
             itemLayout="horizontal"
             renderItem={(item) => (
-              <List.Item style={{justifyContent: 'space-between'}}>
+              <List.Item style={{ justifyContent: 'space-between' }}>
                 <BookNotesView bookNotes={item} />
                 <div className="notes-item-meta">
                   <strong>{item.notes.length} 条</strong>

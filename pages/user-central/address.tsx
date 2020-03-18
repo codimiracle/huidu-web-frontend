@@ -151,7 +151,8 @@ export class AddressCreatorDialog extends React.Component<AddressCreatorDialogPr
           receiver: {
             name: form.getFieldValue('receiver_name'),
             phone: form.getFieldValue('receiver_phone')
-          }
+          },
+          defaulted: false
         })
       }
     })
@@ -221,7 +222,8 @@ export class AddressEditorDialog extends React.Component<AddressEditorDialogProp
           receiver: {
             name: form.getFieldValue('receiver_name'),
             phone: form.getFieldValue('receiver_phone')
-          }
+          },
+          defaulted: false,
         })
       }
     })

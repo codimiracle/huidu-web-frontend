@@ -9,6 +9,7 @@ export interface TagSelectProps {
   value?: string[];
   onChange?: (value: string[]) => void;
   initialDataSource?: Array<Tag>;
+  style?: React.CSSProperties;
 };
 
 export interface TagSelectState {
@@ -52,7 +53,7 @@ export default class TagSelect extends React.Component<TagSelectProps, TagSelect
           value={value}
           onSearch={(value) => this.fetchTags(value)}
           onChange={(value) => this.onChange(value)}
-          style={{minWidth: '256px'}}
+          style={{minWidth: '256px', ...this.props.style}}
       >
         {
           this.state.list.map((tag) => <Select.Option key={tag.id} value={tag.name}>{tag.name}</Select.Option>)

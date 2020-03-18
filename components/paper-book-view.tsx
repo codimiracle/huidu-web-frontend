@@ -7,6 +7,7 @@ import { fetchMessageByPost } from '../util/network-util';
 import CommodityStatusView from './commodity-status-view';
 import DirectLink from './direct-link';
 import LoginRequiredView from './user/login-required-view';
+import MoneyUtil from '../util/money-util';
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
@@ -60,7 +61,7 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
           <div><Link href="/bookshop/paper-books/[book_id]" as={`/bookshop/paper-books/${book.id}`}><a><strong>{book.metadata.name}</strong></a></Link> <CommodityStatusView status={book.commodity.status} /> <span className="author">{book.metadata.author}</span></div>
           <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
           <p className="description">{book.metadata.description}</p>
-          <div className="money">{book.commodity.prices}</div>
+          <div className="money">{MoneyUtil.format(book.commodity.prices)}</div>
           <div className="actions">
             <LoginRequiredView
               renderNonlogin={
@@ -90,9 +91,6 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
           .money {
             font-size: 1.2em;
             color: #f30000;
-          }
-          .money::before {
-            content: '￥';
           }
           .description {
             flex: 1;

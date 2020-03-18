@@ -8,5 +8,6 @@ declare type Content = Topic | Review | Book;
 export interface Subscribe {
   id: string,
   type: ContentType,
+  book: Book,
   content: Content,
 }

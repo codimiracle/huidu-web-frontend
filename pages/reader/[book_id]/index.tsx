@@ -57,7 +57,7 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
           this.setState((state) => ({
             book: data.book,
             bookNotes: data.bookNotes,
-            episodes: data.episode ? state.episodes.concat(data.episode) : state.episodes
+            episodes: data.episode ? state.episodes.concat(data.episode) : (data.history.episode ? state.episodes.concat(data.history.episode) : state.episodes)
           }));
         }}
       >

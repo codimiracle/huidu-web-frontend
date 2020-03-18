@@ -27,13 +27,18 @@ export class CellView extends React.Component<CellViewProps, CellViewState> {
       <div className="cell-view">
         <img src={bookPrevew.cover} />
         <div className="body">
-          <strong><Link href={href} as={asPath}><a>{BookPreview.name}</a></Link></strong>
-          <div>{cell.progress || 0} %</div>
+          <strong><Link href={href} as={asPath}><a>{bookPrevew.name}</a></Link></strong>
+          <div>{cell.progress ? `${cell.progress} %` : '未阅读'} </div>
         </div>
         <style jsx>{`
           .cell-view {
             width: 128px;
             margin: 0 auto;
+            text-align: center;
+          }
+          img {
+            width: 7em;
+            height: 9.4em;
           }
           strong {
             text-align: center;
@@ -67,7 +72,6 @@ export default class BookShelf extends React.Component<BookShelfProps, BookShelf
       fetching: false
     }
   }
-  
   fetchShelfCells(page: number, limit: number): void {
     this.setState({ fetching: true });
     fetchDataByGet<CellListJSON>(API.UserShelfCells, {

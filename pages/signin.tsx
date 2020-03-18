@@ -47,23 +47,27 @@ export class SignIn extends React.Component<SignInProps, SignInState> {
           <h1><img className="logo" src="/assets/huidu.png" />登录荟读</h1>
           <Divider type="horizontal" />
         </div>
-        <Row type="flex" justify="space-between">
-          <Col>
-            <h3>荟读平台服务</h3>
-            <p>
-              荟萃于一，精华芸芸。<br />
+        <Row>
+          <Col push={6} span={12}>
+            <Row type="flex" justify="space-between">
+              <Col>
+                <h3>荟读平台服务</h3>
+                <p>
+                  荟萃于一，精华芸芸。<br />
               一站式书籍阅读服务！
             </p>
-            <ul>
-              <li>在线阅读体验</li>
-              <li>有声书阅读体验</li>
-              <li>社区交流讨论</li>
-              <li>纸质书购物体验</li>
-            </ul>
-          </Col>
-          <Col>
-            <UserSigninForm form={form} />
-            <Button type="primary" loading={signing} block onClick={() => this.onSignIn()}>登录</Button>
+                <ul>
+                  <li>在线阅读体验</li>
+                  <li>有声书阅读体验</li>
+                  <li>社区交流讨论</li>
+                  <li>纸质书购物体验</li>
+                </ul>
+              </Col>
+              <Col>
+                <UserSigninForm form={form} />
+                <Button type="primary" loading={signing} block onClick={() => this.onSignIn()}>登录</Button>
+              </Col>
+            </Row>
           </Col>
         </Row>
         <style jsx>{`
