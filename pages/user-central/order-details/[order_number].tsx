@@ -72,8 +72,8 @@ export class OrderDetails extends React.Component<OrderDetailsProps, OrderDetail
               <div className="order-details">
                 <OrderDetailsList dataSource={order.detailsList} />
                 <div className="statistics">
-                  <div className="total"><strong>总价：<span className="money">{order.totalMoney.amount}</span></strong></div>
-                  <div>(运费：<span className="money">{order.shipmentMoney.amount}</span>)</div>
+                  <div className="total"><strong>总价：<span className="huidu-money">{order.totalMoney.amount}</span></strong></div>
+                  <div>(运费：<span className="huidu-money">{order.shipmentMoney.amount}</span>)</div>
                   <div>共 <span>{order.detailsList.map((details) => details.quantity).reduce((pre, cur) => pre + cur, 0)}</span> 个商品</div>
                 </div>
               </div>
@@ -98,13 +98,6 @@ export class OrderDetails extends React.Component<OrderDetailsProps, OrderDetail
           }
           .statistics {
             text-align: right;
-          }
-          .money {
-            font-size: 1em;
-            color: #f30000;
-          }
-          .money::before {
-            content: '￥';
           }
         `}</style>
       </>

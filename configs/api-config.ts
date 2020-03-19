@@ -880,7 +880,7 @@ export enum API {
   DynamicCollection = 'dynamic.collection',
   ElectronicBookSearch = "electronicBook.search",
   AudioBookSearch = "audioBook.search",
-  ReviewCreate = "ReviewCreate",
+  ReviewCreate = "review.create",
   TopicCreate = "topic.create",
   TopicUpdate = "topic.update",
   UserSpaceDynamicCollection = "user.space.dynamicCollection",
@@ -1796,7 +1796,7 @@ export const APIDefinitionData: APIDefinitionSet = {
   },
   topic: {
     create: {
-      url: `${origin}/api/topics`,
+      url: `${testOrigin}/api/user/community/topics`,
       method: 'post',
       body: {
         title: null,
@@ -1806,7 +1806,7 @@ export const APIDefinitionData: APIDefinitionSet = {
       }
     },
     update: {
-      url: `${origin}/api/topics/@{topic_id}`,
+      url: `${testOrigin}/api/user/community/topics/@{topic_id}`,
       method: 'put',
       body: {
         title: null,
@@ -1815,8 +1815,8 @@ export const APIDefinitionData: APIDefinitionSet = {
         references: []
       }
     },
-    entity: `${origin}/api/topics/@{topic_id}`,
-    collection: `${origin}/api/topics?limit=@{limit}&page=@{page}`
+    entity: `${testOrigin}/api/topics/@{topic_id}`,
+    collection: `${testOrigin}/api/topics?limit=@{limit}&page=@{page}`
   },
   content: {
     comment: {

@@ -94,7 +94,7 @@ export class CartList extends React.Component<CartListProps, CartListState> {
             选定：{selectedCartItems.length} 个项目
           </div>
           <div>
-            总计：<span className="money">￥ {selectedCartItems.map((item: CartItem) => item.commodity.prices.amount * item.quantity).reduce((a, b) => a + b, 0)}</span>
+            总计：<span className="huidu-money">￥ {selectedCartItems.map((item: CartItem) => item.commodity.prices.amount * item.quantity).reduce((a, b) => a + b, 0)}</span>
           </div>
         </div>
         <Divider type="horizontal" />
@@ -102,10 +102,6 @@ export class CartList extends React.Component<CartListProps, CartListState> {
           <Link href={`/user/orderring?cart_items=${selectedCartItems.map((i) => i.id).join(',')}`}><Button type="primary">结算</Button></Link> <Popconfirm title="你确定删除这些项目吗？"><Button disabled={selectedCartItems.length == 0} type="danger" onClick={() => this.onDeleteCartItemsBulk(selectedCartItems)}>删除</Button></Popconfirm>
         </div>
         <style jsx>{`
-          .money {
-            font-size: 1em;
-            color: #f30000;
-          }
           .cart-actions, .cart-appoxi {
             text-align: right;
           }

@@ -143,7 +143,7 @@ export default class ShoppingOrders extends React.Component<ShoppingOrdersProps,
             <BulkBar
               count={this.state.selectedRowKeys.length}
               onClear={() => this.setState({ selectedRowKeys: [], selectedRows: [] })}>
-              总金额：<span className="money">{moneyFormat(this.state.selectedRows.map((o) => o.totalMoney.amountMinorLong).reduce((a, b) => a + b, 0))}</span> 元
+              总金额：<span className="huidu-money">{moneyFormat(this.state.selectedRows.map((o) => o.totalMoney.amountMinorLong).reduce((a, b) => a + b, 0))}</span> 元
             </BulkBar>
           }
           actionOptionsExtra={(entity, index, updater) =>
@@ -203,9 +203,6 @@ export default class ShoppingOrders extends React.Component<ShoppingOrdersProps,
           initialDataSource={this.props.list}
         />
         <style jsx>{`
-          .money {
-            color: red;
-          }
           .tools-bar {
             padding: 0.5em 0;
           }

@@ -1,4 +1,4 @@
-import { Form } from 'antd';
+import { Form, List } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import React, { useContext } from 'react';
@@ -11,6 +11,8 @@ import { User } from '../types/user';
 import { getMockNotification } from './api/mockdata/notification';
 import CartItemView from '../components/cart/cart-item-view';
 import { getMockCartItem } from './api/mockdata/cart';
+import InfiniteListView from '../components/integral/infinite-list-view';
+import { API } from '../configs/api-config';
 
 export interface HelloProps extends ListJSON<Address> {
   form: WrappedFormUtils;
@@ -53,20 +55,12 @@ export class Hello extends React.Component<HelloProps, HelloState> {
     const { retry } = this.state;
     return (
       <div>
-        {/* <PaginationList
-          listAPI={API.AuthorElectronicBookCollection}
-          searchAPI={API.AuthorElectronicBookSearch}
-          renderItem={(item: ElectronicBook) => <List.Item>{item.metadata.name}</List.Item>}
-          initialTotal={100}
-          initialDataSource={[]}
-        /> */}
-        <FormItem>
-          {
-            form.getFieldDecorator('roleId', {
-              rules: [{ required: true, message: '必要的！' }]
-            })(<CategorySelect multiple />)
-          }
-        </FormItem>
+        <InfiniteListView
+          initialLoad
+          api={API.BackendUserCollection}
+          getRequestArguments={() => { }}
+          renderItem={(user: User) => <List.Item>{user.nickname}</List.Item>}
+        />
       </div>
     )
   }

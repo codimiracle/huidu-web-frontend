@@ -157,7 +157,7 @@ export class Orderring extends React.Component<OrderringProps, OrderringState> {
           <Divider type="horizontal" dashed />
           <div className="footer">
             <div>
-              <div>总计：<strong className="money">{totalMoney + shipmentMoney}</strong></div>
+              <div>总计：<strong className="huidu-money">{totalMoney + shipmentMoney}</strong></div>
               <div>(运费 <Tooltip title="纸质书运费"><Icon type="info-circle" /></Tooltip> : <strong>￥{shipmentMoney}</strong>)</div>
             </div>
             <div className="actions">
@@ -174,14 +174,6 @@ export class Orderring extends React.Component<OrderringProps, OrderringState> {
           }
           .actions {
             padding: 0.5em 0 0.5em 0.5em;
-          }
-          
-          .money {
-            font-size: 1em;
-            color: #f30000;
-          }
-          .money::before {
-            content: '￥';
           }
         `}</style>
       </InitializerView>

@@ -123,7 +123,7 @@ export class PaymentDialog extends React.Component<PaymentDialogProps, PaymentDi
             <div className="container">
               <div>订单编号：{order.orderNumber}</div>
               <div>支付金额：</div>
-              <div className="power"><strong className="money">{MoneyUtil.formatHC(order.totalMoney)}</strong></div>
+              <div className="power"><strong className="huidu-money">{MoneyUtil.formatHC(order.totalMoney)}</strong></div>
               <Tabs activeKey={this.state.paymentType} onChange={(key) => this.setState({ paymentType: key })}>
                 {
                   !this.props.recharge &&
@@ -178,10 +178,6 @@ export class PaymentDialog extends React.Component<PaymentDialogProps, PaymentDi
           }
           .power {
             padding: 1em 0;
-          }
-          .money {
-            font-size: 3rem;
-            color: #f30000;
           }
           `}</style>
       </>

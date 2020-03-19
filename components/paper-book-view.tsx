@@ -61,7 +61,7 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
           <div><Link href="/bookshop/paper-books/[book_id]" as={`/bookshop/paper-books/${book.id}`}><a><strong>{book.metadata.name}</strong></a></Link> <CommodityStatusView status={book.commodity.status} /> <span className="author">{book.metadata.author}</span></div>
           <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
           <p className="description">{book.metadata.description}</p>
-          <div className="money">{MoneyUtil.format(book.commodity.prices)}</div>
+          <div className="huidu-money">{MoneyUtil.format(book.commodity.prices)}</div>
           <div className="actions">
             <LoginRequiredView
               renderNonlogin={
@@ -87,10 +87,6 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
             padding: 0.5em;
             display: flex;
             flex-direction: column;
-          }
-          .money {
-            font-size: 1.2em;
-            color: #f30000;
           }
           .description {
             flex: 1;

@@ -1,117 +1,20 @@
-import { Button, Divider, message, Rate, Tabs, Tag } from 'antd';
+import { Divider, Rate, Tabs } from 'antd';
 import { NextPageContext } from 'next';
 import Link from 'next/link';
 import React from 'react';
+import { BookInfoView } from '../../../components/book/electronic-book/book-info-view';
+import LastUpdateEpsidoeView from '../../../components/book/electronic-book/episode/last-update-episode-view';
+import CatalogsView from '../../../components/catalogs-view';
 import CommentModularView from '../../../components/comment-modular-view';
-import DirectLink from '../../../components/direct-link';
 import SectionView from '../../../components/section-view';
 import { API } from '../../../configs/api-config';
 import { EntityJSON } from '../../../types/api';
-import { ElectronicBook, Catalogs } from '../../../types/electronic-book';
+import { Catalogs, ElectronicBook } from '../../../types/electronic-book';
 import { Episode } from '../../../types/episode';
-import { User } from '../../../types/user';
 import DatetimeUtil from '../../../util/datetime-util';
-import { fetchDataByGet, fetchMessageByPost } from '../../../util/network-util';
-import CatalogsView from '../../../components/catalogs-view';
-import ElectronicBookStatusView from '../../../components/electronic-book-status-view';
+import { fetchDataByGet } from '../../../util/network-util';
 
 const { TabPane } = Tabs;
-
-interface EpisodeViewProps {
-  episode: Episode
-}
-
-function EpisodeView(props: EpisodeViewProps) {
-  const { episode } = props;
-  return (
-    <>
-      <h3>{episode.title}</h3>
-      <p dangerouslySetInnerHTML={{ __html: episode.content.source }}></p>
-      <div className="episode-actions">
-        <Link href={`/reader/[book_id]?episode_id=${episode.id}`} as={`/reader/${episode.book.id}?episode_id=${episode.id}`}><a>阅读该章节</a></Link>
-      </div>
-      <style jsx>{`
-        .episode-actions {
-          text-align: right;
-        }
-      `}</style>
-    </>
-  );
-}
-
-
-interface BookInfoProps {
-  book: ElectronicBook
-}
-
-interface BookInfoState {
-  joining: boolean,
-  joined: boolean
-}
-
-class BookInfo extends React.Component<BookInfoProps, BookInfoState> {
-  constructor(props: BookInfoProps) {
-    super(props);
-    this.state = {
-      joined: false,
-      joining: false
-    }
-  }
-  private onJoinShelfClick() {
-    const { book } = this.props;
-    this.setState({ joining: true });
-    fetchMessageByPost(API.UserShelfJoin, {
-      book_id: book.id
-    }).then((msg) => {
-      if (msg.code == 200) {
-        this.setState({ joined: true });
-      } else {
-        message.error(msg.message);
-      }
-    }).catch((err) => {
-      message.error(`加入书架失败：${err}`);
-    }).finally(() => {
-      this.setState({ joining: false });
-    })
-  }
-  render() {
-    const { book } = this.props;
-    const { joined, joining } = this.state;
-    return (
-      <div className="book-info">
-        <img src={book.metadata.cover} />
-        <div className="body">
-          <strong>{book.metadata.name} <ElectronicBookStatusView status={book.status} /></strong>
-          <div>{book.metadata.author} 著</div>
-          <p>{book.metadata.description}</p>
-          <div className="actions">
-            <DirectLink href="/reader/[book_id]" as={`/reader/${book.id}`}><Button type="primary" size="large">在线阅读</Button></DirectLink> <Button size="large" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
-          </div>
-        </div>
-        <style jsx>{`
-        img {
-          width: 192px;
-          height: 264px;
-          border-radius: 4px;
-          background-image: url(/assets/empty.png);
-          background-size: cover;
-        }
-        .book-info {
-          display: flex;
-        }
-        .body {
-          display: flex;
-          flex-direction: column;
-          padding: 0.5em 1em;
-        }
-        p {
-          flex: 1;
-        }
-      `}</style>
-      </div>
-    )
-  }
-}
 
 export interface BookDetailsProps {
   book: ElectronicBook;
@@ -149,9 +52,9 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
     return (
       <SectionView
         content={
-          < div >
-            <BookInfo book={book} />
-            <Tabs>
+          <div>
+            <BookInfoView book={book} />
+            <Tabs animated={false}>
               <TabPane tab="最近更新" key="last-update-episode">
                 {
                   !lastUpdate &&
@@ -161,7 +64,7 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
                   lastUpdate &&
                   <>
                     <span>更新时间: {DatetimeUtil.fromNow(lastUpdate.updateTime)}</span>
-                    <EpisodeView episode={lastUpdate} />
+                    <LastUpdateEpsidoeView episode={lastUpdate} />
                   </>
                 }
               </TabPane>

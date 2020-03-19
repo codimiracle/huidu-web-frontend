@@ -80,8 +80,8 @@ export default class OrderView extends React.Component<OrderViewProps, OrderView
         <Divider type="vertical" style={{ height: 'inherit' }} />
         <div>
           <div className="statistics-area">
-            <div className="total"><strong>总价：<span className="money">{MoneyUtil.format(order.totalMoney)}</span></strong></div>
-            <div>(运费：<span className="money">{MoneyUtil.format(order.shipmentMoney)}</span>)</div>
+            <div className="total"><strong>总价：<span className="huidu-money">{MoneyUtil.format(order.totalMoney)}</span></strong></div>
+            <div>(运费：<span className="huidu-money">{MoneyUtil.format(order.shipmentMoney)}</span>)</div>
             <div>共 <span>{(order.detailsList || []).map((details) => details.quantity).reduce((pre, cur) => pre + cur, 0)}</span> 个商品</div>
           </div>
           <div className="order-actions">
@@ -116,10 +116,6 @@ export default class OrderView extends React.Component<OrderViewProps, OrderView
             padding-top: 3em;
             text-align: right;
             min-width: 168px;
-          }
-          .money {
-            font-size: 1em;
-            color: #f30000;
           }
         `}</style>
       </div>

@@ -5,6 +5,7 @@ import { withRouter, Router } from 'next/router';
 import BasicLayout from '../layouts/basic-layout';
 import NProgress from 'nprogress';
 import 'antd/dist/antd.less';
+import '../public/global.less';
 import Head from 'next/head';
 import UserCentralLayout from '../layouts/user-central-layout';
 import CommunityLayout from '../layouts/community-layout';

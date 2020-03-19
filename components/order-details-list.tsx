@@ -13,16 +13,7 @@ function DetailsItemView(props: DetailsItemViewProps) {
     <>
       <CommodityView commodity={details.commodity} />
       <div>数量：{details.quantity}</div>
-      <div className="money">{details.prices.amount}</div>
-      <style jsx>{`
-        .money {
-          font-size: 1.2em;
-          color: #f30000;
-        }
-        .money::before {
-          content: '￥';
-        }
-      `}</style>
+      <div className="huidu-money">{MoneyUtil.format(details.prices)}</div>
     </>
   );
 }

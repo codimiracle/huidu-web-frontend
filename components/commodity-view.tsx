@@ -19,7 +19,7 @@ export default class CommodityView extends React.Component<CommodityViewProps, C
           <div><strong>{commodity.name}</strong></div>
           <Rate disabled defaultValue={commodity.rate} style={{ fontSize: '18px' }} />
           <p title={commodity.introduction}>{commodity.introduction}</p>
-          <div className="money">{MoneyUtil.format(commodity.prices)}</div>
+          <div className="huidu-money">{MoneyUtil.format(commodity.prices)}</div>
         </div>
         <style jsx>{`
           .commodity-view {
@@ -39,10 +39,6 @@ export default class CommodityView extends React.Component<CommodityViewProps, C
             word-break: break-all;
             max-height: 3em;
             overflow: hidden;
-          }
-          .money {
-            font-size: 1em;
-            color: #f30000;
           }
         `}</style>
       </div>

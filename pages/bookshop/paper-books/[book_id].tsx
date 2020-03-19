@@ -1,4 +1,4 @@
-import { Button, Rate, Tabs } from 'antd';
+import { Rate, Tabs, Divider } from 'antd';
 import { NextPageContext } from 'next';
 import Link from 'next/link';
 import React from 'react';
@@ -9,50 +9,9 @@ import { EntityJSON } from '../../../types/api';
 import { ElectronicBook } from '../../../types/electronic-book';
 import { PaperBook } from '../../../types/paper-book';
 import { fetchDataByGet } from '../../../util/network-util';
-import CommodityStatusView from '../../../components/commodity-status-view';
+import BookInfoView from '../../../components/book/paper-book/book-info-view';
 
 const { TabPane } = Tabs;
-
-interface BookInfoProps {
-  book: PaperBook
-}
-
-function BookInfo(props: BookInfoProps) {
-  const { book } = props;
-  return (
-    <div className="book-info">
-      <img src={book.metadata.cover} />
-      <div className="body">
-        <strong>{book.metadata.name} <CommodityStatusView status={book.commodity.status} /></strong>
-        <div>{book.metadata.author} 著</div>
-        <p>{book.metadata.description}</p>
-        <div className="actions">
-          <Link href={`/user/orderring?book_id=${book.id}`}><Button type="primary" size="large">立即购买</Button></Link> <Button size="large">加入购物车</Button>
-        </div>
-      </div>
-      <style jsx>{`
-        img {
-          width: 192px;
-          height: 264px;
-          border-radius: 4px;
-          background-image: url(/assets/empty.png);
-          background-size: cover;
-        }
-        .book-info {
-          display: flex;
-        }
-        .body {
-          display: flex;
-          flex-direction: column;
-          padding: 0.5em 1em;
-        }
-        p {
-          flex: 1;
-        }
-      `}</style>
-    </div>
-  )
-}
 
 export interface BookDetailsProps {
   book: PaperBook
@@ -105,6 +64,7 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
                 <Link href={`/categories/[category_id]?tag=${tag.name}`} as={`/categories/${book.category.id}?tag=${tag.name}`}><a>{tag.name}</a></Link>
               )}
             </p>
+            <Divider type="horizontal" dashed/>
             <h3>出版信息</h3>
             <p></p>
             <div></div>
@@ -131,17 +91,18 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
         }
       >
         <div>
-          <BookInfo book={book} />
+          <BookInfoView book={book} />
           <Tabs>
-            <TabPane tab="介绍" key="introduction">
+            <TabPane tab="图书介绍" key="introduction">
 
             </TabPane>
-            <TabPane tab="目录" key="contents">
+            <TabPane tab="图书目录" key="contents">
               {
 
               }
             </TabPane>
           </Tabs>
+          <h3>作者简介</h3>
           <h3>商品评价</h3>
           <CommentModularView evaluation rate content={book} />
           <style jsx>{`

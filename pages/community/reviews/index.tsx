@@ -43,12 +43,13 @@ export default class Reviews extends React.Component<ReviewsProps, ReviewsState>
               </Card>
             </>
           }
-        />
-        <ContentList
-          api={API.CommunityReviewCollection}
-          initialTotal={total}
-          initialDataSource={list}
-        />
+        >
+          <ContentList
+            api={API.CommunityReviewCollection}
+            initialTotal={total}
+            initialDataSource={list}
+          />
+        </SectionView>
       </>
     )
   }

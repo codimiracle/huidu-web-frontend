@@ -51,14 +51,8 @@ export default class CartItemView extends React.Component<CartItemViewProps, Car
         <Col><Checkbox checked={!!this.props.checked} onChange={(e) => this.props.onCheckedChange(item, e.target.checked)} /></Col>
         <Col><CommodityView commodity={item.commodity} style={{ width: '314px' }} /></Col>
         <Col>数量：<InputNumber min={1} max={999} value={this.state.count} onChange={(value) => this.setState({ count: value })} /></Col>
-        <Col>小计：<span className="money">￥{item.commodity.prices.amount * this.state.count}</span></Col>
+        <Col>小计：<span className="huidu-money">￥{item.commodity.prices.amount * this.state.count}</span></Col>
         <Col><Button loading={this.state.deleting} type="link">删除</Button></Col>
-        <style jsx>{`
-          .money {
-            font-size: 1em;
-            color: #f30000;
-          }
-        `}</style>
       </Row>
     )
   }

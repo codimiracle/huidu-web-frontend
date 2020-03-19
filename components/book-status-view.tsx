@@ -4,6 +4,8 @@ import { ElectronicBook } from '../types/electronic-book';
 import ElectronicBookStatusView from './electronic-book-status-view';
 import { AudioBook } from '../types/audio-book';
 import AudioBookStatusView from './audio-book-status-view';
+import { PaperBook } from '../types/paper-book';
+import CommodityStatusView from './commodity-status-view';
 
 export interface BookStatusViewProps {
   book: Book
@@ -22,6 +24,10 @@ export default class BookStatusView extends React.Component<BookStatusViewProps,
         {
           book.type == BookType.AudioBook &&
           <AudioBookStatusView status={(book as AudioBook).status} />
+        }
+        {
+          book.type == BookType.PaperBook &&
+          <CommodityStatusView status={(book as PaperBook).commodity.status} />
         }
       </>
     )

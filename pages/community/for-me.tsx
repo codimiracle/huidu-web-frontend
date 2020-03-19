@@ -1,4 +1,5 @@
 import React from 'react';
+import { Row, Col } from 'antd';
 import ContentList from '../../components/content-list-view';
 import { API } from '../../configs/api-config';
 import { Layout } from 'antd';
@@ -22,10 +23,16 @@ export default class FormeDynamic extends React.Component<FormeDynamicProps, For
                 {
                   user ? (
                     <>
-                      <ContentList api={API.UserDynamicCollection} style={{ flex: 1 }} />
-                      <Sider theme="light">
-                        <AvatarView user={user} />
-                      </Sider>
+                      <Row>
+                        <Col span={16}>
+                          <ContentList api={API.UserDynamicCollection} style={{ flex: 1 }} />
+                        </Col>
+                        <Col span={8}>
+                          <Sider theme="light">
+                            <AvatarView user={user} />
+                          </Sider>
+                        </Col>
+                      </ Row>
                     </>
                   ) : <div>请先登录，再查看我的动态！</div>
                 }
