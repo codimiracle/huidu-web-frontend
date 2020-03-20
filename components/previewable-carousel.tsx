@@ -1,8 +1,10 @@
 import React from 'react';
-import { Row, Col, Carousel, List } from 'antd';
+import { Row, Col, Carousel, List, Empty } from 'antd';
 import { Activity } from '../types/activity';
 import Link from 'next/link';
 import { BookPreview } from '../types/book';
+import BookDescription from './book/book-description';
+import BookHeader from './book/book-header';
 
 interface PreviewImageViewProps {
   selectedIndex: number,
@@ -45,7 +47,9 @@ export class PreviewableCarousel extends React.Component<PreviewableCarouselProp
     const { selectedIndex } = this.state;
     let selectedActivity = (selectedIndex < activities.length && activities[selectedIndex]);
     let referBook = selectedActivity.book;
-
+    if (!referBook) {
+      return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+    }
     return (
       <>
         <Row gutter={8}>
@@ -79,8 +83,8 @@ export class PreviewableCarousel extends React.Component<PreviewableCarouselProp
             </Row>
             {referBook &&
               <Row>
-                <h2><Link href={`/bookshop/${referBook.type}s/[book_id]`} as={`/bookshop/${referBook.type}s/${referBook.id}`}><a>{selectedActivity && selectedActivity.book.metadata.name}</a></Link></h2>
-                <p>{selectedActivity && selectedActivity.book.metadata.description}</p>
+                <BookHeader book={referBook} style={{fontSize: '1.5em'}}/>
+                <BookDescription book={referBook} size="medium" />
               </Row>
             }
           </Col>

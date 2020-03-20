@@ -2,6 +2,9 @@ import { Book, BookType, BookPreview } from "../types/book";
 import Link from "next/link";
 import { Rate, Button } from "antd";
 import DirectLink from "./direct-link";
+import BookHeader from "./book/book-header";
+import BookDescription from "./book/book-description";
+import BookCover from "./book/book-cover";
 
 export interface BookMiniViewProps {
   book: Book
@@ -9,15 +12,14 @@ export interface BookMiniViewProps {
 
 export default function BookMiniView(props: BookMiniViewProps) {
   const { book } = props;
-  const bookPreview = BookPreview.valueOf(book);
   return (
     <div className="book-mini-view">
-      <img src={bookPreview.cover} />
+      <BookCover book={book} />
       <div className="body">
-        <strong><Link href={`/bookshop/${book.type}/[book_id]`} as={`/bookshop/${book.type}/${book.id}`}><a>{bookPreview.name}</a></Link></strong>
+        <BookHeader book={book} status author/>
         <Rate disabled defaultValue={book.rate} style={{ fontSize: '1.2em' }} />
-        <p title={bookPreview.description}>{bookPreview.description}</p>
-        <div>
+        <BookDescription book={book} size="small" />
+        <div className="huidu-actions-left">
           <DirectLink href={`/${book.type == BookType.ElectronicBook ? 'reader' : 'player'}/[book_id]`} as={`/${book.type == BookType.ElectronicBook ? 'reader' : 'player'}/${book.id}`}><Button>{book.type == BookType.ElectronicBook ? '在线阅读' : '在线听书'}</Button></DirectLink>
         </div>
       </div>

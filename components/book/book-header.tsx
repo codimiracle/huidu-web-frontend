@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { Book, BookPreview } from '../../types/book';
 import BookStatusView from '../book-status-view';
 
@@ -12,6 +12,7 @@ export interface BookHeaderProps {
   link?: boolean;
   status?: boolean;
   author?: boolean;
+  style?: CSSProperties;
 };
 export interface BookHeaderState { };
 
@@ -25,7 +26,7 @@ export default class BookHeader extends React.Component<BookHeaderProps, BookHea
       headerNode = <Link href={`/bookshop/${type}s/[book_id]`} as={`/bookshop/${type}s/${book.id}`}><a><strong>{preview.name}</strong></a></Link>;
     }
     return (
-    <div> {headerNode} {this.props.status && <BookStatusView book={book} />} {this.props.author && <span className="author">{preview.author}</span>}</div>
+    <div style={this.props.style}> {headerNode} {this.props.status && <BookStatusView book={book} />} {this.props.author && <span className="author">{preview.author}</span>}</div>
     )
   }
 }

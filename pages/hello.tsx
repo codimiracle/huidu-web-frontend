@@ -13,6 +13,8 @@ import CartItemView from '../components/cart/cart-item-view';
 import { getMockCartItem } from './api/mockdata/cart';
 import InfiniteListView from '../components/integral/infinite-list-view';
 import { API } from '../configs/api-config';
+import BookReducedView from '../components/book/book-reduced-view';
+import { getMockElectronicBook } from './api/mockdata/electronic-book';
 
 export interface HelloProps extends ListJSON<Address> {
   form: WrappedFormUtils;
@@ -55,12 +57,7 @@ export class Hello extends React.Component<HelloProps, HelloState> {
     const { retry } = this.state;
     return (
       <div>
-        <InfiniteListView
-          initialLoad
-          api={API.BackendUserCollection}
-          getRequestArguments={() => { }}
-          renderItem={(user: User) => <List.Item>{user.nickname}</List.Item>}
-        />
+        <BookReducedView book={getMockElectronicBook()} />
       </div>
     )
   }

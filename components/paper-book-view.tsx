@@ -8,6 +8,8 @@ import CommodityStatusView from './commodity-status-view';
 import DirectLink from './direct-link';
 import LoginRequiredView from './user/login-required-view';
 import MoneyUtil from '../util/money-util';
+import BookDescription from './book/book-description';
+import BookHeader from './book/book-header';
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
@@ -58,9 +60,9 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
           <img src={book.metadata.cover || EMPTY_IMAGE} />
         </div>
         <div className="body">
-          <div><Link href="/bookshop/paper-books/[book_id]" as={`/bookshop/paper-books/${book.id}`}><a><strong>{book.metadata.name}</strong></a></Link> <CommodityStatusView status={book.commodity.status} /> <span className="author">{book.metadata.author}</span></div>
+          <BookHeader book={book} status author />
           <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
-          <p className="description">{book.metadata.description}</p>
+          <BookDescription book={book} size="small" style={{flex: 1}} />
           <div className="huidu-money">{MoneyUtil.format(book.commodity.prices)}</div>
           <div className="actions">
             <LoginRequiredView
@@ -87,13 +89,6 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
             padding: 0.5em;
             display: flex;
             flex-direction: column;
-          }
-          .description {
-            flex: 1;
-
-            max-height: 3em;
-            word-break: break-all;
-            overflow: hidden;
           }
         `}</style>
       </div>

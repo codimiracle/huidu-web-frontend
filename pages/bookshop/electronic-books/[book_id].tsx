@@ -118,6 +118,10 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
                   : <span>无标签</span>
               }
             </p>
+            <h3>可能需要</h3>
+            <div>
+              
+            </div>
             <style jsx>{`
               .marks-details {
                 display: flex;

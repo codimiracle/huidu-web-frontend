@@ -2,6 +2,7 @@ import { Button } from "antd";
 import Link from "next/link";
 import { PaperBook } from "../../../types/paper-book";
 import BookHeader from "../book-header";
+import BookDescription from "../book-description";
 
 export interface BookInfoViewProps {
   book: PaperBook
@@ -15,7 +16,7 @@ export default function BookInfoView(props: BookInfoViewProps) {
       <div className="body">
         <BookHeader book={book} status link={false} />
         <div>{book.metadata.author} 著</div>
-        <p className="huidu-description">{book.metadata.description}</p>
+        <BookDescription book={book} size="large" />
         <div className="huidu-actions-left">
           <Link href={`/user/orderring?book_id=${book.id}`}><Button type="primary" size="large">立即购买</Button></Link> <Button size="large">加入购物车</Button>
         </div>

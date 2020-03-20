@@ -50,16 +50,21 @@ export default class ExhibitionRankingAsideView<T> extends React.Component<Exhib
   render() {
     const { renderItem } = this.props;
     const { list, loading, selectedIndex } = this.state;
-    let selectedItem = selectedIndex < list.length ? list[selectedIndex] : null;
     return (
       <div className="exhibition-ranks-aside-view">
         <List
-          renderItem={(item, index) => <List.Item onMouseMove={() => this.setState({ selectedIndex: index })} style={{ padding: '0', justifyContent: 'space-between', borderBottom: 'none' }}>{renderItem(item, index, selectedIndex == index)}</List.Item>}
+          itemLayout="vertical"
+          renderItem={(item, index) => <List.Item onMouseMove={() => this.setState({ selectedIndex: index })} style={{ padding: '0', justifyContent: 'space-between', borderBottom: 'none' }}>
+            <div>
+              {renderItem(item, index, selectedIndex == index)}
+            </div>
+            <div>
+              {selectedIndex == index && this.props.renderPreview(item)}
+            </div>
+          </List.Item>}
           loading={loading}
           dataSource={list}
         />
-        {selectedItem && this.props.renderPreview(selectedItem)}
-        {!selectedItem && <div>没有可预览的项目</div>}
       </div>
     )
   }

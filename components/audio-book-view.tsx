@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { fetchMessageByPost } from '../util/network-util';
 import { API } from '../configs/api-config';
 import AudioBookStatusView from './audio-book-status-view';
+import BookHeader from './book/book-header';
+import BookDescription from './book/book-description';
 
 const EMPTY_IMAGE = '/assets/empty-audio.png';
 
@@ -66,9 +68,9 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
             <img src={book.cover || book.metadata.cover || EMPTY_IMAGE} />
           </div>
           <div className="body">
-            <div><strong><Link href="/bookshop/audio-books/[book_id]" as={`/bookshop/audio-books/${book.id}`}><a>{book.title || book.metadata.name}</a></Link></strong> <AudioBookStatusView status={book.status} /> <span className="author">{book.teller}</span></div>
+            <BookHeader book={book} status author />
             <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
-            <p className="description">{book.description || book.metadata.description}</p>
+            <BookDescription book={book} size="small" style={{ flex: 1 }} />
             <div className="actions">
               <DirectLink href={`/player/[book_id]`} as={`/player/${book.id}`}><Button size="small">在线听书</Button></DirectLink> <Button size="small" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
             </div>
@@ -89,13 +91,6 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
             padding: 0.5em;
             display: flex;
             flex-direction: column;
-          }
-          .description {
-            flex: 1;
-
-            max-height: 3em;
-            word-break: break-all;
-            overflow: hidden;
           }
           `}</style>
       </RetryView>

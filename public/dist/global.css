@@ -4,45 +4,37 @@
   overflow: hidden;
 }
 .huidu-small-ellipsis {
-  .huidu-ellipsis();
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
   height: 3em;
   -webkit-line-clamp: 2;
 }
-
 .huidu-last-update-ellipsis {
-  .huidu-ellipsis();
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
   -webkit-line-clamp: 2;
-  height: 7em; 
+  height: 7em;
 }
-
 .huidu-description {
   word-break: break-all;
 }
-
 .huidu-small-description {
-  .huidu-description();
-  margin: 0;
+  word-break: break-all;
+  margin-top: 0.5em;
 }
-.huidu-medium-description {
-  .huidu-description();
-  margin-top: 0.3em;
-}
-
 .huidu-large-description {
-  .huidu-description();
+  word-break: break-all;
   margin-top: 1.5em;
 }
-
 .huidu-money {
   font-size: 1em;
   color: #f30000;
 }
-
-.huidu-actions {
-  .left {
-    text-align: left;
-  }
-  .right {
-    text-align: right;
-  }
+.huidu-actions .left {
+  text-align: left;
+}
+.huidu-actions .right {
+  text-align: right;
 }
