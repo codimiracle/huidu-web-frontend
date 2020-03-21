@@ -135,7 +135,7 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
           loading={loading}
           loadMore={<div style={{ textAlign: 'center' }}>
             <Button type="link" loading={this.state.loading} onClick={() => this.previousNotification()}>更多</Button>
-            {this.props.markable && <Button type="link" loading={this.state.changingBulk} onClick={() => this.onMarkAllRead()}>全部已读</Button>}
+            {this.props.markable && <Button type="link" disabled={this.state.list.length == 0} loading={this.state.changingBulk} onClick={() => this.onMarkAllRead()}>全部已读</Button>}
           </div>}
           dataSource={list}
         />

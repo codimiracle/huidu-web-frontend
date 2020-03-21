@@ -110,7 +110,7 @@ export default class CommodityForm extends React.Component<CommodityFormProps, C
                 <FormItem label="单价">
                   {
                     form.getFieldDecorator('commodity.prices', {
-                      initialValue: commodity && commodity.prices || 0,
+                      initialValue: commodity && commodity.prices.amount || 0,
                       rules: [{ required: true, message: '请输入单价' }]
                     })(
                       <InputNumber
@@ -127,7 +127,7 @@ export default class CommodityForm extends React.Component<CommodityFormProps, C
                 <FormItem label="运费">
                   {
                     form.getFieldDecorator('commodity.shipment', {
-                      initialValue: commodity && commodity.shipment || 0,
+                      initialValue: commodity && commodity.shipment.amount || 0,
                       rules: [{ required: true, message: '请设定运费' }]
                     })(
                       <InputNumber

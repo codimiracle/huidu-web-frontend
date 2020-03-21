@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { fetchDataByGet } from '../../../../util/network-util';
 import { ListJSON } from '../../../../types/api';
 import { Tag as TagView } from 'antd';
+import CategoryForm from '../../../../components/backend/form/category-form';
 
 export interface CollectionManagerProps {
   list: Array<Category>;
@@ -50,6 +51,14 @@ export default class CollectionManager extends React.Component<CollectionManager
         <EntityManager
           config={{
             list: API.BackendCollectionCollection,
+            create: API.BackendCollectionCreate,
+            renderCreateForm: (form) => <CategoryForm form={form} collection />,
+            getCreateRequestData: (form) => ({...(form.getFieldsValue().category)}),
+            update: API.BackendCollectionUpdate,
+            renderUpdateForm: (form, entity) => <CategoryForm form={form} category={entity} collection />,
+            getUpdateRequestData: (form, entity) => ({collection_id: entity.id, ...(form.getFieldsValue().category)}),
+            delete: API.BackendCollectionDelete,
+            getDeleteRequestData: (entity) => ({collection_id: entity.id})
           }}
           actionOptionsExtra={(entity, index) => <span><Link href="collections/[category_id]/statistics" as={`collections/${entity.id}/statistics`}><a>统计数据</a></Link></span>}
           rowKey={(category) => category.id}

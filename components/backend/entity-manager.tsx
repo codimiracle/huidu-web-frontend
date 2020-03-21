@@ -1,7 +1,7 @@
 import { Button, message, Table } from 'antd';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import { ColumnProps, PaginationConfig, SorterResult, TableCurrentDataSource, TableRowSelection } from 'antd/lib/table';
-import { withRouter, Router } from 'next/router';
+import { Router } from 'next/router';
 import React, { ReactNode } from 'react';
 import { API } from '../../configs/api-config';
 import { ListJSON } from '../../types/api';
@@ -17,7 +17,7 @@ export interface Config<T> {
   getCreateRequestData?: (form: WrappedFormUtils) => any;
   renderCreateForm?: (form: WrappedFormUtils) => ReactNode;
   list: API;
-  getListingRequestExtraData?: () => object,
+  getListingRequestExtraData?: () => any,
   searchableColumns?: Array<SearchableColumn<T>>;
   getDeleteRequestData?: (entity: T) => any;
   delete?: API;
@@ -27,7 +27,6 @@ export interface Config<T> {
 }
 
 export interface EntityManagerProps<T> {
-  router: Router;
   config: Config<T>;
   scroll?: {
     x?: boolean | number | string;
@@ -107,7 +106,7 @@ export class EntityManager<T> extends React.Component<EntityManagerProps<T>, Ent
     this.fetchList(null, null, 1, 10);
   }
   componentDidMount() {
-    this.props.router.events.on('routeChangeComplete', this.onRouterChangeComplete);
+    Router.events.on('routeChangeComplete', this.onRouterChangeComplete);
     if (!(this.props.initialDataSource && this.props.initialTotal)) {
       this.fetchList(null, null, 1, 10);
     } else {
@@ -117,7 +116,7 @@ export class EntityManager<T> extends React.Component<EntityManagerProps<T>, Ent
     }
   }
   componentWillUnmount() {
-    this.props.router.events.off('routeChangeComplete', this.onRouterChangeComplete);
+    Router.events.off('routeChangeComplete', this.onRouterChangeComplete);
   }
   render() {
     const { filter, sorter } = this.state;
@@ -227,4 +226,4 @@ export class EntityManager<T> extends React.Component<EntityManagerProps<T>, Ent
   }
 }
 
-export default withRouter(EntityManager);
+export default EntityManager;

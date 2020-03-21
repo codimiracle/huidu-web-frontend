@@ -228,582 +228,6 @@ export interface APIDefinitionSet {
 /**
  * for using API in netwok-util
  */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
 export enum API {
   UserCollection = "user.collection",
   LoggedUserData = "user.logged",
@@ -1028,7 +452,19 @@ export enum API {
   BackendUserFigureTagDelete = "backend.userFigure.tag.delete",
   BackendUserFigureTagCreate = "backend.userFigure.tag.create",
   BackendUserFigureTagMostInteresting = "backend.userFigure.tag.mostInteresting",
-  BackendUserFigureSimilarUserCollection = "backend.userFigure.similarUser.collection"
+  BackendUserFigureSimilarUserCollection = "backend.userFigure.similarUser.collection",
+  RecommendationByBookType = "recommendation.byBookType",
+  RecommendationByBook = "recommendation.byBook",
+  RecommendationByUser = "recommendation.byUser",
+  RecommendationByCategory = "recommendation.byCategory",
+  RecommendationByTag = "recommendation.byTag",
+  RecommendByBookType = "RecommendByBookType",
+  CommunityReviewHotCollection = "community.review.hotCollection",
+  CommunityTopicHotCollection = "community.topic.hotCollection",
+  BackendCollectionStatistics = "backend.collection.statistics",
+  AudioBookHotCollection = "AudioBookHotCollection",
+  PaperbookHotCollection = "PaperbookHotCollection",
+  ElectronicBookHotCollection = "ElectronicBookHotCollection"
 }
 
 /**
@@ -1377,6 +813,7 @@ export const APIDefinitionData: APIDefinitionSet = {
           collection_id: null
         }
       },
+      statistics: `${testOrigin}/api/backend/classification/collections/@{collection_id}/statistics?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
       collection: `${testOrigin}/api/backend/classification/collections?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`
     },
     category: {
@@ -1697,6 +1134,13 @@ export const APIDefinitionData: APIDefinitionSet = {
       }
     },
   },
+  recommendation: {
+    byBookType: `${testOrigin}/api/recommendation/by-book-type?type=@{type}&filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+    byBook: `${testOrigin}/api/recommendation/by-book?book_id=@{book_id}&filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+    byCategory: `${testOrigin}/api/recommendation/by-category?category_id=@{category_id}&filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+    byTag: `${testOrigin}/api/recommendation/by-tag?tag_id=@{tag_id}&filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+    byUser: `${testOrigin}/api/recommendation/by-user?user_id=@{user_id}&filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+  },
   common: {
     mostRead: `${testOrigin}/api/common/most-read?type=@{type}&page=@{page}&limit=@{limit}`,
     recommends: `${testOrigin}/api/common/recommends?page=@{page}&limit=@{limit}`
@@ -1773,16 +1217,16 @@ export const APIDefinitionData: APIDefinitionSet = {
   },
   category: {
     related: `${testOrigin}/api/categories/related-by-book-type?type=@{type}`,
-    collection: `${testOrigin}/api/categories`,
+    collection: `${testOrigin}/api/categories?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
     suggestion: `${testOrigin}/api/categories/suggestion?keyword=@{keyword}`,
     exhibited: {
       collection: `${origin}/api/categories/exhibited`
     },
-    entity: `${origin}/api/categories/@{category_id}`,
+    entity: `${testOrigin}/api/categories/@{category_id}`,
     items: {
-      collection: `${origin}/api/categories/@{category_id}/items?page=@{page}&limit=@{limit}&filter=@{filter}`,
-      mostread: `${origin}/api/categories/@{category_id}/items/most-read`,
-      recommends: `${origin}/api/categories/@{category_id}/items/recommends`,
+      collection: `${testOrigin}/api/categories/@{category_id}/items?page=@{page}&limit=@{limit}&filter=@{filter}&sorter=@{sorter}`,
+      mostread: `${testOrigin}/api/categories/@{category_id}/items/most-read`,
+      recommends: `${testOrigin}/api/categories/@{category_id}/items/recommends`,
     },
     bookCollection: `${origin}/api/categories/@{category_id}/books?page=@{page}&limit=@{limit}&filter=@{filter}`,
     hotBookCollection: `${origin}/api/categories/@{category_id}/hot-books?page=@{page}&limit=@{limit}&filter=@{filter}`,
@@ -2090,12 +1534,8 @@ export const APIDefinitionData: APIDefinitionSet = {
       }
     }
   },
-  recommendation: {
-    interesting: `${origin}/api/recommendation/by-interesting?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
-    sameInteresting: `${origin}/api/recommendation/by-same-interesting?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`
-  },
   discover: {
-    collection: `${origin}/api/recommendation/discover`
+    collection: `${testOrigin}/api/recommendation/discover`
   },
   system: {
     signIn: {
@@ -2114,7 +1554,7 @@ export const APIDefinitionData: APIDefinitionSet = {
     signUp: `${testOrigin}/api/system/sign-up`,
     usernameExists: `${testOrigin}/api/system/username-exists?username=@{username}`,
     nicknameExists: `${testOrigin}/api/system/nickname-exists?nickname=@{nickname}`,
-    realtime: `${origin}/api/system/realtime`
+    realtime: `${testOrigin}/api/system/realtime`
   }
 }
 

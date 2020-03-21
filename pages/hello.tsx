@@ -1,20 +1,11 @@
-import { Form, List } from 'antd';
-import { WrappedFormUtils } from 'antd/lib/form/Form';
-import FormItem from 'antd/lib/form/FormItem';
+import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import React, { useContext } from 'react';
-import CategorySelect from '../components/backend/util/category-select';
 import { UserContext } from '../components/hooks/with-user';
-import NotificationItemView from '../components/notification-item-view';
 import { Address } from '../types/address';
 import { ListJSON } from '../types/api';
 import { User } from '../types/user';
-import { getMockNotification } from './api/mockdata/notification';
-import CartItemView from '../components/cart/cart-item-view';
-import { getMockCartItem } from './api/mockdata/cart';
-import InfiniteListView from '../components/integral/infinite-list-view';
-import { API } from '../configs/api-config';
-import BookReducedView from '../components/book/book-reduced-view';
-import { getMockElectronicBook } from './api/mockdata/electronic-book';
+import { getMockCommunityFocus } from './api/mockdata/community';
+import CommunityFocusView from '../components/community/community-focus-view';
 
 export interface HelloProps extends ListJSON<Address> {
   form: WrappedFormUtils;
@@ -57,7 +48,7 @@ export class Hello extends React.Component<HelloProps, HelloState> {
     const { retry } = this.state;
     return (
       <div>
-        <BookReducedView book={getMockElectronicBook()} />
+        <CommunityFocusView swap focus={getMockCommunityFocus()} />
       </div>
     )
   }

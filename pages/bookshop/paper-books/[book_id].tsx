@@ -64,9 +64,11 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
                 <Link href={`/categories/[category_id]?tag=${tag.name}`} as={`/categories/${book.category.id}?tag=${tag.name}`}><a>{tag.name}</a></Link>
               )}
             </p>
-            <Divider type="horizontal" dashed/>
+            <Divider type="horizontal" dashed />
             <h3>出版信息</h3>
-            <p></p>
+            <p>
+              {JSON.stringify(book.commodity.extra)}
+            </p>
             <div></div>
             <style jsx>{`
               .marks-details {
@@ -92,17 +94,16 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
       >
         <div>
           <BookInfoView book={book} />
-          <Tabs>
+          {/* <Tabs>
             <TabPane tab="图书介绍" key="introduction">
-
+              <p>{book.commodity.extra.introduction}</p>
             </TabPane>
             <TabPane tab="图书目录" key="contents">
-              {
-
-              }
+              <p>{book.commodity.extra.catalogs}</p>
             </TabPane>
-          </Tabs>
-          <h3>作者简介</h3>
+          </Tabs> */}
+          {/* <h3>作者简介</h3>
+          <p>{book.commodity.extra.authorIntroduction}</p> */}
           <h3>商品评价</h3>
           <CommentModularView evaluation rate content={book} />
           <style jsx>{`

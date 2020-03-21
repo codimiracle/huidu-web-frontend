@@ -35,7 +35,7 @@ export default class ExhibitionView<T> extends React.Component<ExhibitionViewPro
       limit: this.props.count || 6,
       list: [],
       total: 0,
-      selectedTag: props.category && props.category.tags[0]
+      selectedTag: props.category && props.category.tags && props.category.tags[0]
     }
   }
   fetchList(page: number, limit: number) {
@@ -45,8 +45,9 @@ export default class ExhibitionView<T> extends React.Component<ExhibitionViewPro
     fetchDataByGet<ListJSON<T>>(API.CategoryItemsCollection, {
       category_id: category.id,
       filter: {
-        tagId: selectedTag.id
+        tagName: selectedTag && [selectedTag.name]
       },
+      sorter: null,
       page: page,
       limit: limit
     }).then((data) => {

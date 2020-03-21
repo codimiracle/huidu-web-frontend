@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { BookType } from '../../../../types/book';
 import { APIResponse, EntityJSON } from '../../../../types/api';
 import { PaperBook } from '../../../../types/paper-book';
-import { CommodityStatus } from '../../../../types/commodity';
 import { getMockPaperBook } from '../../mockdata/paper-book';
 
 export default function (request: NextApiRequest, response: NextApiResponse) {

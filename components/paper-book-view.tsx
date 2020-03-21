@@ -10,6 +10,7 @@ import LoginRequiredView from './user/login-required-view';
 import MoneyUtil from '../util/money-util';
 import BookDescription from './book/book-description';
 import BookHeader from './book/book-header';
+import BookCover from './book/book-cover';
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
@@ -57,13 +58,13 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
     return (
       <div className="paper-book">
         <div>
-          <img src={book.metadata.cover || EMPTY_IMAGE} />
+          <BookCover book={book} />
         </div>
         <div className="body">
           <BookHeader book={book} status author />
           <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
           <BookDescription book={book} size="small" style={{flex: 1}} />
-          <div className="huidu-money">{MoneyUtil.format(book.commodity.prices)}</div>
+          <div className="huidu-money">{MoneyUtil.format(book.commodity && book.commodity.prices)}</div>
           <div className="actions">
             <LoginRequiredView
               renderNonlogin={

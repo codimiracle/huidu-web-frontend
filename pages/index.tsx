@@ -1,11 +1,14 @@
-import { Card, List, Row } from 'antd';
+import { List, Row } from 'antd';
 import React from 'react';
 import BookRank from '../components/book-rank-view';
 import BookView from '../components/book-view';
 import CategoryBar from '../components/category-bar';
+import ReviewItemView from '../components/community/review-item-view';
+import TopicItemView from '../components/community/topic-item-view';
 import ContentRelatedView from '../components/content-related-view';
 import ExhibitionParisingView from '../components/exhibition-parising-view';
 import ExhibitionView from '../components/exhibition-view';
+import SimpleListView from '../components/integral/simple-list-view';
 import ParticipantView from '../components/participant-view';
 import { PreviewableCarousel } from '../components/previewable-carousel';
 import SectionView from '../components/section-view';
@@ -14,10 +17,12 @@ import { API } from '../configs/api-config';
 import { Book, BookType } from '../types/book';
 import { Category } from '../types/category';
 import { Comment } from '../types/comment';
+import { Review } from '../types/review';
 import { Topic } from '../types/topic';
 import { fetchDataByGet } from '../util/network-util';
 import { RealtimeJSON } from './api/system/realtime';
-import { Review } from '../types/review';
+import { CommunityFocus } from '../types/community';
+import CommunityFocusView from '../components/community/community-focus-view';
 
 export interface ComprehensivePageProps extends RealtimeJSON { }
 export interface ComprehensivePageState { }
@@ -143,65 +148,33 @@ class ComprehensivePage extends React.Component<ComprehensivePageProps, Comprehe
           <ContentSection category={sections[0]} bookType={BookType.ElectronicBook} title="" asideTitle="悦读榜" />
           <ContentSection category={sections[1]} bookType={BookType.AudioBook} title="阅读有声" asideTitle="动听榜" /> */}
 
-          <ExhibitionParisingView category={sections[2]} />
+          {sections[2] && <ExhibitionParisingView category={sections[2]} />}
           <SectionView
             title="社区动态"
             content={
               <>
-                <Card>
-                  <h3>高赞话题</h3>
-                  {
-                    community.topTopics && community.topTopics.length == 2 &&
-                    <ContentRelatedView
-                      content={
-                        <TopicDisplayer topic={community.topTopics[0]} />
-                      }
-                      relatedContent={
-                        <TopicDisplayer topic={community.topTopics[1]} />
-                      }
-                    />
-                  }
-                  <h3>交流热点</h3>
-                  {
-                    community.focus.map((value, index) => (
-                      <ContentRelatedView
-                        key={`${value.book.id}`}
-                        content={
-                          <BookView book={value.book} />
-                        }
-                        relatedContent={
-                          <List
-                            renderItem={(item: Topic) => <List.Item>{item.title}</List.Item>}
-                            dataSource={value.topics}
-                          />
-                        }
-                        swap={index % 2 == 0}
-                        style={{ marginBottom: '8px' }}
-                      />
-                    ))
-                  }
-                </Card>
+                <h3>交流热点</h3>
+                <List
+                  renderItem={(item: CommunityFocus, index: number) => <CommunityFocusView swap={index % 2 == 0} focus={item} />}
+                  dataSource={community.focus}
+                />
               </>
             }
             asideTitle="社区活跃榜"
             aside={
               <>
-                <h3>刚刚活跃</h3>
-                <div>
-                  <ParticipantView recents={community.topParticipants} />
-                </div>
                 <h3>热气话题</h3>
                 <div>
-                  <List
-                    renderItem={(item: Topic) => <List.Item>{item.title}</List.Item>}
-                    dataSource={community.hotTopics}
+                  <SimpleListView
+                    api={API.CommunityReviewHotCollection}
+                    renderItem={(item: Topic) => <TopicItemView topic={item} />}
                   />
                 </div>
                 <h3>热气书评</h3>
                 <div>
-                  <List
-                    renderItem={(item: Review) => <List.Item>{item.title}</List.Item>}
-                    dataSource={community.hotReviews}
+                  <SimpleListView
+                    api={API.CommunityReviewHotCollection}
+                    renderItem={(item: Review) => <ReviewItemView review={item} />}
                   />
                 </div>
               </>

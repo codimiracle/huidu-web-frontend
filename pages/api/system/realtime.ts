@@ -14,6 +14,8 @@ import { getMockSocialUser } from "../mockdata/user";
 import { getMockReview } from "../mockdata/review";
 import { Review } from "../../../types/review";
 import { getMockOperation } from "../mockdata/operation";
+import { getMockCommunityFocus } from "../mockdata/community";
+import { CommunityFocus } from "../../../types/community";
 
 export interface RealtimeJSON {
   activities: Array<Activity>,
@@ -24,14 +26,10 @@ export interface RealtimeJSON {
     sametaste: Category
   },
   community: {
-    topTopics: Array<Topic>,
     topParticipants: Array<Operation>,
     hotTopics: Array<Topic>,
     hotReviews: Array<Review>
-    focus: Array<{
-      topics: Array<Topic>,
-      book: Book
-    }>
+    focus: Array<CommunityFocus>
   }
 }
 
@@ -48,16 +46,10 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         sametaste: getMockCategory(),
       },
       community: {
-        topTopics: new Array(10).fill(0).map(() => getMockTopic()),
         topParticipants: new Array(10).fill(0).map(() => getMockOperation()),
         hotTopics: new Array(10).fill(0).map(() => getMockTopic()),
         hotReviews: new Array(10).fill(0).map(() => getMockReview()),
-        focus: [
-          {
-            topics: new Array(10).fill(0).map(() => getMockTopic()),
-            book: getMockElectronicBook(),
-          }
-        ]
+        focus: new Array(3).fill(0).map(() => getMockCommunityFocus()),
       }
     }
   }

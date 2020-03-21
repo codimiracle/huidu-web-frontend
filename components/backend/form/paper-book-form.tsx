@@ -1,13 +1,11 @@
-import { DatePicker, Input } from 'antd';
+import { Input } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import React from 'react';
 import { PaperBook } from '../../../types/paper-book';
-import CategoryForm from './category-form';
 import CategorySelect from '../util/category-select';
-import CommoditySelect from '../util/commodity-select';
-import MetadataSelect from '../util/metadata-select';
 import TagSelect from '../util/tag-select';
+import CategoryForm from './category-form';
 import CommodityForm from './commodity-form';
 import MetadataForm from './metadata-form';
 import SelectableFormItem from './selectable-form-item';

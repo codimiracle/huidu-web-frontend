@@ -5,15 +5,17 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { fetchDataByGet } from '../../util/network-util';
 import { ListJSON } from '../../types/api';
 import { Article } from '../../types/content';
+import { ListGridType } from 'antd/lib/list';
 
 export interface InfiniteListViewProps<T> {
   api: API;
   filter?: any;
   sorter?: any;
+  grid?: ListGridType;
   initialDataSource?: Array<T>;
   initialTotal?: number;
   getRequestArguments?: () => any;
-  renderItem: (record: T) => React.ReactNode;
+  renderItem: (record: T, index: number) => React.ReactNode;
   style?: React.CSSProperties;
 };
 export interface InfiniteListViewState<T> {
@@ -51,7 +53,7 @@ export default class InfiniteListView<T> extends React.Component<InfiniteListVie
       this.setState((state) => ({
         page: data.page,
         limit: data.limit,
-        list: state.list.concat(data.list),
+        list: data.page == 1 ? data.list : state.list.concat(data.list),
         total: data.total
       }));
     }).catch((err) => {
@@ -69,6 +71,7 @@ export default class InfiniteListView<T> extends React.Component<InfiniteListVie
         hasMore={!this.state.loading && (this.state.page == null || (this.state.list.length < this.state.total))}
       >
         <List
+          grid={this.props.grid}
           renderItem={this.props.renderItem}
           dataSource={this.state.list}
         >

@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import { API } from '../../configs/api-config';
 import { fetchDataByGet } from '../../util/network-util';
 import Link from 'next/link';
+import LoginRequiredView from '../user/login-required-view';
 
 
 function CartBadge(props: { children: JSX.Element }) {
@@ -28,13 +29,17 @@ export default class CartButton extends React.Component<CartButtonProps, CartBut
     return (
       <>
         <Affix offsetBottom={128} style={{ position: 'fixed', right: '100px' }}>
-          <span style={{ padding: '4px' }}>
-            <CartBadge>
-              <Link href="/user/cart">
-                <Button type="primary" size="large" shape="circle" icon="shopping-cart" />
-              </Link>
-            </CartBadge>
-          </span>
+          <LoginRequiredView
+            renderNonlogin={(opener) => <Button type="primary" size="large" shape="circle" icon="shopping-cart" onClick={opener} />}
+          >
+            <span style={{ padding: '4px' }}>
+              <CartBadge>
+                <Link href="/user/cart">
+                  <Button type="primary" size="large" shape="circle" icon="shopping-cart" />
+                </Link>
+              </CartBadge>
+            </span>
+          </LoginRequiredView>
         </Affix>
       </>
     )

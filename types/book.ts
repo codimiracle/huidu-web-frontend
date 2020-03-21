@@ -35,6 +35,9 @@ export class BookPreview {
   cover: string;
   description: string;
   static valueOf(book: Book): BookPreview {
+    if (!book) {
+      return null;
+    }
     if (book.type == BookType.ElectronicBook) {
       let electronicBook = (book as ElectronicBook);
       return {
@@ -56,10 +59,10 @@ export class BookPreview {
     if (book.type == BookType.PaperBook) {
       let paperBook = book as PaperBook;
       return {
-        name: paperBook.commodity.name || paperBook.metadata.name,
+        name: paperBook.commodity && paperBook.commodity.name || paperBook.metadata.name,
         author: paperBook.metadata.author,
-        cover: paperBook.commodity.picture || paperBook.metadata.cover,
-        description: paperBook.commodity.introduction || paperBook.metadata.description
+        cover: paperBook.commodity && paperBook.commodity.picture || paperBook.metadata.cover,
+        description: paperBook.commodity && paperBook.commodity.introduction || paperBook.metadata.description
       };
     }
   }

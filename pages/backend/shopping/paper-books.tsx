@@ -9,6 +9,8 @@ import { SorterResult, ColumnProps } from 'antd/lib/table';
 import { Tag } from 'antd';
 import { COMMODITY_STATUS_COLORS, COMMODITY_STATUS_TEXTS, CommodityStatus, Commodity } from '../../../types/commodity';
 import PaperBookForm from '../../../components/backend/form/paper-book-form';
+import MoneyUtil from '../../../util/money-util';
+import BookCover from '../../../components/book/book-cover';
 
 export interface PaperBookManagerProps {
   list: Array<PaperBook>,
@@ -30,7 +32,7 @@ export default class PaperBookManager extends React.Component<PaperBookManagerPr
         title: '图书封面',
         key: 'cover',
         dataIndex: 'commodity',
-        render: (commodity) => <img src={commodity.picture} style={{ width: '7em', height: '9.4em' }} />
+        render: (commodity, book) => <BookCover book={book} />
       },
       {
         title: '书名',
@@ -73,9 +75,9 @@ export default class PaperBookManager extends React.Component<PaperBookManagerPr
         title: '图书价格',
         key: 'commodityPrices',
         dataIndex: 'commodity',
-        sorter: (a, b) => a.commodity.prices - b.commodity.prices,
+        sorter: (a, b) => a.commodity.prices.amount - b.commodity.prices.amount,
         sortOrder: sorter && sorter.columnKey === 'commodityPrices' ? sorter.order : false,
-        render: (commodity) => <span style={{ color: 'red' }}>￥{commodity.prices}</span>
+        render: (commodity) => <span className="huidu-money">{MoneyUtil.format(commodity.prices)}</span>
       }
     ];
   }

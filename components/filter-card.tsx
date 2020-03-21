@@ -26,8 +26,8 @@ export default class FilterCard extends React.Component<FilterCardProps, FilterC
   constructor(props: FilterCardProps) {
     super(props);
     this.state = {
-      selectedYear: "all",
-      selectedFare: "all",
+      selectedYear: null,
+      selectedFare: null,
       selectedCategory: null,
       selectedTag: null
     }
@@ -65,39 +65,41 @@ export default class FilterCard extends React.Component<FilterCardProps, FilterC
     const { categories, years } = this.props;
     const { selectedYear, selectedCategory, selectedTag, selectedFare } = this.state;
     return (
-      <>
-        <Card>
-          <h3>年份</h3>
-          <CheckableTag checked={selectedYear == 'all'} onChange={() => this.onYearChange('all')}>全部</CheckableTag>
-          {
-            years.map((year: string) => (
-              <CheckableTag key={year} checked={selectedYear == year} onChange={() => this.onYearChange(year)}>{year}</CheckableTag>
-            ))
-          }
-          <h3>费用</h3>
-          <CheckableTag checked={selectedFare == 'all'} onChange={() => this.onFareChange('all')}>全部</CheckableTag>
-          <CheckableTag checked={selectedFare == 'free'} onChange={() => this.onFareChange('free')}>免费</CheckableTag>
-          <CheckableTag checked={selectedFare == 'pay'} onChange={() => this.onFareChange('pay')}>付费</CheckableTag>
-          <h3>类别</h3>
-          <CheckableTag checked={selectedCategory === null} onChange={() => this.onCategoryChange(null)}>全部</CheckableTag>
-          {categories.map((category: Category) => (
-            <CheckableTag key={category.id} checked={selectedCategory && selectedCategory.id === category.id} onChange={() => this.onCategoryChange(category)}>{category.name}</CheckableTag>
-          ))}
-          {
-            selectedCategory && <div>
-              <h3>标签</h3>
-              <CheckableTag checked={selectedTag == null} onChange={() => this.onTagChange(null)}>全部</CheckableTag>
-              {selectedCategory.tags.map((tag: Tag) => <CheckableTag key={tag.id} checked={selectedTag && selectedTag.id === tag.id} onChange={() => this.onTagChange(tag)}>{tag.name}</CheckableTag>)}
-            </div>
-          }
-        </Card>
+      <div className="filter-card">
+        <h3>年份</h3>
+        <CheckableTag checked={selectedYear == null} onChange={() => this.onYearChange(null)}>全部</CheckableTag>
+        {
+          years.map((year: string) => (
+            <CheckableTag key={year} checked={selectedYear == year} onChange={() => this.onYearChange(year)}>{year}</CheckableTag>
+          ))
+        }
+        <h3>费用</h3>
+        <CheckableTag checked={selectedFare == null} onChange={() => this.onFareChange(null)}>全部</CheckableTag>
+        <CheckableTag checked={selectedFare == 'free'} onChange={() => this.onFareChange('free')}>免费</CheckableTag>
+        <CheckableTag checked={selectedFare == 'pay'} onChange={() => this.onFareChange('pay')}>付费</CheckableTag>
+        <h3>类别</h3>
+        <CheckableTag checked={selectedCategory === null} onChange={() => this.onCategoryChange(null)}>全部</CheckableTag>
+        {categories.map((category: Category) => (
+          <CheckableTag key={category.id} checked={selectedCategory && selectedCategory.id === category.id} onChange={() => this.onCategoryChange(category)}>{category.name}</CheckableTag>
+        ))}
+        {
+          selectedCategory && <div>
+            <h3>标签</h3>
+            <CheckableTag checked={selectedTag == null} onChange={() => this.onTagChange(null)}>全部</CheckableTag>
+            {selectedCategory.tags.map((tag: Tag) => <CheckableTag key={tag.id} checked={selectedTag && selectedTag.id === tag.id} onChange={() => this.onTagChange(tag)}>{tag.name}</CheckableTag>)}
+          </div>
+        }
 
         <style jsx>{`
+          .filter-card {
+            padding-left: 4px;
+            font-size: 0.9em;
+          }
           h3 {
             margin 0.5em 0;
           }
         `}</style>
-      </>
+      </div>
     )
   }
 }

@@ -1,10 +1,10 @@
+import { Carousel, Col, Empty, List, Row } from 'antd';
 import React from 'react';
-import { Row, Col, Carousel, List, Empty } from 'antd';
 import { Activity } from '../types/activity';
-import Link from 'next/link';
 import { BookPreview } from '../types/book';
 import BookDescription from './book/book-description';
 import BookHeader from './book/book-header';
+import BookCover from './book/book-cover';
 
 interface PreviewImageViewProps {
   selectedIndex: number,
@@ -13,16 +13,15 @@ interface PreviewImageViewProps {
 }
 function PreviewImageView(props: PreviewImageViewProps) {
   const { selectedIndex, index, activity } = props;
-  const bookPreview = BookPreview.valueOf(activity.book);
   return (
-    <>
-      <img className={index === selectedIndex ? 'selected' : ''} width="100%" src={bookPreview.cover || '/assets/empty.png'} />
+    <div className={index === selectedIndex ? 'selected' : ''}>
+      <BookCover book={activity.book} style={{width: '100%'}}/>
       <style jsx>{`
-        img.selected {
+        div.selected {
           outline: 0.1em solid grey;
         }
-        `}</style>
-    </>
+      `}</style>
+    </div>
   );
 }
 
@@ -58,7 +57,7 @@ export class PreviewableCarousel extends React.Component<PreviewableCarouselProp
               {
                 activities.map((activity: Activity) => (
                   <div className="activity-content" key={activity.id}>
-                    <img src={activity.banner} width="100%" />
+                    <img src={activity.banner} width="100%" height="52.7%" />
                   </div>)
                 )
               }
@@ -83,7 +82,7 @@ export class PreviewableCarousel extends React.Component<PreviewableCarouselProp
             </Row>
             {referBook &&
               <Row>
-                <BookHeader book={referBook} style={{fontSize: '1.5em'}}/>
+                <BookHeader book={referBook} style={{ fontSize: '1.5em' }} />
                 <BookDescription book={referBook} size="medium" />
               </Row>
             }

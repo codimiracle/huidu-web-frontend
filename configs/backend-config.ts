@@ -68,12 +68,6 @@ const Entries: EntryInfoMap = {
     key: 'frontend-services',
     absoluteLink: '/'
   },
-  'author-data-services': {
-    icon: 'dashboard',
-    title: '创作数据',
-    key: 'author-data-services',
-    link: '/creator/dashboard'
-  },
   'author-electronic-books-service': {
     icon: 'read',
     title: '电子书创作',
@@ -106,13 +100,6 @@ const Entries: EntryInfoMap = {
     icon: 'heart',
     title: '用户推荐',
     link: '/recommendation/user-recommendation'
-  },
-  'user-search': {
-    group: 'recommendation',
-    key: 'user-search',
-    icon: 'search',
-    title: '用户搜索',
-    link: '/recommendation/user-search'
   },
   'content-topics': {
     group: 'content',

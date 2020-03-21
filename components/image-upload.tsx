@@ -62,7 +62,7 @@ export class ImageUpload extends React.Component<ImageUploadProps, ImageUploadSt
   render() {
     const { value } = this.props;
     const { loading, uploadedUrl } = this.state;
-    let imageUrl = value || uploadedUrl;
+    let imageUrl = uploadedUrl || value;
     let width = this.props.width || '7em';
     let height = this.props.height || '9.4em';
     return (
@@ -76,11 +76,13 @@ export class ImageUpload extends React.Component<ImageUploadProps, ImageUploadSt
           onChange={(info) => this.onChange(info)}
           showUploadList={false}
         >
-          <div className="upload-button" style={{ width: width, height: height, paddingTop: `calc((${height} - 41px) / 2)`, backgroundImage: imageUrl ? `url(${imageUrl})` : 'none' }}>
-            {!imageUrl && <>
-              <Icon type={loading ? 'loading' : 'plus'} />
-              <div className="ant-upload-text">上传</div>
-            </>}
+          <div className="upload-button" style={{ width: width, height: height, paddingTop: `calc((${height}px - 41px) / 2)`, backgroundImage: imageUrl ? `url(${imageUrl})` : 'none' }}>
+            {
+              !imageUrl && <>
+                <Icon type={loading ? 'loading' : 'plus'} />
+                <div className="ant-upload-text">上传</div>
+              </>
+            }
           </div>
         </Upload>
         <style jsx>{`

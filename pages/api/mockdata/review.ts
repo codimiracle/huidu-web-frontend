@@ -6,6 +6,7 @@ export const getMockReview = (): Review => {
   let hotCommentList = new Array(10).fill(0).map(() => getMockComment());
   return {
     ...getMockComment(),
+    title: 'Review Title',
     type: ContentType.Review,
     hotCommentList: hotCommentList
   }

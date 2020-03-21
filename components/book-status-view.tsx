@@ -27,7 +27,7 @@ export default class BookStatusView extends React.Component<BookStatusViewProps,
         }
         {
           book.type == BookType.PaperBook &&
-          <CommodityStatusView status={(book as PaperBook).commodity.status} />
+          <CommodityStatusView status={(book as PaperBook).commodity && (book as PaperBook).commodity.status} />
         }
       </>
     )

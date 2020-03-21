@@ -24,19 +24,21 @@ export default class CategoryForm extends React.Component<CategoryFormProps, Cat
         {
           collection &&
           <Row>
-            <Col span={4}>
+            <Col span={12}>
               <FormItem label="榜单封面">
                 {
                   form.getFieldDecorator('category.extra.url', {
+                    initialValue: category && category.extra && category.extra.url || undefined,
                     rules: [{ required: true, message: '请上传榜单封面' }]
-                  })(<ImageUpload />)
+                  })(<ImageUpload width={196} height={148}/>)
                 }
               </FormItem>
             </Col>
-            <Col span={20}>
+            <Col span={12}>
               <FormItem label="榜单侧栏标题">
                 {
                   form.getFieldDecorator('category.extra.asideTitle', {
+                    initialValue: category && category.extra && category.extra.asideTitle || undefined,
                     rules: [{ required: true, message: '请设定侧栏标题' }]
                   })(<Input placeholder="侧栏标题" />)
                 }

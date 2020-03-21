@@ -7,6 +7,8 @@ import { fetchDataByGet } from '../../../util/network-util';
 import { API } from '../../../configs/api-config';
 import ContentList from '../../../components/content-list-view';
 import { ListJSON } from '../../../types/api';
+import SimpleListView from '../../../components/integral/simple-list-view';
+import ReviewItemView from '../../../components/community/review-item-view';
 
 export interface ReviewsProps {
   list: Array<Review>;
@@ -38,9 +40,11 @@ export default class Reviews extends React.Component<ReviewsProps, ReviewsState>
         <SectionView
           aside={
             <>
-              <Card>
-                <h3>本周点评榜</h3>
-              </Card>
+              <h3>点评榜</h3>
+              <SimpleListView
+                api={API.CommunityReviewCollection}
+                renderItem={(item: Review) => <List.Item style={{padding: 0, display: 'block'}}><ReviewItemView review={item} /></List.Item>}
+              />
             </>
           }
         >
