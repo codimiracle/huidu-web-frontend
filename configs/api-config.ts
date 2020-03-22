@@ -39,195 +39,6 @@ export interface APIDefinitionSet {
 /**
  * for using API in netwok-util
  */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
 export enum API {
   UserCollection = "user.collection",
   LoggedUserData = "user.logged",
@@ -462,9 +273,14 @@ export enum API {
   CommunityReviewHotCollection = "community.review.hotCollection",
   CommunityTopicHotCollection = "community.topic.hotCollection",
   BackendCollectionStatistics = "backend.collection.statistics",
-  AudioBookHotCollection = "AudioBookHotCollection",
-  PaperbookHotCollection = "PaperbookHotCollection",
-  ElectronicBookHotCollection = "ElectronicBookHotCollection"
+  AudioBookHotCollection = "audioBook.hotCollection",
+  PaperbookHotCollection = "paperbook.hotCollection",
+  ElectronicBookHotCollection = "electronicBook.hotCollection",
+  UserOrderShipment = "user.order.shipment",
+  UserOrderCancel = "user.order.cancel",
+  UserOrderReceived = "user.order.received",
+  UserOrderLogisticsInformation = "user.order.logisticsInformation",
+  UserOrderEvaluate = "user.order.evaluate"
 }
 
 /**
@@ -1124,14 +940,12 @@ export const APIDefinitionData: APIDefinitionSet = {
       }
     },
     topic: {
-      collection: {
-        url: `${testOrigin}/api/community/topics?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`
-      }
+      collection:  `${testOrigin}/api/community/topics?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+      hotCollection:  `${testOrigin}/api/community/topics/hots?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
     },
     review: {
-      collection: {
-        url: `${testOrigin}/api/community/reviews?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`
-      }
+      collection: `${testOrigin}/api/community/reviews?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+      hotCollection: `${testOrigin}/api/community/reviews/hots?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
     },
   },
   recommendation: {
@@ -1150,7 +964,7 @@ export const APIDefinitionData: APIDefinitionSet = {
     collections: `${testOrigin}/api/comprehensive-page/collections`,
   },
   search: {
-    url: `${origin}/api/search?kw=@{keyword}&type=@{type}`
+    url: `${testOrigin}/api/search?kw=@{keyword}&type=@{type}&filter=null&sorter=null&page=1&limit=10`
   },
   electronicBook: {
     search: `${testOrigin}/api/electronic-books/search?q=@{keyword}`,
@@ -1482,6 +1296,13 @@ export const APIDefinitionData: APIDefinitionSet = {
           password: null
         }
       },
+      shipment: {
+        url: `${testOrigin}/api/user/orders/shipment`,
+        body: {
+          addressId: null,
+          items: null
+        }
+      },
       orderring: {
         url: `${testOrigin}/api/user/orders/orderring`,
         body: {
@@ -1489,6 +1310,21 @@ export const APIDefinitionData: APIDefinitionSet = {
           type: null,
           items: null
         }
+      },
+      logisticsInformation: {
+        url: `${testOrigin}/api/user/orders/@{order_number}/logisticsInformation`,
+        method: 'post',
+        body: {}
+      },
+      cancel: {
+        url: `${testOrigin}/api/user/orders/@{order_number}/cancel`,
+        method: 'post',
+        body: {}
+      },
+      received: {
+        url: `${testOrigin}/api/user/orders/@{order_number}/receive`,
+        method: 'post',
+        body: {}
       }
     },
     cart: {

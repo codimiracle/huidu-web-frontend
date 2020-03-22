@@ -68,8 +68,8 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
             <div><BookHeader book={book} status author /></div>
             <div><Rate defaultValue={2.5} disabled style={{ fontSize: '1em' }} /></div>
             <p className="description">{book.description || book.metadata.description}</p>
-            <div className="actions">
-              <Button loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
+            <div className="huidu-actions-left">
+              <Button size="small" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
             </div>
           </div>
         </div>

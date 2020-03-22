@@ -5,13 +5,16 @@ import Password from "antd/lib/input/Password";
 import { Router, withRouter } from "next/router";
 import React from "react";
 import { API } from "../../configs/api-config";
-import { Order } from "../../types/order";
+import { Order, OrderStatus } from "../../types/order";
 import MoneyUtil from "../../util/money-util";
 import { fetchMessageByPost } from "../../util/network-util";
+import Link from "next/link";
 
 const { TabPane } = Tabs;
 
 export interface PaymentDialogProps {
+  nolink?: boolean;
+  onPaied: (order: Order) => void;
   visible: boolean;
   onCancel?: () => void;
   form: WrappedFormUtils<any>;
@@ -54,7 +57,12 @@ export class PaymentDialog extends React.Component<PaymentDialogProps, PaymentDi
         }).then((msg) => {
           if (msg.code == 200) {
             this.setState({ triggered: true, result: 1 });
-            router.replace('/user-central/order-details/[order_number]', `/user-central/order-details/${order.orderNumber}`);
+            if (!this.props.nolink) {
+              router.replace('/user-central/order-details/[order_number]', `/user-central/order-details/${order.orderNumber}`);
+            }
+            let newOrder = {...order};
+            newOrder.status = OrderStatus.AwaitingShipment;
+            this.props.onPaied && this.props.onPaied(newOrder);
           } else {
             message.error(`错误代码：${msg.code}: ${msg.message}`);
           }
@@ -78,6 +86,9 @@ export class PaymentDialog extends React.Component<PaymentDialogProps, PaymentDi
           triggered: true,
           result: 1,
         });
+        let newOrder = {...this.props.order};
+        newOrder.status = OrderStatus.AwaitingShipment;
+        this.props.onPaied && this.props.onPaied(newOrder);
       } else {
         message.error(`虚拟支付失败：${msg.message}`);
       }
@@ -89,9 +100,13 @@ export class PaymentDialog extends React.Component<PaymentDialogProps, PaymentDi
   }
   onCancel() {
     const { router } = this.props;
-    this.setState({ triggered: true, result: 2 });
-    message.info('订单尚未支付，请前往我的订单处理！');
-    router.back();
+    if (!this.props.nolink) {
+      this.setState({ triggered: true, result: 2 });
+      message.info('订单尚未支付，请前往我的订单处理！');
+      router.back();
+    } else {
+      this.props.onCancel();
+    }
   }
   render() {
     const { order, form } = this.props;
@@ -104,15 +119,15 @@ export class PaymentDialog extends React.Component<PaymentDialogProps, PaymentDi
           visible={this.props.visible}
           onCancel={() => {
             this.props.onCancel()
-            setTimeout(() => 
-            this.setState({
-              paying: false,
-              canceling: false,
-              triggered: false,
-              recharging: false,
-              result: 0,
-              paymentType: this.props.recharge ? 'wechat' : 'huidu'
-            }), 1000);
+            setTimeout(() =>
+              this.setState({
+                paying: false,
+                canceling: false,
+                triggered: false,
+                recharging: false,
+                result: 0,
+                paymentType: this.props.recharge ? 'wechat' : 'huidu'
+              }), 1000);
           }}
           closable={this.props.recharge}
           footer={null}
@@ -156,7 +171,7 @@ export class PaymentDialog extends React.Component<PaymentDialogProps, PaymentDi
               <Result
                 status="success"
                 title="订单已成功支付"
-                subTitle={`订单编号：${order.orderNumber}`}
+                subTitle={<span>订单编号：<Link href={`/api/user/orders/${order.orderNumber}`}><a>{order.orderNumber}</a></Link></span>}
               />
             </div>
           }
@@ -166,7 +181,7 @@ export class PaymentDialog extends React.Component<PaymentDialogProps, PaymentDi
               <Result
                 status="info"
                 title="您的订单尚未支付"
-                subTitle={`订单编号：${order.orderNumber}`}
+                subTitle={<span>订单编号：<Link href={`/api/user/orders/${order.orderNumber}`}><a>{order.orderNumber}</a></Link></span>}
               />
             </div>
           }

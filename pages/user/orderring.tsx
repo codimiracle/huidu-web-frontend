@@ -2,6 +2,7 @@ import { Button, Divider, Icon, List, message, Tooltip } from 'antd';
 import { Router, withRouter } from 'next/router';
 import React from 'react';
 import AddressView from '../../components/address-view';
+import AddressSelectDialog from '../../components/address/address-select-dialog';
 import OrderringDialog from '../../components/dialogs/orderring-dialog';
 import WrappedPaymentDialog from '../../components/dialogs/payment-dialog';
 import ShoppingCommodityView from '../../components/shopping-commodity-view';
@@ -11,11 +12,12 @@ import { Address } from '../../types/address';
 import { EntityJSON, ListJSON } from '../../types/api';
 import { CartItem } from '../../types/cart';
 import { Commodity } from '../../types/commodity';
-import { Order, OrderType } from '../../types/order';
+import { Order, OrderType, Money } from '../../types/order';
 import { PaperBook } from '../../types/paper-book';
 import { fetchDataByGet, fetchDataByPost } from '../../util/network-util';
 
 interface OrderDetails {
+  commodityId: string;
   commodity: Commodity<any>;
   quantity: number;
   cartItemId?: string;
@@ -28,10 +30,12 @@ export interface OrderringProps {
 export interface OrderringState {
   orderringDetails: Array<OrderDetails>,
   address: Address,
+  addressDialogVisible: boolean,
   orderring: boolean,
   totalMoney: number,
   shipmentMoney: number,
   createdOrder: Order,
+  refreshing: boolean,
   paymentDialogVisible: boolean
 };
 
@@ -42,11 +46,13 @@ export class Orderring extends React.Component<OrderringProps, OrderringState> {
     this.state = {
       orderringDetails: [],
       address: null,
+      addressDialogVisible: false,
       totalMoney: 0,
       shipmentMoney: 0,
       orderring: false,
       createdOrder: null,
       paymentDialogVisible: false,
+      refreshing: false,
     };
     this.orderringDetails = {}
   }
@@ -58,6 +64,7 @@ export class Orderring extends React.Component<OrderringProps, OrderringState> {
         book_id: book_id,
       });
       orderringDetails.push({
+        commodityId: data.entity.commodity.id,
         commodity: data.entity.commodity,
         quantity: 1
       });
@@ -67,6 +74,7 @@ export class Orderring extends React.Component<OrderringProps, OrderringState> {
         ids: book_list
       });
       orderringDetails = orderringDetails.concat(data.list.map((book) => ({
+        commodityId: book.commodity.id,
         commodity: book.commodity,
         quantity: 1
       })));
@@ -75,12 +83,18 @@ export class Orderring extends React.Component<OrderringProps, OrderringState> {
       let data = await fetchDataByGet<ListJSON<CartItem>>(API.UserCartItemsByIds, {
         ids: cart_items
       });
-      orderringDetails = orderringDetails.concat(data.list);
+      orderringDetails = orderringDetails.concat(data.list.map((cartItem) => ({ commodityId: cartItem.commodityId, commodity: cartItem.commodity, cartItemId: cartItem.id, quantity: cartItem.quantity })));
     }
     let defaultAddressData = await fetchDataByGet<EntityJSON<Address>>(API.UserAddressDefault);
+
+    let shipmentMoneyData = await fetchDataByPost<Money>(API.UserOrderShipment, {
+      addressId: defaultAddressData.entity.id,
+      items: orderringDetails.map((orderingDetail) => ({ commodityId: orderingDetail.commodityId, quantity: orderingDetail.quantity, cartItemId: orderingDetail.cartItemId }))
+    });
     return {
       address: defaultAddressData.entity,
-      orderringDetails: orderringDetails
+      orderringDetails: orderringDetails,
+      shipmentMoney: shipmentMoneyData.amount
     };
   }
   onOrderring() {
@@ -93,7 +107,7 @@ export class Orderring extends React.Component<OrderringProps, OrderringState> {
     fetchDataByPost<EntityJSON<Order>>(API.UserOrderring, {
       addressId: address.id,
       type: OrderType.PaperBook,
-      items: this.state.orderringDetails
+      items: this.state.orderringDetails.map((orderingDetail) => ({ commodityId: orderingDetail.commodityId, quantity: orderingDetail.quantity, cartItemId: orderingDetail.cartItemId }))
     }).then((data) => {
       this.setState({ createdOrder: data.entity });
       setTimeout(() => {
@@ -115,19 +129,30 @@ export class Orderring extends React.Component<OrderringProps, OrderringState> {
         orderringDetails: orderingDetailsList
       }, () => {
         let totalMoney = this.getTotalMoney();
-        let shipmentMoney = this.getShipmentMoney();
-        this.setState({ totalMoney: totalMoney, shipmentMoney: shipmentMoney });
+        this.refreshShipment();
+        this.setState({ totalMoney: totalMoney });
       })
     }
   }
-  getShipmentMoney() {
-    return 10;
+  refreshShipment() {
+    this.setState({ refreshing: true });
+    fetchDataByPost<Money>(API.UserOrderShipment, {
+      addressId: this.state.address.id,
+      items: this.state.orderringDetails.map((orderingDetail) => ({ commodityId: orderingDetail.commodityId, quantity: orderingDetail.quantity, cartItemId: orderingDetail.cartItemId }))
+    }).then((data) => {
+      this.setState({ shipmentMoney: data.amount });
+    }).catch((err) => {
+      message.error(`获取运费预计失败：${err.message}`);
+    }).finally(() => {
+      this.setState({ refreshing: false });
+    });
+
   }
   getTotalMoney() {
     return this.state.orderringDetails.map((value) => value.commodity.prices.amount * value.quantity).reduce((a, b) => a + b, 0);
   }
   render() {
-    const { address, totalMoney, shipmentMoney, orderring, createdOrder, paymentDialogVisible } = this.state;
+    const { address, totalMoney, shipmentMoney, orderring, createdOrder, addressDialogVisible, paymentDialogVisible } = this.state;
     return (
       <InitializerView
         initializer={() => this.getClientSideProps(this.props.router.query)}
@@ -135,12 +160,12 @@ export class Orderring extends React.Component<OrderringProps, OrderringState> {
       >
         <h1>订单确认</h1>
         <div className="order-content">
-          <h3>收货地址 <Tooltip title="修改"><Icon type="edit" /></Tooltip></h3>
+          <h3>收货地址 <Tooltip title="修改"><Icon type="edit" onClick={() => this.setState({ addressDialogVisible: true })} /></Tooltip></h3>
           <div>
             {
               address ?
-              <AddressView address={address} />
-              : <p>请选择地址</p>
+                <AddressView address={address} />
+                : <p>请选择地址</p>
             }
           </div>
           <h3>商品</h3>
@@ -166,7 +191,14 @@ export class Orderring extends React.Component<OrderringProps, OrderringState> {
           </div>
         </div>
         <OrderringDialog orderring={orderring} />
-        <WrappedPaymentDialog visible={paymentDialogVisible} order={createdOrder} />
+        <AddressSelectDialog
+          visible={addressDialogVisible}
+          value={this.state.address}
+
+          onCancel={() => this.setState({ addressDialogVisible: false })}
+          onSelected={(address) => this.setState({ address: address })}
+        />
+        <WrappedPaymentDialog onCancel={() => this.setState({paymentDialogVisible: false})} visible={paymentDialogVisible} order={createdOrder} />
         <style jsx>{`
           .footer {
             display: flex;

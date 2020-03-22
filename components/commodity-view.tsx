@@ -14,7 +14,7 @@ export default class CommodityView extends React.Component<CommodityViewProps, C
     const { commodity } = this.props;
     return (
       <div className="commodity-view" style={this.props.style}>
-        <img />
+        <img src={commodity.picture} />
         <div className="body">
           <div><strong>{commodity.name}</strong></div>
           <Rate disabled defaultValue={commodity.rate} style={{ fontSize: '18px' }} />

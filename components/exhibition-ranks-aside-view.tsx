@@ -30,9 +30,10 @@ export default class ExhibitionRankingAsideView<T> extends React.Component<Exhib
     this.setState({ loading: true });
     fetchDataByGet<ListJSON<T>>(API.CategoryItemsCollection, {
       category_id: category.id,
-      filter: {
-        orderBy: '<hot>',
-        order: 'desc'
+      filter: null,
+      sorter: {
+        field: 'hotDegree',
+        order: 'descend'
       },
       page: 1,
       limit: 10,

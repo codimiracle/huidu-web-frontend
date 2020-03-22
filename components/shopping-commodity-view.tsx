@@ -53,7 +53,7 @@ export default class ShoppingCommodityView extends React.Component<ShoppingCommo
           </div>
         }
         <div>
-          <strong className="huidu-money">{commodity.prices.amount * quantity}</strong>
+          <strong className="huidu-money">￥{commodity.prices.amount * quantity}</strong>
         </div>
         <style jsx>{`
           .shopping-commodity-view {
@@ -63,6 +63,9 @@ export default class ShoppingCommodityView extends React.Component<ShoppingCommo
           }
           .shopping-commodity-view > div {
             padding: 0 1.5em;
+          }
+          .huidu-money {
+            font-size: 2em;
           }
         `}</style>
       </div>

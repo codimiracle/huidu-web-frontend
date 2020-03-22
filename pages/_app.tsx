@@ -9,7 +9,6 @@ import '../public/global.less';
 import Head from 'next/head';
 import UserCentralLayout from '../layouts/user-central-layout';
 import CommunityLayout from '../layouts/community-layout';
-import CentralOrderManagerLayout from '../layouts/central-order-manage-layout';
 import ReaderLayout from '../layouts/reader-layout';
 import CreatorLayout from '../layouts/creator-layout';
 import BackendLayout from '../layouts/backend-layout';
@@ -35,10 +34,6 @@ class HuiduWebApp extends App<HuiduWebAppProps> {
     let isUserCentralPage = router.pathname.startsWith('/user-central');
     if (isUserCentralPage) {
       Layout = UserCentralLayout;
-    }
-    let isOrderManagePage = router.pathname.startsWith('/user-central/orders');
-    if (isOrderManagePage) {
-      Layout = CentralOrderManagerLayout;
     }
     let isCommunityPage = router.pathname.startsWith('/community');
     if (isCommunityPage) {

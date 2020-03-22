@@ -137,8 +137,8 @@ export default class UserCentralWallet extends React.Component<UserCentralWallet
               />
             </Col>
           </Row>
-          <h3>交易记录</h3>
-          <div className="hightline">统计：{}绘币（约合 {} 元）</div>
+          {/* <h3>交易记录</h3>
+          <div className="hightline">统计：{}绘币（约合 {} 元）</div> */}
         </div>
         <OrderringDialog orderring={this.state.orderring} />
         <WrappedPaymentDialog recharge order={this.state.rechargeOrder} onCancel={() => this.setState({paymentDialogVisible: false})} visible={this.state.paymentDialogVisible}/>

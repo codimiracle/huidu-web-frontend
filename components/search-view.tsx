@@ -1,19 +1,27 @@
 import { Icon, List, message, Popover, Tabs } from 'antd';
 import React from 'react';
 import { API } from '../configs/api-config';
-import { SearchJSON } from '../pages/api/search';
+import { ListJSON } from '../types/api';
 import { Article } from '../types/content';
-import { fetchDataByPost } from '../util/network-util';
+import { fetchDataByPost, fetchDataByGet } from '../util/network-util';
 import BookView from './book-view';
 import ContentView from './content-view';
+import { ElectronicBook } from '../types/electronic-book';
+import { AudioBook } from '../types/audio-book';
+import { PaperBook } from '../types/paper-book';
 
 const { TabPane } = Tabs;
+
+type SearchType = 'electronic-book' | 'audio-book' | 'paper-book' | 'community';
 
 export interface SearchViewProps { };
 export interface SearchViewState {
   searching: boolean,
-  result: SearchJSON,
-  searchType: string,
+  electronicBooks: ElectronicBook[],
+  audioBooks: AudioBook[],
+  paperBooks: PaperBook[],
+  contents: Article[],
+  searchType: SearchType,
   keyword: string
 };
 
@@ -23,10 +31,22 @@ export default class SearchView extends React.Component<SearchViewProps, SearchV
     this.state = {
       searching: false,
       keyword: '',
-      result: null,
+      electronicBooks: [],
+      audioBooks: [],
+      paperBooks: [],
+      contents: [],
       searchType: 'electronic-book'
     }
     this.onTabChange = this.onTabChange.bind(this);
+  }
+  private setList(searchType: string, list: Array<any>) {
+    let results = {
+      electronicBooks: searchType == 'electronic-book' ? list : [],
+      audioBooks: searchType == 'audio-book' ? list : [],
+      paperBooks: searchType == 'paper-book' ? list : [],
+      contents: searchType == 'community' ? list : []
+    }
+    this.setState(results);
   }
   onKeywordChange(keyword: string): void {
     if (keyword == "") {
@@ -34,56 +54,56 @@ export default class SearchView extends React.Component<SearchViewProps, SearchV
     }
     const { searchType } = this.state;
     this.setState({ searching: true, keyword: keyword });
-    fetchDataByPost<SearchJSON>(API.Search, {
+    fetchDataByGet<ListJSON<any>>(API.Search, {
       keyword: keyword,
       type: searchType
     }).then((data) => {
-      this.setState({ result: data });
+      this.setList(searchType, data.list);
     }).catch((err) => {
-      message.error(`搜索失败：${err}`)
-      this.setState({ result: null });
+      message.error(`搜索失败：${err}`);
+
     }).finally(() => {
       this.setState({ searching: false });
     })
   }
-  onTabChange(key: string) {
+  onTabChange(key: SearchType) {
     this.setState({ searchType: key });
     this.onKeywordChange(this.state.keyword);
   }
   render() {
-    const { searching, result, searchType } = this.state;
+    const { searching, electronicBooks, audioBooks, paperBooks, contents, searchType } = this.state;
     return (
       <>
         <Popover
           placement="bottom"
           trigger="hover"
           content={
-            <Tabs size="small" activeKey={searchType} onChange={this.onTabChange}>
-              <TabPane tab="电子书" key="electronic-book">
+            <Tabs size="small" activeKey={searchType} animated={false} onChange={this.onTabChange}>
+              <TabPane tab="电子书" key="electronic-book"  style={{maxWidth: '348px'}}>
                 <List
                   loading={searching}
                   renderItem={(item) => <BookView book={item} />}
-                  dataSource={result && result.electronicBooks || []}
+                  dataSource={electronicBooks || []}
                 />
               </TabPane>
-              <TabPane tab="有声书" key="audio-book">
+              <TabPane tab="有声书" key="audio-book" style={{maxWidth: '348px'}}>
                 <List
                   loading={searching}
                   renderItem={(item) => <BookView book={item} />}
-                  dataSource={result && result.audioBooks || []}
+                  dataSource={audioBooks || []}
                 />
               </TabPane>
-              <TabPane tab="纸质书" key="paper-book">
+              <TabPane tab="纸质书" key="paper-book"  style={{maxWidth: '348px'}}>
                 <List
                   loading={searching}
-                  dataSource={result && result.paperBooks || []}
+                  dataSource={paperBooks || []}
                 />
               </TabPane>
-              <TabPane tab="社区" key="community">
+              <TabPane tab="社区" key="community" style={{maxWidth: '348px'}}>
                 <List
                   loading={searching}
                   renderItem={(item) => <ContentView content={item as Article} />}
-                  dataSource={result && result.community || []}
+                  dataSource={contents || []}
                 />
               </TabPane>
             </Tabs>

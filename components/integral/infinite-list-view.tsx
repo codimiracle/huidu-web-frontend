@@ -1,11 +1,10 @@
-import React from 'react';
-import { API } from '../../configs/api-config';
-import { List, Spin, message } from 'antd';
-import InfiniteScroll from 'react-infinite-scroller';
-import { fetchDataByGet } from '../../util/network-util';
-import { ListJSON } from '../../types/api';
-import { Article } from '../../types/content';
+import { List, message, Spin } from 'antd';
 import { ListGridType } from 'antd/lib/list';
+import React from 'react';
+import InfiniteScroll from 'react-infinite-scroller';
+import { API } from '../../configs/api-config';
+import { ListJSON } from '../../types/api';
+import { fetchDataByGet } from '../../util/network-util';
 
 export interface InfiniteListViewProps<T> {
   api: API;

@@ -1,15 +1,15 @@
-import { Button, Divider, Tag } from 'antd';
+import { Button, Divider, message, Tag, Popconfirm } from 'antd';
 import Link from 'next/link';
 import React from 'react';
-import { Order, OrderStatus, ORDER_STATUS_TEXTS, ORDER_STATUS_COLORS } from '../types/order';
+import { API } from '../configs/api-config';
+import { Order, OrderStatus, ORDER_STATUS_COLORS, ORDER_STATUS_TEXTS } from '../types/order';
 import DatetimeUtil from '../util/datetime-util';
-import OrderDetailsList from './order-details-list';
 import MoneyUtil from '../util/money-util';
-
-export interface OrderViewProps {
-  order: Order
-};
-export interface OrderViewState { };
+import { fetchMessageByPost } from '../util/network-util';
+import OrderDetailsList from './order-details-list';
+import WrappedPaymentDialog from './dialogs/payment-dialog';
+import EvaluationCommentDialog from './dialogs/evaluation-dialog';
+import LogisticsInformationDetailsDialog from './dialogs/logistics-information-details-dialog';
 
 const ORDER_TYPE_TEXTS = {
   'audio-book': '购买有声书',
@@ -28,35 +28,122 @@ ORDER_ACTIONS_TEXTS[OrderStatus.AwaitingEvaluation] = ['评价'];
 
 
 interface OrderActionViewProps {
-  status: OrderStatus,
-  orderNumber: string,
+  order: Order;
+  status: OrderStatus;
+  orderNumber: string;
+  onOrderRefresh: (Order) => void;
 }
 
-class OrderActionView extends React.Component<OrderActionViewProps> {
+interface OrderActionViewState {
+  seconddoing: boolean;
+  paymentDialogVisible: boolean;
+  logisticsInfoVisible: boolean;
+  commentDialogVisible: boolean;
+}
+
+class OrderActionView extends React.Component<OrderActionViewProps, OrderActionViewState> {
   constructor(props: OrderActionViewProps) {
     super(props);
-    this.state = {}
+    this.state = {
+      seconddoing: false,
+      paymentDialogVisible: false,
+      logisticsInfoVisible: false,
+      commentDialogVisible: false,
+    }
+    this.onPrimaryClick = this.onPrimaryClick.bind(this);
+    this.onSecondaryClick = this.onSecondaryClick.bind(this);
   }
   onPrimaryClick() {
+    if (this.props.status == OrderStatus.AwaitingPayment) {
+      //付款
+      this.setState({ paymentDialogVisible: true });
+    }
+    if (this.props.status == OrderStatus.AwaitingShipment) {
+      //催单
+      message.info('暂不能催单！');
+    }
+    if (this.props.status == OrderStatus.AwaitingDelivery) {
+      //物流
+      this.setState({ logisticsInfoVisible: true });
+    }
+    if (this.props.status == OrderStatus.AwaitingEvaluation) {
+      //评价
+      this.setState({ commentDialogVisible: true });
 
+    }
   }
   onSecondaryClick() {
-
+    if ([OrderStatus.AwaitingPayment, OrderStatus.AwaitingShipment, OrderStatus.AwaitingDelivery].includes(this.props.status)) {
+      // 取消订单
+      this.setState({ seconddoing: true });
+      fetchMessageByPost(API.UserOrderCancel, {
+        order_number: this.props.orderNumber
+      }).then((msg) => {
+        if (msg.code == 200) {
+          message.success('取消订单成功！');
+        } else {
+          message.error(`取消订单失败：${msg.message}`);
+        }
+      }).catch((err) => {
+        message.error(`取消订单失败：${err.message}`);
+      }).finally(() => {
+        this.setState({ seconddoing: false });
+      });
+    }
+    if (OrderStatus.AwaitingEvaluation == this.props.status) {
+      // 收货
+      this.setState({ seconddoing: true });
+      fetchMessageByPost(API.UserOrderReceived, {
+        order_number: this.props.orderNumber
+      }).then((msg) => {
+        if (msg.code == 200) {
+          message.success('收货成功！');
+        } else {
+          message.error(`收货失败：${msg.message}`);
+        }
+      }).catch((err) => {
+        message.error(`收货失败：${err.message}`);
+      }).finally(() => {
+        this.setState({ seconddoing: false });
+      });
+    }
   }
   render() {
     const { status, orderNumber } = this.props;
     const triggers = [this.onPrimaryClick, this.onSecondaryClick];
     const buttons: Array<string> = ORDER_ACTIONS_TEXTS[status];
     return (
-      <>
-        <div style={{paddingBottom: '1em'}}><Link href="/user-central/order-details/[order_number]" as={`/user-central/order-details/${orderNumber}`}><a>查看订单</a></Link></div>
+      <div>
+        <div style={{ paddingBottom: '1em' }}><Link href="/user-central/order-details/[order_number]" as={`/user-central/order-details/${orderNumber}`}><a>查看订单</a></Link></div>
         {
-          buttons.map((text: string, index: number) => <Button key={text} {...(index == 0 ? { type: "primary" } : {})} onClick={() => triggers[index]} style={{ marginLeft: '0.5em' }}>{text}</Button>)
+          buttons.map((text: string, index: number) =>
+            text == '取消' ? (
+              <Popconfirm key={text} title="您真的要取消订单吗？" onConfirm={() => () => triggers[index]()}>
+                <Button {...(index == 0 ? { type: "primary" } : {})} style={{ marginLeft: '0.5em' }}>{text}</Button>
+              </Popconfirm>
+            ) : (<Button key={text} {...(index == 0 ? { type: "primary" } : {})} onClick={() => triggers[index]()} style={{ marginLeft: '0.5em' }}>{text}</Button>)
+          )
         }
-      </>
+        <WrappedPaymentDialog nolink onPaied={(order) => {
+          this.props.onOrderRefresh(order);
+        }} onCancel={() => this.setState({ paymentDialogVisible: false })} visible={this.state.paymentDialogVisible} order={this.props.order} />
+        <LogisticsInformationDetailsDialog orderNumber={this.props.orderNumber} onCancel={() => this.setState({ logisticsInfoVisible: false })} visible={this.state.logisticsInfoVisible} />
+        <EvaluationCommentDialog onEvaluated={() => {
+          let newOrder = { ...this.props.order };
+          newOrder.status = OrderStatus.Completed;
+          this.props.onOrderRefresh(newOrder);
+        }} orderNumber={this.props.orderNumber} onCancel={() => this.setState({ commentDialogVisible: false })} visible={this.state.commentDialogVisible} />
+      </div>
     )
   }
 }
+
+
+export interface OrderViewProps {
+  order: Order;
+  onOrderStatusChanged: (order: Order) => void;
+};
+export interface OrderViewState { };
 
 export default class OrderView extends React.Component<OrderViewProps, OrderViewState> {
   render() {
@@ -85,7 +172,12 @@ export default class OrderView extends React.Component<OrderViewProps, OrderView
             <div>共 <span>{(order.detailsList || []).map((details) => details.quantity).reduce((pre, cur) => pre + cur, 0)}</span> 个商品</div>
           </div>
           <div className="order-actions">
-            <OrderActionView status={order.status} orderNumber={order.orderNumber} />
+            <OrderActionView
+              onOrderRefresh={this.props.onOrderStatusChanged}
+              status={order.status}
+              order={order}
+              orderNumber={order.orderNumber}
+            />
           </div>
         </div>
         <style jsx>{`

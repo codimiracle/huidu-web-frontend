@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react';
-import { Row, Col, InputNumber, Checkbox, Button, message } from 'antd';
+import { Row, Col, InputNumber, Checkbox, Button, message, Popconfirm } from 'antd';
 import { CartItem } from '../../types/cart';
 import CommodityView from '../commodity-view';
 import { API } from '../../configs/api-config';
@@ -17,7 +17,7 @@ export interface CartItemViewProps {
 export interface CartItemViewState {
   deleting: boolean;
   count: number;
-  value: Partial<CartItem>;
+  value: CartItem;
 };
 
 export default class CartItemView extends React.Component<CartItemViewProps, CartItemViewState> {
@@ -29,7 +29,8 @@ export default class CartItemView extends React.Component<CartItemViewProps, Car
       value: props.defaultValue
     }
   }
-  onDelete(item) {
+  onDelete(item: CartItem) {
+    this.setState({ deleting: true });
     fetchMessageByDelete(API.UserCartItemDelete, {
       cart_item_id: item.id
     }).then((msg) => {
@@ -50,9 +51,16 @@ export default class CartItemView extends React.Component<CartItemViewProps, Car
       <Row type="flex" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
         <Col><Checkbox checked={!!this.props.checked} onChange={(e) => this.props.onCheckedChange(item, e.target.checked)} /></Col>
         <Col><CommodityView commodity={item.commodity} style={{ width: '314px' }} /></Col>
-        <Col>数量：<InputNumber min={1} max={999} value={this.state.count} onChange={(value) => this.setState({ count: value })} /></Col>
+        <Col>数量：<InputNumber min={1} max={999} disabled value={this.state.count} onChange={(value) => this.setState({ count: value })} /> (下单时可修改)</Col>
         <Col>小计：<span className="huidu-money">￥{item.commodity.prices.amount * this.state.count}</span></Col>
-        <Col><Button loading={this.state.deleting} type="link">删除</Button></Col>
+        <Col>
+          <Popconfirm
+            title="你确定删除这个购物车项吗？"
+            onConfirm={() => this.onDelete(item)}
+          >
+            <Button loading={this.state.deleting} type="link">删除</Button>
+          </Popconfirm>
+        </Col>
       </Row>
     )
   }

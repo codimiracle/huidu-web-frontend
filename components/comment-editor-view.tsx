@@ -10,11 +10,19 @@ import WrappedUserSigninDialog from './dialogs/user-signin-dialog';
 import { UserContext } from './hooks/with-user';
 
 export interface CommentEditorProps {
-  form: WrappedFormUtils,
-  contentId: string,
-  mention?: SocialUser,
-  replay?: boolean
-  rate?: boolean
+  form: WrappedFormUtils;
+  /**
+   * for Order evaluate
+   */
+  orderNumber?: string;
+  /**
+   * for content
+   */
+  onCommented?: () => void;
+  contentId: string;
+  mention?: SocialUser;
+  replay?: boolean;
+  rate?: boolean;
 };
 export interface CommentEditorState {
   loading: boolean;
@@ -30,17 +38,20 @@ class CommentEditor extends React.Component<CommentEditorProps, CommentEditorSta
     }
   }
   onPostComment() {
-    const { form, contentId, replay, mention } = this.props;
+    const { form, contentId, replay, mention, orderNumber } = this.props;
     let opstr = replay ? '回复' : '评论';
     form.validateFields((errors, values) => {
       if (!errors) {
+        let api = orderNumber ? API.ContentCommentCreate : API.UserOrderEvaluate;
         this.setState({ loading: true });
-        fetchMessageByPost(API.ContentCommentCreate, {
-          content_id: contentId,
+        fetchMessageByPost(api, {
+          orderNumber: orderNumber ? orderNumber : undefined,
+          content_id: orderNumber ? contentId : undefined,
           ...values
         }).then((msg) => {
           if (msg.code == 200) {
             message.success(`${opstr}成功！`);
+            this.props.onCommented && this.props.onCommented();
             form.resetFields();
           } else {
             message.error(msg.message);

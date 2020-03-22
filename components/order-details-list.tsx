@@ -1,7 +1,8 @@
+import { Icon, List } from 'antd';
 import React from 'react';
-import { List, Icon } from 'antd';
 import { OrderDetails } from '../types/order';
-import CommodityView from './commodity-view';
+import MoneyUtil from '../util/money-util';
+import CommodityMiniView from './commodity/commodity-mini-view';
 
 interface DetailsItemViewProps {
   details: OrderDetails
@@ -11,7 +12,7 @@ function DetailsItemView(props: DetailsItemViewProps) {
   const { details } = props;
   return (
     <>
-      <CommodityView commodity={details.commodity} />
+      <CommodityMiniView commodity={details.commodity} />
       <div>数量：{details.quantity}</div>
       <div className="huidu-money">{MoneyUtil.format(details.prices)}</div>
     </>

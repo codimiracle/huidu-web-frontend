@@ -1,13 +1,12 @@
-import { CartItem } from "../../types/cart";
+import { Button, Checkbox, Divider, List, message, Popconfirm } from "antd";
+import Link from "next/link";
 import React from "react";
-import { fetchDataByGet } from "../../util/network-util";
-import { ListJSON } from "../../types/api";
 import { API } from "../../configs/api-config";
-import { message, List, Checkbox, Button, Divider, Popconfirm } from "antd";
+import { ListJSON } from "../../types/api";
+import { CartItem } from "../../types/cart";
+import { fetchDataByGet } from "../../util/network-util";
 import InitializerView from "../ui/initializer-view";
 import CartItemView from "./cart-item-view";
-import WrappedPaymentDialog from "../dialogs/payment-dialog";
-import Link from "next/link";
 
 export interface CartListProps {
   onSelected?: (selectedKeys: [], selectedCartItems: CartItem[]) => void;

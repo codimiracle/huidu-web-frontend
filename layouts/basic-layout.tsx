@@ -104,7 +104,6 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
                             <Menu.Item><Link href="/user-central/bookshelf"><a>我的书架</a></Link></Menu.Item>
                             <Menu.Item><Link href="/user-central/orders"><a>我的订单</a></Link></Menu.Item>
                             <Menu.Item><Link href="/user/arrived"><a>读书打卡</a></Link></Menu.Item>
-                            <Menu.Item><Link href="/user-central/history"><a>阅读历史</a></Link></Menu.Item>
                             {
                               AuthorityUtil.checkAuthority(user, Authority.AuthorElectronicsBooksService) &&
                               AuthorityUtil.checkAuthority(user, Authority.AuthorAudioBooksService) &&

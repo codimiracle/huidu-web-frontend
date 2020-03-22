@@ -67,7 +67,7 @@ class CategoryPage extends React.Component<CategoryPageProps, CategoryPageState>
   }
   onTagSelected(tag: Tag) {
     this.setState({ selectedTag: tag }, () => {
-      this.fetchList();
+      this.fetchList(1, 10);
     })
   }
   private isTagChecked(tag: Tag): boolean {

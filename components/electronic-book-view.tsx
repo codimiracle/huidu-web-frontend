@@ -7,6 +7,7 @@ import { fetchMessageByPost } from '../util/network-util';
 import BookDescription from './book/book-description';
 import DirectLink from './direct-link';
 import ElectronicBookStatusView from './electronic-book-status-view';
+import BookCover from './book/book-cover';
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
@@ -52,7 +53,7 @@ export default class ElectronicBookView extends React.Component<ElectronicBookVi
     return (
       <div className="electronic-book">
         <div>
-          <img src={renderringBook.metadata.cover || EMPTY_IMAGE} />
+          <BookCover book={renderringBook} />
         </div>
         <div className="body">
           <div><strong><Link href="/bookshop/electronic-books/[book_id]" as={`/bookshop/electronic-books/${renderringBook.id}`}><a>{renderringBook.metadata.name}</a></Link></strong> <ElectronicBookStatusView status={renderringBook.status} /> <span className="author">{renderringBook.metadata.author}</span></div>
@@ -60,7 +61,6 @@ export default class ElectronicBookView extends React.Component<ElectronicBookVi
           <BookDescription book={renderringBook} size="small" style={{flex: 1}} />
           <div className="actions">
             <DirectLink href="/reader/[book_id]" as={`/reader/${renderringBook.id}`}><Button size="small">在线阅读</Button></DirectLink> <Button size="small" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
-
           </div>
         </div>
         <style jsx>{`

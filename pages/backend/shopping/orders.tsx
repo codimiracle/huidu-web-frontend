@@ -1,19 +1,17 @@
+import { Divider, Tag } from 'antd';
+import { ColumnProps, SorterResult, TableRowSelection } from 'antd/lib/table';
 import React from 'react';
-import { Tag, Alert, Input, Button, Icon, Divider } from 'antd';
-import DatetimeUtil from '../../../util/datetime-util';
-import EntityManager from '../../../components/backend/entity-manager';
-import { API } from '../../../configs/api-config';
-import { fetchDataByGet } from '../../../util/network-util';
-import { ListJSON } from '../../../types/api';
-import { Order, ORDER_TYPE_TEXTS, PAY_TYPE_TEXTS, ORDER_STATUS_COLORS, ORDER_STATUS_TEXTS, OrderStatus, OrderType } from '../../../types/order';
-import { TableRowSelection, SorterResult, ColumnProps } from 'antd/lib/table';
-import { User } from '../../../types/user';
-import HeaderBar from '../../../components/backend/header-bar';
 import BulkBar from '../../../components/backend/bulk-bar';
-import { SearchableColumn } from '../../../components/backend/entity-search';
 import EntityAction from '../../../components/backend/entity-action';
+import EntityManager from '../../../components/backend/entity-manager';
+import { SearchableColumn } from '../../../components/backend/entity-search';
+import HeaderBar from '../../../components/backend/header-bar';
 import WrappedLogisticsInfomationDialog from '../../../components/dialogs/logistics-infomation-dialog';
 import OrderDetailsDialog from '../../../components/dialogs/order-details-dialog';
+import { API } from '../../../configs/api-config';
+import { Order, OrderStatus, OrderType, ORDER_STATUS_COLORS, ORDER_STATUS_TEXTS, ORDER_TYPE_TEXTS, PAY_TYPE_TEXTS } from '../../../types/order';
+import { User } from '../../../types/user';
+import DatetimeUtil from '../../../util/datetime-util';
 
 function moneyFormat(m: number): string {
   let s = m + "";

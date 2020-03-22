@@ -38,7 +38,7 @@ export default class ExhibitionView<T> extends React.Component<ExhibitionViewPro
       selectedTag: props.category && props.category.tags && props.category.tags[0]
     }
   }
-  fetchList(page: number, limit: number) {
+  fetchList(page?: number, limit?: number) {
     const { category } = this.props;
     const { selectedTag } = this.state;
     this.setState({ loading: true });
@@ -63,7 +63,9 @@ export default class ExhibitionView<T> extends React.Component<ExhibitionViewPro
     this.fetchList(page, limit);
   }
   onTagChange(tag: Tag) {
-    this.setState({ selectedTag: tag });
+    this.setState({ selectedTag: tag }, () => {
+      this.fetchList(1, 10);
+    });
   }
   componentDidMount() {
     const { page, limit } = this.state;

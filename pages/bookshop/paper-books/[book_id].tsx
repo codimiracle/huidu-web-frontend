@@ -10,8 +10,7 @@ import { ElectronicBook } from '../../../types/electronic-book';
 import { PaperBook } from '../../../types/paper-book';
 import { fetchDataByGet } from '../../../util/network-util';
 import BookInfoView from '../../../components/book/paper-book/book-info-view';
-
-const { TabPane } = Tabs;
+import CartButton from '../../../components/cart/cart-button';
 
 export interface BookDetailsProps {
   book: PaperBook
@@ -104,6 +103,7 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
           </Tabs> */}
           {/* <h3>作者简介</h3>
           <p>{book.commodity.extra.authorIntroduction}</p> */}
+          <Divider type="horizontal" dashed />
           <h3>商品评价</h3>
           <CommentModularView evaluation rate content={book} />
           <style jsx>{`
@@ -113,6 +113,7 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
               }
             `}</style>
         </div>
+        <CartButton />
       </SectionView>
     )
   }
