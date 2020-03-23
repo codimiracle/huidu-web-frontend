@@ -6,6 +6,7 @@ import { API } from '../../configs/api-config';
 import Link from 'next/link';
 import { BookType, BookPreview, Book } from '../../types/book';
 import { ListJSON } from '../../types/api';
+import BookCover from '../../components/book/book-cover';
 
 const { TabPane } = Tabs;
 
@@ -36,7 +37,7 @@ export class SubscribeView extends React.Component<SubscribeViewProps, Subscribe
     return (
       <div className="subscribe-view">
         <div className="subscribe-book-view">
-          <img src={bookPreview.cover} />
+          <BookCover book={book} />
           <div className="body">
             <strong>{bookPreview.name}</strong>
             <div>{bookPreview.author}</div>

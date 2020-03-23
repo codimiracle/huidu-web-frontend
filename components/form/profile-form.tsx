@@ -28,6 +28,8 @@ export default class ProfileForm extends React.Component<ProfileFormProps, Profi
       chinaDivision: [],
       fetchingChinaDivision: false
     }
+    this.isUsernameValid = this.isUsernameValid.bind(this);
+    this.isNicknameValid = this.isNicknameValid.bind(this);
   }
   fetchChainDivision() {
     this.setState({ fetchingChinaDivision: true });
@@ -44,7 +46,20 @@ export default class ProfileForm extends React.Component<ProfileFormProps, Profi
     fetchMessageByGet(API.SystemUsernameExists, {
       username: value
     }).then((msg) => {
-      if (msg.code == 404) {
+      if (msg.code == 200) {
+        callback();
+      } else {
+        callback(new Error(msg.message));
+      }
+    }).catch((err) => {
+      callback(err);
+    });
+  }
+  isNicknameValid(rule, value, callback) {
+    fetchMessageByGet(API.SystemNicknameExists, {
+      nickname: value
+    }).then((msg) => {
+      if (msg.code == 200) {
         callback();
       } else {
         callback(new Error(msg.message));
@@ -139,7 +154,10 @@ export default class ProfileForm extends React.Component<ProfileFormProps, Profi
               {
                 form.getFieldDecorator('nickname', {
                   initialValue: userdata && userdata.nickname || undefined,
-                  rules: [{ required: true, message: '昵称不能为空' }]
+                  rules: [
+                    { required: true, message: '昵称不能为空' },
+                    { validator: this.isNicknameValid, message: '该昵称不可用或已被占用！' }
+                  ]
                 })(<Input disabled={disabled} placeholder="请输入昵称" />)
               }
             </FormItem>

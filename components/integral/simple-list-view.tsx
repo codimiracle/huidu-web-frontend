@@ -7,6 +7,7 @@ import RetryView from '../retry-view';
 
 export interface SimpleListViewProps<T> {
   api: API;
+  getReqeustArguments?: () => any;
   filter?: any;
   sorter?: any;
   single?: boolean;
@@ -36,7 +37,8 @@ export default class SimpleListView<T> extends React.Component<SimpleListViewPro
       filter: this.props.filter || null,
       sorter: this.props.sorter || null,
       page: page || this.state.page,
-      limit: this.state.limit
+      limit: this.state.limit,
+      ...(this.props.getReqeustArguments && this.props.getReqeustArguments())
     }).then((data) => {
       this.setState((state) => ({
         list: (this.props.single || state.page == 1) ? data.list : state.list.concat(data.list),

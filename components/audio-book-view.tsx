@@ -9,6 +9,7 @@ import { API } from '../configs/api-config';
 import AudioBookStatusView from './audio-book-status-view';
 import BookHeader from './book/book-header';
 import BookDescription from './book/book-description';
+import BookCover from './book/book-cover';
 
 const EMPTY_IMAGE = '/assets/empty-audio.png';
 
@@ -65,11 +66,11 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
       <RetryView visible={!loading && retry} onClick={() => this.fetchBook()}>
         <div className="audio-book">
           <div>
-            <img src={book.cover || book.metadata.cover || EMPTY_IMAGE} />
+            <BookCover book={book} />
           </div>
           <div className="body">
             <BookHeader book={book} status author />
-            <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
+            <div><Rate defaultValue={book.rate} disabled style={{ fontSize: '18px' }} /></div>
             <BookDescription book={book} size="small" style={{ flex: 1 }} />
             <div className="actions">
               <DirectLink href={`/player/[book_id]`} as={`/player/${book.id}`}><Button size="small">在线听书</Button></DirectLink> <Button size="small" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>

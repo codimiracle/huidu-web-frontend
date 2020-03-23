@@ -18,6 +18,7 @@ export const fetchRaw = async function <T>(api: API, init?: RequestInit): Promis
   }
   if (response.status != 200) {
     console.error(`Api invoking failed: ${JSON.stringify(api)} \n\t calling with data: ${JSON.stringify(init)}`);
+    console.log("server response: ", response);
     throw new Error('调用失败！');
   }
   let result = await response.json();

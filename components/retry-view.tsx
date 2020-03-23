@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { Button, Icon } from 'antd';
 
 export interface RetryViewProps {
-  visible: boolean,
-  onClick: () => void
+  visible: boolean;
+  onClick: () => void;
+  style?: CSSProperties;
+  retryButtonStyle?: CSSProperties;
 };
 export interface RetryViewState { };
 
@@ -11,12 +13,12 @@ export default class RetryView extends React.Component<RetryViewProps, RetryView
   render() {
     const { children, visible, onClick } = this.props;
     return (
-      <div className={`retry-view ${visible ? 'retrying' : ''}`}>
+      <div className={`retry-view ${visible ? 'retrying' : ''}`} style={this.props.style}>
         <div className="wrapper">
           {children}
         </div>
         <div className="retry-layer">
-          <div className="retry-action">
+          <div className="retry-action" style={this.props.retryButtonStyle}>
             <Button shape="circle" size="large" style={{ display: 'block', margin: '0 auto' }} onClick={() => onClick()}>
               <Icon type="redo" />
             </Button>

@@ -10,9 +10,11 @@ import { EntityJSON } from '../../../types/api';
 import { History } from '../../../types/history';
 import ElectronicBookCatalogsView from '../../../components/page/reader/electronic-book-catalogs-view';
 import ReaderNotesView from '../../../components/page/reader/reader-notes-view';
+import { Button } from 'antd';
 
 export interface ReaderPageProps { };
 export interface ReaderPageState {
+  allLoaded: boolean;
   book: ElectronicBook;
   bookNotes: BookNotes;
   episodes: Array<Episode>;
@@ -47,6 +49,13 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
       book: null,
       bookNotes: null,
       episodes: [],
+      allLoaded: false,
+    }
+  }
+  fetchNextEpisode() {
+    let lastEpisode = this.state.episodes.length > 0 ? this.state.episodes[this.state.episodes.length - 1] : null;
+    if (lastEpisode) {
+
     }
   }
   render() {
@@ -57,7 +66,7 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
           this.setState((state) => ({
             book: data.book,
             bookNotes: data.bookNotes,
-            episodes: data.episode ? state.episodes.concat(data.episode) : (data.history.episode ? state.episodes.concat(data.history.episode) : state.episodes)
+            episodes: data.episode ? [data.episode] : (data.history.episode ? [data.history.episode] : state.episodes)
           }));
         }}
       >
@@ -80,6 +89,7 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
             />
           )}
         />
+        <div className="huidu-actions-center"><Button type="link" style={{ margin: '1em 0 2em 0' }}>下一章</Button></div>
       </InitializerView>
     )
   }

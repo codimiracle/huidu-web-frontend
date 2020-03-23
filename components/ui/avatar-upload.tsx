@@ -57,7 +57,7 @@ export default class AvatarUpload extends React.Component<AvatarUploadProps> {
     const uploadButton = (
       <div>
         <Icon type={this.state.loading ? 'loading' : 'plus'} />
-        <div className="ant-upload-text">Upload</div>
+        <div className="ant-upload-text">上传头像</div>
       </div>
     );
     const { image } = this.state;

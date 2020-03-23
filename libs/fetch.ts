@@ -1,6 +1,5 @@
 import fetch from 'isomorphic-unfetch';
-import { APIDefinitionSet, APIDefinitionData, API } from '../configs/api-config';
-import { useEffect } from 'react';
+import { API, APIDefinitionData, APIDefinitionSet } from '../configs/api-config';
 import AuthenticationUtil from '../util/authentication-util';
 
 interface APIDefinition {
@@ -81,7 +80,7 @@ export default async function (api: API, init?: RequestInit): Promise<Response> 
     data = JSON.parse(body.toString());
   }
   // check api calling method
-  if (apiDefinition.method != (init && init.method || '').toLowerCase()) {
+  if (apiDefinition.method != (init && init.method || 'get').toLowerCase()) {
     console.warn(`API calling method [use ${init && init.method} but ${apiDefinition.method}] doesn't match API definition.`);
   }
   // for simple query or url includes placeholder '@'

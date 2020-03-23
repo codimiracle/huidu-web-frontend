@@ -70,9 +70,7 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
         <div className="player">
           <Affix offsetTop={32} style={{ position: 'absolute', right: 0 }}>
             {
-              audioEpisode ?
-                <AudioPlayerView src={audioEpisode.streamUrl} />
-                : <span>无音频源</span>
+              <AudioPlayerView src={audioEpisode.streamUrl} />
             }
           </Affix>
         </div>

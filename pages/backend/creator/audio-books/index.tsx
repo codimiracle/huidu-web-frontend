@@ -5,6 +5,7 @@ import HeaderBar from '../../../../components/backend/header-bar';
 import PaginationList from '../../../../components/pagination-list';
 import { API } from '../../../../configs/api-config';
 import { AudioBook } from '../../../../types/audio-book';
+import BookCover from '../../../../components/book/book-cover';
 
 const EMPTY_IMAGE = "/assets/empty.png";
 
@@ -17,7 +18,7 @@ function MyBookView(props: MyBookViewProps) {
   const { book } = props;
   return (
     <div className="my-book-view">
-      <img src={book.metadata.cover || EMPTY_IMAGE} />
+      <BookCover book={book} />
       <div>
         <strong><Link href={`./audio-books/[book_id]`} as={`./audio-books/${book.id}`}><a>{book.metadata.name}</a></Link></strong>
       </div>

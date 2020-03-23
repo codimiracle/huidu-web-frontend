@@ -7,6 +7,7 @@ import { Cell } from '../../types/shelf';
 import { fetchDataByGet } from '../../util/network-util';
 import { CellListJSON } from '../api/user/shelf/cells';
 import { ListJSON } from '../../types/api';
+import BookCover from '../../components/book/book-cover';
 
 export interface CellViewProps {
   cell: Cell
@@ -25,7 +26,7 @@ export class CellView extends React.Component<CellViewProps, CellViewState> {
     let asPath = `/${baseUrl}/${cell.book.id}${episode ? `?episode_id=${episode.id}` : ''}`;
     return (
       <div className="cell-view">
-        <img src={bookPrevew.cover} />
+        <BookCover book={cell.book} />
         <div className="body">
           <strong><Link href={href} as={asPath}><a>{bookPrevew.name}</a></Link></strong>
           <div>{cell.progress ? `${cell.progress} %` : '未阅读'} </div>

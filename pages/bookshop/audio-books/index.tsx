@@ -56,9 +56,7 @@ export default class BookShop extends React.Component<BookShopProps, BookShopSta
         }}
         recommendListProps={{
           api: API.RecommendationByBookType,
-          filter: {
-            type: ['audio-book']
-          },
+          getReqeustArguments: () => ({type: 'audio-book'}),
           single: true,
           renderItem: (item, index) => <List.Item><BookView book={item as Book} /></List.Item>
         }}

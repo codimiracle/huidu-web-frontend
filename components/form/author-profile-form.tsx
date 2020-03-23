@@ -40,7 +40,7 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
     fetchMessageByGet(API.SystemNicknameExists, {
       nickname: value
     }).then((msg) => {
-      if (msg.code == 404) {
+      if (msg.code == 200) {
         callback();
       } else {
         callback(new Error(msg.message));
@@ -53,7 +53,7 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
     fetchMessageByGet(API.SystemUsernameExists, {
       username: value
     }).then((msg) => {
-      if (msg.code == 404) {
+      if (msg.code == 200) {
         callback();
       } else {
         callback(new Error(msg.message));
@@ -145,7 +145,7 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
                   initialValue: userdata && userdata.nickname || undefined,
                   rules: [
                     { required: true, message: '笔名不能为空' },
-                    { validator: this.isNicknameValid, message: '该昵称不可用或已被占用！' }
+                    { validator: this.isNicknameValid, message: '该笔名不可用或已被占用！' }
                   ]
                 })(<Input disabled={disabled} placeholder="笔名" />)
               }

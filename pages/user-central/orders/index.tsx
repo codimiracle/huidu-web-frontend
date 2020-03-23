@@ -43,10 +43,7 @@ class UserOrderManager extends React.Component<UserOrderManagerProps, UserOrderM
   }
   private getCurrentKey() {
     const { router } = this.props;
-    let path = router.pathname;
-    let rightIndex = path.indexOf('/', '/user-central/orders'.length + 1);
-    let currentKey = path.substring('/user-central/orders'.length + 1, rightIndex == -1 ? path.length : rightIndex)
-    return currentKey === '' ? 'all' : currentKey;
+    return router.query.status as string || 'all';
   }
   fetchList(page?: number, limit?: number, status?: string) {
     this.setState({ loading: true });
@@ -55,8 +52,8 @@ class UserOrderManager extends React.Component<UserOrderManagerProps, UserOrderM
         status: status ? [status] : undefined,
       },
       sorter: null,
-      page: 1,
-      limit: 10
+      page: page || this.state.page,
+      limit: limit || this.state.limit
     }).then((data) => {
       this.setState((state) => ({
         page: data.page,

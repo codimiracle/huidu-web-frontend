@@ -197,7 +197,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
             border-top: 1px solid lightgrey;
           }
           .page-content {
-            padding: 8px 0;
+            padding: 1em 0;
             word-break: break-all;
           }
           .page-view {

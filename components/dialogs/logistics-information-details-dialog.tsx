@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, message } from 'antd';
+import { Modal, message, Spin } from 'antd';
 import LogisticsInformationView from '../logistics-information-view';
 import { LogisticsInformation } from '../../types/logistics-information';
 import RetryView from '../retry-view';
@@ -34,23 +34,44 @@ export default class LogisticsInformationDetailsDialog extends React.Component<L
     }).then((data) => {
       this.setState({ logisticsInformation: data.entity, fetched: true });
     }).catch((err) => {
-      message.error(`获取物流信息失败：${err.message}`)
+      if (err.message == '500: 没有找到快递信息！') {
+        this.setState({ fetched: true });
+      } else {
+        message.error(`获取物流信息失败：${err.message}`)
+      }
     }).finally(() => {
       this.setState({ fetching: false });
     });
   }
+  componentDidMount() {
+    this.fetchLogisticsInformation();
+  }
   render() {
     return (
       <Modal
+        title="物流信息"
         visible={this.props.visible}
-        cancelText={null}
-        onCancel={() => this.props.onCancel()}
+        onCancel={() => this.props.onCancel() }
+        footer={null}
       >
         <RetryView
-          visible={!this.state.fetched}
+          visible={!this.state.fetched && !this.state.fetching}
           onClick={() => this.fetchLogisticsInformation()}
+          style={{ minHeight: '60px' }}
+          retryButtonStyle={{ margin: '0 auto' }}
         >
-          <LogisticsInformationView logisticsInformation={this.state.logisticsInformation} />
+          {
+            this.state.fetched && this.state.logisticsInformation &&
+            (<LogisticsInformationView logisticsInformation={this.state.logisticsInformation} />)
+          }
+          {
+            this.state.fetching &&
+            (<Spin spinning={this.state.fetching} />)
+          }
+          {
+            this.state.fetched && !this.state.logisticsInformation &&
+            (<span>暂无物流信息 <a onClick={() => this.fetchLogisticsInformation()}>刷新</a></span>)
+          }
         </RetryView>
       </Modal>
     )

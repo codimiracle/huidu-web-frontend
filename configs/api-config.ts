@@ -66,6 +66,7 @@ export enum API {
   AudioBookLastReadEpisode = "audioBook.episode.lastRead",
   AudioBookEpisodeEntity = "audioBook.episode.entity",
   AudioBookEntity = "audioBook.entity",
+  AudioBookLastUpdate = "audioBook.lastUpdate",
   AudioBookCollection = "audioBook.collection",
   AudioBookComments = "audioBook.comments",
   AudioBookPublishYears = "audioBook.publishYears",
@@ -86,7 +87,6 @@ export enum API {
   UserAddressDefault = "user.address.default",
   UserAddressMakeDefault = "user.address.makeDefault",
   UserOrderPay = "user.order.pay",
-  AudioBookLastUpdate = "audioBook.lastUpdate",
   UserShelfJoin = "user.shelf.join",
   UserProfile = "user.profile",
   UserAddressCollection = "user.address.collection",
@@ -269,7 +269,6 @@ export enum API {
   RecommendationByUser = "recommendation.byUser",
   RecommendationByCategory = "recommendation.byCategory",
   RecommendationByTag = "recommendation.byTag",
-  RecommendByBookType = "RecommendByBookType",
   CommunityReviewHotCollection = "community.review.hotCollection",
   CommunityTopicHotCollection = "community.topic.hotCollection",
   BackendCollectionStatistics = "backend.collection.statistics",
@@ -978,6 +977,7 @@ export const APIDefinitionData: APIDefinitionSet = {
       collection: `${testOrigin}/api/electronic-books/@{book_id}/episodes?page=@{page}&limit=@{limit}`,
       entity: `${testOrigin}/api/electronic-books/@{book_id}/episodes/@{episode_id}`,
     },
+    hotCollection: `${testOrigin}/api/electronic-books/hots?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
     collection: `${testOrigin}/api/electronic-books?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
     publishYears: `${testOrigin}/api/electronic-books/publish-years`
   },
@@ -985,12 +985,15 @@ export const APIDefinitionData: APIDefinitionSet = {
     search: `${testOrigin}/api/audio-books/search?q=@{keyword}`,
     entity: `${testOrigin}/api/audio-books/@{book_id}`,
     catalogs: `${testOrigin}/api/audio-books/@{book_id}/catalogs`,
-    lastUpdate: `${testOrigin}/api/audio-books/@{book_id}/last-update`,
+    lastUpdate: `${testOrigin}/api/audio-books/@{book_id}/last-updated-episode`,
     comments: `${testOrigin}/api/audio-books/@{book_id}/comments?page=@{page}&limit=@{limit}`,
     episode: {
       lastRead: `${testOrigin}/api/audio-books/@{book_id}/episodes/last-read`,
       collection: `${testOrigin}/api/audio-books/@{book_id}/episodes?page=@{page}&limit=@{limit}`,
       entity: `${testOrigin}/api/audio-books/@{book_id}/episodes/@{episode_id}`,
+    },
+    hotCollection: {
+      url: `${testOrigin}/api/audio-books/hots?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
     },
     collection: {
       url: `${testOrigin}/api/audio-books?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
@@ -1042,8 +1045,6 @@ export const APIDefinitionData: APIDefinitionSet = {
       mostread: `${testOrigin}/api/categories/@{category_id}/items/most-read`,
       recommends: `${testOrigin}/api/categories/@{category_id}/items/recommends`,
     },
-    bookCollection: `${origin}/api/categories/@{category_id}/books?page=@{page}&limit=@{limit}&filter=@{filter}`,
-    hotBookCollection: `${origin}/api/categories/@{category_id}/hot-books?page=@{page}&limit=@{limit}&filter=@{filter}`,
   },
   dynamic: {
     collection: `${origin}/api/dynamics?limit=@{limit}&page=@{page}`
@@ -1312,9 +1313,8 @@ export const APIDefinitionData: APIDefinitionSet = {
         }
       },
       logisticsInformation: {
-        url: `${testOrigin}/api/user/orders/@{order_number}/logisticsInformation`,
-        method: 'post',
-        body: {}
+        url: `${testOrigin}/api/user/orders/@{order_number}/logistics-information`,
+        method: 'get'
       },
       cancel: {
         url: `${testOrigin}/api/user/orders/@{order_number}/cancel`,

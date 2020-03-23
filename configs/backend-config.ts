@@ -86,7 +86,13 @@ const Entries: EntryInfoMap = {
     icon: 'dashboard',
     title: '后台面板',
     key: 'dashboard',
-    link: '/dashboard'
+    link: '/'
+  },
+  'author-dashboard': {
+    icon: 'dashboard',
+    title: '作者面板',
+    key: 'author-dashboard',
+    link: '/creator/dashboard'
   },
   'comprehensive-page': {
     icon: 'home',
@@ -196,6 +202,7 @@ const Entries: EntryInfoMap = {
 
 export enum Authority {
   FrontendServices = "frontend-services",
+  AuthorDashboard = 'author-dashboard',
   AuthorDataServices = "author-data-services",
   AuthorElectronicsBooksService = "author-electronic-books-service",
   AuthorAudioBooksService = "author-audio-books-service",

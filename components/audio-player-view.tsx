@@ -1,5 +1,5 @@
 import React, { RefObject, CSSProperties } from 'react';
-import { Icon, Progress, Slider, Button } from 'antd';
+import { Icon, Progress, Slider, Button, message } from 'antd';
 
 export enum PlayerStatus {
   playing,
@@ -36,8 +36,12 @@ export default class AudioPlayerView extends React.Component<AudioPlayerViewProp
     this.onPaused = this.onPaused.bind(this);
   }
   play() {
-    this.audioElementRef.current.play();
-    this.setState({ status: PlayerStatus.playing });
+    if (this.props.src) {
+      this.audioElementRef.current.play();
+      this.setState({ status: PlayerStatus.playing });
+    } else {
+      message.error('音频源无效');
+    }
   }
   pause() {
     this.audioElementRef.current.pause();

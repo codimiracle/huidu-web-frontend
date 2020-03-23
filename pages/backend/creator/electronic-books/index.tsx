@@ -1,12 +1,11 @@
-import { List, Button } from 'antd';
+import { Button, List } from 'antd';
 import Link from 'next/link';
 import React from 'react';
+import HeaderBar from '../../../../components/backend/header-bar';
 import PaginationList from '../../../../components/pagination-list';
 import { API } from '../../../../configs/api-config';
-import { ListJSON } from '../../../../types/api';
 import { ElectronicBook } from '../../../../types/electronic-book';
-import { fetchDataByGet } from '../../../../util/network-util';
-import HeaderBar from '../../../../components/backend/header-bar';
+import BookCover from '../../../../components/book/book-cover';
 
 const EMPTY_IMAGE = "/assets/empty.png";
 
@@ -19,7 +18,7 @@ function MyBookView(props: MyBookViewProps) {
   const { book } = props;
   return (
     <div className="my-book-view">
-      <img src={book.metadata.cover || EMPTY_IMAGE} />
+      <BookCover book={book} />
       <div>
         <strong><Link href={`./electronic-books/[book_id]`} as={`./electronic-books/${book.id}`}><a>{book.metadata.name}</a></Link></strong>
       </div>

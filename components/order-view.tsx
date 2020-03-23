@@ -73,7 +73,7 @@ class OrderActionView extends React.Component<OrderActionViewProps, OrderActionV
     }
   }
   onSecondaryClick() {
-    if ([OrderStatus.AwaitingPayment, OrderStatus.AwaitingShipment, OrderStatus.AwaitingDelivery].includes(this.props.status)) {
+    if ([OrderStatus.AwaitingPayment, OrderStatus.AwaitingShipment].includes(this.props.status)) {
       // 取消订单
       this.setState({ seconddoing: true });
       fetchMessageByPost(API.UserOrderCancel, {
@@ -90,7 +90,7 @@ class OrderActionView extends React.Component<OrderActionViewProps, OrderActionV
         this.setState({ seconddoing: false });
       });
     }
-    if (OrderStatus.AwaitingEvaluation == this.props.status) {
+    if (OrderStatus.AwaitingDelivery == this.props.status) {
       // 收货
       this.setState({ seconddoing: true });
       fetchMessageByPost(API.UserOrderReceived, {
@@ -127,7 +127,10 @@ class OrderActionView extends React.Component<OrderActionViewProps, OrderActionV
         <WrappedPaymentDialog nolink onPaied={(order) => {
           this.props.onOrderRefresh(order);
         }} onCancel={() => this.setState({ paymentDialogVisible: false })} visible={this.state.paymentDialogVisible} order={this.props.order} />
-        <LogisticsInformationDetailsDialog orderNumber={this.props.orderNumber} onCancel={() => this.setState({ logisticsInfoVisible: false })} visible={this.state.logisticsInfoVisible} />
+        {
+          this.props.status == OrderStatus.AwaitingDelivery &&
+          <LogisticsInformationDetailsDialog orderNumber={this.props.orderNumber} onCancel={() => this.setState({ logisticsInfoVisible: false })} visible={this.state.logisticsInfoVisible} />
+        }
         <EvaluationCommentDialog onEvaluated={() => {
           let newOrder = { ...this.props.order };
           newOrder.status = OrderStatus.Completed;
