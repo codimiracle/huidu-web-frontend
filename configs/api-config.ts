@@ -30,7 +30,7 @@ export interface APIDefinition {
 var origin: string = browserWindow.location.origin;
 // var origin = `http://${address}:3000`;
 
-var testOrigin = `http://192.168.43.178:4000`;
+var testOrigin = `http://${browserWindow.location.hostname}:4000`;
 
 export interface APIDefinitionSet {
   [x: string]: any | APIDefinition | APIDefinitionSet;
