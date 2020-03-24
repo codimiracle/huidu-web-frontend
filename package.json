@@ -26,6 +26,7 @@
     "react-responsive": "^8.0.1",
     "react-scrollbar": "^0.5.6",
     "react-sticky": "^6.0.3",
+    "react-tagcloud": "^2.0.0",
     "swr": "^0.1.18",
     "xpath-dom": "^0.2.2"
   },
