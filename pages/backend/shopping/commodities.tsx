@@ -10,6 +10,8 @@ import CommodityForm from '../../../components/backend/form/commodity-form';
 import HeaderBar from '../../../components/backend/header-bar';
 import { SearchableColumn } from '../../../components/backend/entity-search';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
+import { Money } from '../../../types/order';
+import MoneyUtil from '../../../util/money-util';
 
 export interface CommodityManagerProps {
   list: Array<Commodity<any>>,
@@ -90,9 +92,9 @@ export default class CommodityManager extends React.Component<CommodityManagerPr
         key: 'prices',
         dataIndex: 'prices',
         fixed: 'right',
-        sorter: (a, b) => a.prices - b.prices,
+        sorter: (a, b) => a.prices.amount - b.prices.amount,
         sortOrder: sorter && sorter.columnKey === 'prices' ? sorter.order : false,
-        render: (prices: number) => <span style={{ color: 'red' }}>￥{prices}</span>
+        render: (prices) => <span className="huidu-money">{MoneyUtil.format(prices)}</span>
       },
     ]
   }
@@ -139,7 +141,7 @@ export default class CommodityManager extends React.Component<CommodityManagerPr
               }
             },
             delete: API.BackendCommodityDelete,
-            getDeleteRequestData: (entity) => ({commodity_id: entity.id})
+            getDeleteRequestData: (entity) => ({ commodity_id: entity.id })
           }}
           scroll={{ x: 1200 }}
           columns={this.getColumns}

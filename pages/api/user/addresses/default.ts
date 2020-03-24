@@ -18,7 +18,8 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         receiver: {
           name: '欧阳少',
           phone: '18533333333'
-        }
+        },
+        defaulted: false
       }
     }
     let json: APIResponse<AddressJSON> = {

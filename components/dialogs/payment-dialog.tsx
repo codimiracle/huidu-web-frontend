@@ -14,7 +14,7 @@ const { TabPane } = Tabs;
 
 export interface PaymentDialogProps {
   nolink?: boolean;
-  onPaied: (order: Order) => void;
+  onPaied?: (order: Order) => void;
   visible: boolean;
   onCancel?: () => void;
   form: WrappedFormUtils<any>;

@@ -25,7 +25,8 @@ export const getMockOrder = (): Order => {
       receiver: {
         name: '欧阳少',
         phone: '18533333333'
-      }
+      },
+      defaulted: false
     },
     detailsList: new Array(Math.trunc(Math.random() * 10)).fill(0).map(() => getMockOrderDetails()),
     status: status[Math.trunc(Math.random() * status.length) % status.length],

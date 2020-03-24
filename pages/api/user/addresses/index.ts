@@ -34,7 +34,8 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         receiver: {
           name: '3432423',
           phone: '1221'
-        }
+        },
+        defaulted: false
       })
     }
 
