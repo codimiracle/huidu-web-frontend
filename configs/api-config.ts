@@ -1,4 +1,5 @@
 import { ElectronicBookStatus } from "../types/electronic-book";
+import { FRONTEND_HOSTNAME, BACKEND_HOSTNAME } from './host-config';
 
 let browserWindow = null;
 if (typeof window == 'object') {
@@ -7,15 +8,23 @@ if (typeof window == 'object') {
   browserWindow = {
     location: {
       protocol: 'http',
-      hostname: 'localhost',
+      hostname: FRONTEND_HOSTNAME,
       port: '3000'
     }
   }
 }
+
 // For IE
 if (!browserWindow.location.origin) {
   browserWindow.location.origin = browserWindow.location.protocol + "://" + browserWindow.location.hostname + (browserWindow.location.port ? ':' + browserWindow.location.port : '');
 }
+
+var origin: string = browserWindow.location.origin;
+var testOrigin = `http://${browserWindow.location.hostname}:4000`;
+if (BACKEND_HOSTNAME) {
+  testOrigin = `http://${BACKEND_HOSTNAME}:4000`;
+}
+
 
 export interface APIDefinition {
   url: string,
@@ -23,14 +32,6 @@ export interface APIDefinition {
   query: any,
   body: any,
 }
-
-// const address = '192.168.1.150';
-// const address = '192.168.43.195';
-
-var origin: string = browserWindow.location.origin;
-// var origin = `http://${address}:3000`;
-
-var testOrigin = `http://${browserWindow.location.hostname}:4000`;
 
 export interface APIDefinitionSet {
   [x: string]: any | APIDefinition | APIDefinitionSet;
@@ -939,8 +940,8 @@ export const APIDefinitionData: APIDefinitionSet = {
       }
     },
     topic: {
-      collection:  `${testOrigin}/api/community/topics?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
-      hotCollection:  `${testOrigin}/api/community/topics/hots?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+      collection: `${testOrigin}/api/community/topics?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+      hotCollection: `${testOrigin}/api/community/topics/hots?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
     },
     review: {
       collection: `${testOrigin}/api/community/reviews?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
