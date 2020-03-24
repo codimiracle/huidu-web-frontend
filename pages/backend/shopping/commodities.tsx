@@ -1,17 +1,15 @@
+import { Rate, Tag } from 'antd';
+import { WrappedFormUtils } from 'antd/lib/form/Form';
+import { ColumnProps, SorterResult } from 'antd/lib/table';
 import React from 'react';
-import { Commodity, COMMODITY_STATUS_TEXTS, COMMODITY_STATUS_COLORS, COMMODITY_TYPE_TEXTS, CommodityType, CommodityStatus } from '../../../types/commodity';
-import { API } from '../../../configs/api-config';
 import EntityManager from '../../../components/backend/entity-manager';
-import { SorterResult, ColumnProps } from 'antd/lib/table';
-import { Tag, Rate } from 'antd';
-import { ListJSON } from '../../../types/api';
-import { fetchDataByGet } from '../../../util/network-util';
+import { SearchableColumn } from '../../../components/backend/entity-search';
 import CommodityForm from '../../../components/backend/form/commodity-form';
 import HeaderBar from '../../../components/backend/header-bar';
-import { SearchableColumn } from '../../../components/backend/entity-search';
-import { WrappedFormUtils } from 'antd/lib/form/Form';
-import { Money } from '../../../types/order';
+import { API } from '../../../configs/api-config';
+import { Commodity, CommodityStatus, CommodityType, COMMODITY_STATUS_COLORS, COMMODITY_STATUS_TEXTS, COMMODITY_TYPE_TEXTS } from '../../../types/commodity';
 import MoneyUtil from '../../../util/money-util';
+import Cover from '../../../components/base/cover';
 
 export interface CommodityManagerProps {
   list: Array<Commodity<any>>,
@@ -35,7 +33,7 @@ export default class CommodityManager extends React.Component<CommodityManagerPr
         fixed: 'left',
         width: 130,
         dataIndex: 'picture',
-        render: (picture: string) => <img src={picture} style={{ width: '7em', height: '9.4em' }} />
+        render: (picture: string) => <Cover src={picture} />
       },
       {
         title: '商品名称',
