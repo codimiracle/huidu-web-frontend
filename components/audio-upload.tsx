@@ -5,6 +5,7 @@ import { API } from '../configs/api-config';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
 import UploadUtil from '../util/upload-util';
+import ApiUtil from '../util/api-util';
 
 export interface AudioUploadProps {
   value?: string,
@@ -57,7 +58,7 @@ export default class AudioUpload extends React.Component<AudioUploadProps, Audio
         <Upload
           name="file"
           accept=".mp3"
-          action={API.Upload}
+          action={ApiUtil.findApiDefinition(API.Upload).url}
           onChange={onChange}
           beforeUpload={beforeUpload}
           showUploadList={false}

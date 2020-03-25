@@ -2,6 +2,7 @@ import { Upload, Icon, message } from 'antd';
 import React from 'react';
 import { API } from '../../configs/api-config';
 import UploadUtil from '../../util/upload-util';
+import ApiUtil from '../../util/api-util';
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -69,7 +70,7 @@ export default class AvatarUpload extends React.Component<AvatarUploadProps> {
         className="avatar-uploader"
         showUploadList={false}
         accept=".jpg,.png"
-        action={API.Upload}
+        action={ApiUtil.findApiDefinition(API.Upload).url}
         disabled={this.props.disabled}
         beforeUpload={beforeUpload}
         onChange={this.handleChange}

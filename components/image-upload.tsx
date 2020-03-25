@@ -4,6 +4,7 @@ import { UploadFile } from "antd/lib/upload/interface";
 import React from "react";
 import { API } from "../configs/api-config";
 import UploadUtil from "../util/upload-util";
+import ApiUtil from "../util/api-util";
 
 export interface ImageUploadProps {
   width?: number | string,
@@ -70,7 +71,7 @@ export class ImageUpload extends React.Component<ImageUploadProps, ImageUploadSt
           accept=".png,.jpg"
           listType="picture-card"
           beforeUpload={this.beforeUpload}
-          action={API.Upload}
+          action={ApiUtil.findApiDefinition(API.Upload).url}
           onChange={(info) => this.onChange(info)}
           showUploadList={false}
         >

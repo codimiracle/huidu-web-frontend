@@ -11,7 +11,6 @@ export default class DommarkUtil {
   static getXPath(node: Node, relativeRoot: Node): string {
     let path: string = xpath.getUniqueXPath(node, relativeRoot);
     // for #text node
-    debugger;
     if (node.nodeName == '#text') {
       let markedIndex = null;
       let allTextNodes = xpath.findAll(path.replace('#text[1]', 'text()'), relativeRoot);
