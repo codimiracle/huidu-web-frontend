@@ -1,6 +1,8 @@
 import React from 'react';
 import { Category } from '../types/category';
 import Link from 'next/link';
+import UploadUtil from '../util/upload-util';
+import { API } from '../configs/api-config';
 
 export interface CategoryViewProps {
   album: boolean
@@ -15,7 +17,7 @@ export default class CategoryView extends React.Component<CategoryViewProps, Cat
       <div className="album">
         <Link href={`/categories/${category.id}`}>
           <a>
-            {album && <img width="100%" src={category.extra.url} />}
+            {album && <img width="100%" src={UploadUtil.absoluteUrl(API.UploadSource, category.extra.url)} />}
             <strong>{category.name}</strong>
           </a>
         </Link>

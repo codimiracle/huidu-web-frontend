@@ -1,5 +1,7 @@
 import { Book, BookPreview } from "../../types/book";
 import { useState, CSSProperties } from "react";
+import UploadUtil from "../../util/upload-util";
+import { API } from "../../configs/api-config";
 
 export interface BookCoverProps {
   book: Book;
@@ -20,7 +22,7 @@ export default function BookCover(props: BookCoverProps) {
     width = '192px';
     height = '264px';
   }
-  let realCover = error ? '/assets/empty.png' : bookPreview.cover;
+  let realCover = error ? '/assets/empty.png' : UploadUtil.absoluteUrl(API.CoverSource, bookPreview.cover);
   return (
     <>
       <img src={realCover} onError={() => setError(true)} style={props.style}/>

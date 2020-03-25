@@ -1,33 +1,7 @@
 import fetch from 'isomorphic-unfetch';
-import { API, APIDefinitionData, APIDefinitionSet } from '../configs/api-config';
 import AuthenticationUtil from '../util/authentication-util';
-
-interface APIDefinition {
-  url: string,
-  method?: "get" | "post" | "delete" | "put",
-  query?: any,
-  body?: any
-}
-
-export function retriveApiDefinition(object: APIDefinitionSet, api: API): (null | APIDefinition) {
-  if (!api) {
-    throw new Error(`Unknown api invoking for \`${api}\``);
-  }
-  let paths = api.split(/\./);
-  let index = 0;
-  let result: any = object;
-  while (index < paths.length && result) {
-    result = result[paths[index]];
-    index++;
-  }
-  let resultType = typeof result;
-  if (resultType === 'string') {
-    return {
-      url: result
-    }
-  }
-  return result === undefined ? null : result;
-}
+import { API, APIDefinition } from '../configs/api-config';
+import ApiUtil from '../util/api-util';
 
 export function queryPlaceholderReplacer(apiDefinition: APIDefinition, data: any) {
   let url = apiDefinition.url;
@@ -68,7 +42,7 @@ export default async function (api: API, init?: RequestInit): Promise<Response> 
   if (!api) {
     throw new Error(`Api name is required but call with ${api} !`)
   }
-  let apiDefinition = retriveApiDefinition(APIDefinitionData, api);
+  let apiDefinition = ApiUtil.findApiDefinition(api);
   if (!apiDefinition) {
     throw new Error(`API definition not found: \`${api}\``);
   }

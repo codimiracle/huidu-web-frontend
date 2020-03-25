@@ -7,6 +7,7 @@ import { ElectronicBook } from '../../types/electronic-book';
 import DatetimeUtil from '../../util/datetime-util';
 import Link from 'next/link';
 import { ListJSON } from '../../types/api';
+import BookCover from '../../components/book/book-cover';
 
 
 interface BookNotesViewProps {
@@ -18,7 +19,7 @@ function BookNotesView(props: BookNotesViewProps) {
   const book: ElectronicBook = bookNotes.book
   return (
     <div className="book-notes-view">
-      <img src={book.metadata.cover} />
+      <BookCover book={book} />
       <div className="body">
         <div>
           <strong>{book.metadata.name}</strong> <Tag>{book.status}</Tag>

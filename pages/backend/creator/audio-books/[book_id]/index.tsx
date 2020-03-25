@@ -8,6 +8,7 @@ import { AudioBook, AudioCatalogs, AUDIO_BOOK_STATUS_COLORS, AUDIO_BOOK_STATUS_T
 import { Episode } from '../../../../../types/episode';
 import { fetchDataByGet, fetchMessageByDelete } from '../../../../../util/network-util';
 import AudioPlayerView from '../../../../../components/audio-player-view';
+import UploadUtil from '../../../../../util/upload-util';
 const EMPTY_IMAGE = "/assets/empty.png";
 
 export interface MyBookDetailsProps {
@@ -70,7 +71,7 @@ export default class MyBookDetails extends React.Component<MyBookDetailsProps, M
           <Row type="flex">
             <Col>
               <div className="book-details-view">
-                <img src={book && book.cover || EMPTY_IMAGE} />
+                <img src={book && UploadUtil.absoluteUrl(API.CoverSource, book.cover) || EMPTY_IMAGE} />
                 <div className="body">
                   <strong>{book.title} <Tag color={AUDIO_BOOK_STATUS_COLORS[book.status]}>{AUDIO_BOOK_STATUS_TEXTS[book.status]}</Tag></strong>
                   <p>{book.description}</p>
@@ -90,7 +91,7 @@ export default class MyBookDetails extends React.Component<MyBookDetailsProps, M
                 lastEditedEpisode &&
                 <div>
                   <strong>{lastEditedEpisode.title}</strong>
-                  <AudioPlayerView src={lastEditedEpisode.streamUrl} style={{ borderRadius: '0', border: '1px solid #dcdcdc' }} />
+                  <AudioPlayerView src={UploadUtil.absoluteUrl(API.UploadSource, lastEditedEpisode.streamUrl)} style={{ borderRadius: '0', border: '1px solid #dcdcdc' }} />
                 </div>
               }
               {!lastEditedEpisode && <p>暂无章节</p>}

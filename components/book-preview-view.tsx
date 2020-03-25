@@ -1,6 +1,8 @@
-import React from 'react';
-import { Book, BookPreview } from '../types/book';
 import Link from 'next/link';
+import React from 'react';
+import { API } from '../configs/api-config';
+import { Book, BookPreview } from '../types/book';
+import UploadUtil from '../util/upload-util';
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
@@ -17,7 +19,7 @@ export default class BookPreviewView extends React.Component<BookPreviewViewProp
     const bookPreview = BookPreview.valueOf(book);
     return (
       <div className="book-preview-view">
-        <img src={bookPreview.cover || EMPTY_IMAGE} />
+        <img src={UploadUtil.absoluteUrl(API.CoverSource, bookPreview.cover) || EMPTY_IMAGE} />
         <div className="body">
           <div><Link href={href} as={asPath}><a><strong>{bookPreview.name}</strong></a></Link> <span>{bookPreview.author}</span></div>
           <p title={bookPreview.description}>{bookPreview.description}</p>

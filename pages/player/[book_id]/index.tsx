@@ -11,6 +11,7 @@ import { BookNotes } from '../../../types/notes';
 import { fetchDataByGet } from '../../../util/network-util';
 import { Affix } from 'antd';
 import AudioPlayerView from '../../../components/audio-player-view';
+import UploadUtil from '../../../util/upload-util';
 
 export interface PlayerPageProps { };
 export interface PlayerPageState {
@@ -70,7 +71,7 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
         <div className="player">
           <Affix offsetTop={32} style={{ position: 'absolute', right: 0 }}>
             {
-              <AudioPlayerView src={audioEpisode.streamUrl} />
+              <AudioPlayerView src={UploadUtil.absoluteUrl(API.UploadSource, audioEpisode.streamUrl)} />
             }
           </Affix>
         </div>

@@ -1,6 +1,7 @@
 import { Upload, Icon, message } from 'antd';
 import React from 'react';
 import { API } from '../../configs/api-config';
+import UploadUtil from '../../util/upload-util';
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -29,7 +30,7 @@ export interface AvatarUploadProps {
 export default class AvatarUpload extends React.Component<AvatarUploadProps> {
   state = {
     image: null,
-    uploadedUrl: null,
+    uploadedRelativeUrl: null,
     loading: false,
   };
 
@@ -41,15 +42,15 @@ export default class AvatarUpload extends React.Component<AvatarUploadProps> {
     }
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      let uploadedUrl = API.AvatarSource.toString() + "/" + info.file.response.data.referenceId;
+      let uploadedRelativeUrl = UploadUtil.relativeUrl(info.file.response.data.referenceId);
       getBase64(info.file.originFileObj, image =>
         this.setState({
           image,
-          uploadedUrl,
+          uploadedRelativeUrl,
           loading: false,
         })
       );
-      onChange && onChange(uploadedUrl);
+      onChange && onChange(uploadedRelativeUrl);
     }
   };
 

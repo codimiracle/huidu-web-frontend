@@ -2,6 +2,8 @@ import { Rate } from 'antd';
 import React, { CSSProperties } from 'react';
 import { Commodity } from '../types/commodity';
 import MoneyUtil from '../util/money-util';
+import UploadUtil from '../util/upload-util';
+import { API } from '../configs/api-config';
 
 export interface CommodityViewProps {
   commodity: Commodity<any>;
@@ -14,7 +16,7 @@ export default class CommodityView extends React.Component<CommodityViewProps, C
     const { commodity } = this.props;
     return (
       <div className="commodity-view" style={this.props.style}>
-        <img src={commodity.picture} />
+        <img src={UploadUtil.absoluteUrl(API.UploadSource, commodity.picture)} />
         <div className="body">
           <div><strong>{commodity.name}</strong></div>
           <Rate disabled defaultValue={commodity.rate} style={{ fontSize: '18px' }} />

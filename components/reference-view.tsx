@@ -2,6 +2,8 @@ import { CSSProperties } from "react";
 import { Book, BookPreview } from "../types/book";
 import { Content, ContentType, Reference, Article } from "../types/content";
 import ContentView from "./content-view";
+import UploadUtil from "../util/upload-util";
+import { API } from "../configs/api-config";
 
 
 interface BookReferenceViewProps {
@@ -15,7 +17,7 @@ function BookReferenceView(props: BookReferenceViewProps) {
   const bookPreview = BookPreview.valueOf(book);
   return (
     <div className="book-reference-view">
-      <img src={bookPreview.cover || EMPTY_IMAGE} />
+      <img src={UploadUtil.absoluteUrl(API.UploadSource, bookPreview.cover) || EMPTY_IMAGE} />
       <div className="body">
         <div><strong>{bookPreview.name}</strong> <span>{bookPreview.author}</span></div>
         <p title={bookPreview.description}>{bookPreview.description}</p>

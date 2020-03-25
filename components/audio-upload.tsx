@@ -4,6 +4,7 @@ import { Upload, Icon, Button, message, Affix } from 'antd';
 import { API } from '../configs/api-config';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
+import UploadUtil from '../util/upload-util';
 
 export interface AudioUploadProps {
   value?: string,
@@ -32,7 +33,7 @@ export default class AudioUpload extends React.Component<AudioUploadProps, Audio
       }
       if (info.file.status === 'done') {
         message.success('上传成功，可以使用播放控件播放哟。');
-        let path = API.UploadSource.toString() + "/" + info.file.response.data.referenceId;
+        let path = UploadUtil.relativeUrl(info.file.response.data);
         this.setState({ loading: false, value: path });
         this.fireChange(path);
       }
@@ -50,7 +51,7 @@ export default class AudioUpload extends React.Component<AudioUploadProps, Audio
         return false;
       }
     }
-    let value = this.props.value || this.state.value;
+    let value = UploadUtil.absoluteUrl(API.UploadSource, this.props.value || this.state.value);
     return (
       <>
         <Upload

@@ -7,6 +7,7 @@ import ElectronicBookFrom from '../../../../components/backend/form/electronic-b
 import HeaderBar from '../../../../components/backend/header-bar';
 import { API } from '../../../../configs/api-config';
 import { ElectronicBook, ElectronicBookStatus, ELECTRONIC_BOOK_STATUS_COLORS, ELECTRONIC_BOOK_STATUS_TEXTS } from '../../../../types/electronic-book';
+import Cover from '../../../../components/base/cover';
 
 export interface ElectronicBookManagerProps {
   list: Array<ElectronicBook>;
@@ -28,7 +29,7 @@ export default class ElectronicBookManager extends React.Component<ElectronicBoo
         title: '电子书封面',
         key: 'cover',
         dataIndex: 'metadata',
-        render: (metadata) => <img src={metadata.cover} style={{ width: '7em', height: '9.4em' }} />
+        render: (metadata) => <Cover src={metadata.cover} />
       },
       {
         title: '电子书名称',

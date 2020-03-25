@@ -7,6 +7,7 @@ import { Popover, Tag } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import BookPreviewView from '../../book-preview-view';
 import DatetimeUtil from '../../../util/datetime-util';
+import UploadUtil from '../../../util/upload-util';
 
 export interface ActivityManagerProps {
   initialDataSource?: Array<Activity>;
@@ -26,7 +27,7 @@ export default class ActivityManager extends React.Component<ActivityManagerProp
         title: 'Banner',
         key: 'banner',
         dataIndex: 'banner',
-        render: (banner) => <img src={banner} width="128px" height="67.55px" />
+        render: (banner) => <img src={UploadUtil.absoluteUrl(API.UploadSource, banner)} width="128px" height="67.55px" />
       }, {
         title: '关联图书',
         key: 'book',

@@ -7,6 +7,7 @@ import { EntityJSON } from '../../../../../types/api';
 import { Catalogs, ElectronicBook, ELECTRONIC_BOOK_STATUS_COLORS, ELECTRONIC_BOOK_STATUS_TEXTS } from '../../../../../types/electronic-book';
 import { Episode } from '../../../../../types/episode';
 import { fetchDataByGet, fetchMessageByDelete } from '../../../../../util/network-util';
+import UploadUtil from '../../../../../util/upload-util';
 const EMPTY_IMAGE = "/assets/empty.png";
 
 export interface MyBookDetailsProps {
@@ -69,7 +70,7 @@ export default class MyBookDetails extends React.Component<MyBookDetailsProps, M
           <Row type="flex">
             <Col>
               <div className="book-details-view">
-                <img src={book && book.metadata.cover || EMPTY_IMAGE} />
+                <img src={book && UploadUtil.absoluteUrl(API.CoverSource, book.metadata.cover) || EMPTY_IMAGE} />
                 <div className="body">
                   <strong>{book.metadata.name} <Tag color={ELECTRONIC_BOOK_STATUS_COLORS[book.status]}>{ELECTRONIC_BOOK_STATUS_TEXTS[book.status]}</Tag></strong>
                   <p>{book.metadata.description}</p>

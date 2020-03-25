@@ -1,10 +1,10 @@
-import React from 'react';
-import { ElectronicBook } from '../types/electronic-book';
-import { Tag, Button, Rate, message } from 'antd';
-import DirectLink from './direct-link';
+import { Button, message, Rate } from 'antd';
 import Link from 'next/link';
-import { fetchMessageByPost } from '../util/network-util';
+import React from 'react';
 import { API } from '../configs/api-config';
+import { ElectronicBook } from '../types/electronic-book';
+import { fetchMessageByPost } from '../util/network-util';
+import UploadUtil from '../util/upload-util';
 import ElectronicBookStatusView from './electronic-book-status-view';
 
 const EMPTY_IMAGE = '/assets/empty.png';
@@ -51,7 +51,7 @@ export default class ElectronicBookMiniView extends React.Component<ElectronicBo
     return (
       <div className="electronic-book">
         <div>
-          <img src={renderringBook.metadata.cover || EMPTY_IMAGE} />
+          <img src={UploadUtil.absoluteUrl(API.CoverSource, renderringBook.metadata.cover) || EMPTY_IMAGE} />
         </div>
         <div className="body">
           <div><strong><Link href="/bookshop/electronic-books/[book_id]" as={`/bookshop/electronic-books/${renderringBook.id}`}><a>{renderringBook.metadata.name}</a></Link></strong> <ElectronicBookStatusView status={renderringBook.status} /></div>

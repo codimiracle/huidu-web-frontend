@@ -11,6 +11,7 @@ import { Review } from '../../../types/review';
 import { fetchDataByGet, fetchMessageByPost } from '../../../util/network-util';
 import { EntityJSON } from '../../../types/api';
 import { ElectronicBook } from '../../../types/electronic-book';
+import UploadUtil from '../../../util/upload-util';
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
@@ -23,7 +24,7 @@ function BookPreviewView(props: BookPreviewViewProps) {
   const bookPreview = BookPreview.valueOf(book);
   return (
     <div className="book-reference-view">
-      <img src={bookPreview.cover || EMPTY_IMAGE} />
+      <img src={UploadUtil.absoluteUrl(API.CoverSource, bookPreview.cover) || EMPTY_IMAGE} />
       <div className="body">
         <div><strong>{bookPreview.name}</strong> <span className="help-text">{bookPreview.author}</span></div>
         <p title={bookPreview.description}>{bookPreview.description}</p>

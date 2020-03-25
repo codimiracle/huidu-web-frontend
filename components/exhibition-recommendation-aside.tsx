@@ -6,6 +6,7 @@ import { API } from '../configs/api-config';
 import { message } from 'antd';
 import { ListJSON } from '../types/api';
 import { fetchDataByGet } from '../util/network-util';
+import UploadUtil from '../util/upload-util';
 
 export interface ExhibitionRecommendationAsideProps { };
 export interface ExhibitionRecommendationAsideState {
@@ -67,7 +68,7 @@ export default class ExhibitionRecommendationAside extends React.Component<Exhib
           <PreviewableRank
             loading={this.state.fetchingInteresting}
             dataSource={this.state.interestingList}
-            renderItem={(data: Book) => <img style={{width: '100%'}} src={data.metadata.cover} />}
+            renderItem={(data: Book) => <img style={{width: '100%'}} src={UploadUtil.absoluteUrl(API.CoverSource, data.metadata.cover)} />}
           />
         </div>
         <h3 style={{ marginTop: '32px' }}>同样兴趣的人读了</h3>
@@ -75,7 +76,7 @@ export default class ExhibitionRecommendationAside extends React.Component<Exhib
           <PreviewableRank
             loading={this.state.fetchingSameInteresting}
             dataSource={this.state.sameInterestingList}
-            renderItem={(data: Book) => <img style={{width: '100%'}} src={data.metadata.cover} />}
+            renderItem={(data: Book) => <img style={{width: '100%'}} src={UploadUtil.absoluteUrl(API.CoverSource, data.metadata.cover)} />}
           />
         </div>
       </div>

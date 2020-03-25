@@ -9,6 +9,7 @@ import { ArrivedData } from '../../types/arriveddata';
 import { Book, BookPreview } from '../../types/book';
 import DatetimeUtil from '../../util/datetime-util';
 import { fetchDataByGet, fetchMessageByPost } from '../../util/network-util';
+import UploadUtil from '../../util/upload-util';
 
 const EMPTY_IMAGE = "/assets/empty.png";
 
@@ -21,7 +22,7 @@ function BookView(props: BookViewProps) {
   const bookPreview = BookPreview.valueOf(book);
   return (
     <div className="book-view">
-      <img src={bookPreview.cover || EMPTY_IMAGE} />
+      <img src={UploadUtil.absoluteUrl(API.CoverSource, bookPreview.cover) || EMPTY_IMAGE} />
       <div className="body">
         <strong>{bookPreview.name}</strong>
         <p title={bookPreview.description}>{bookPreview.description}</p>

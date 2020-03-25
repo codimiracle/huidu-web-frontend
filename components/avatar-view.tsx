@@ -1,6 +1,8 @@
 import React from 'react';
 import { Avatar } from 'antd';
 import { User, SocialUser } from '../types/user';
+import UploadUtil from '../util/upload-util';
+import { API } from '../configs/api-config';
 
 export interface AvatarViewProps {
   user: User | SocialUser;
@@ -19,7 +21,7 @@ export default class AvatarView extends React.Component<AvatarViewProps, AvatarV
     return (
       <>
         <span onClick={this.props.onClick}>
-          <Avatar className="avatar-view" size={size || 'default'} src={user && user.avatar || undefined} icon={!user && 'user' || undefined} />
+          <Avatar className="avatar-view" size={size || 'default'} src={user && UploadUtil.absoluteUrl(API.AvatarSource, user.avatar) || undefined} icon={!user && 'user' || undefined} />
         </span>
         <style jsx global>{`
             .avatar-view > i{

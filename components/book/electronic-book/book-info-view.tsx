@@ -7,6 +7,7 @@ import DirectLink from "../../direct-link";
 import ElectronicBookStatusView from "../../electronic-book-status-view";
 import BookHeader from "../book-header";
 import BookDescription from "../book-description";
+import BookCover from "../book-cover";
 
 export interface BookInfoViewProps {
   book: ElectronicBook
@@ -47,7 +48,7 @@ export class BookInfoView extends React.Component<BookInfoViewProps, BookInfoVie
     const { joined, joining } = this.state;
     return (
       <div className="book-info">
-        <img src={book.metadata.cover} />
+        <BookCover size="large" book={book} />
         <div className="body">
           <BookHeader book={book} status link={false} />
           <div>{book.metadata.author} 著</div>
@@ -57,13 +58,6 @@ export class BookInfoView extends React.Component<BookInfoViewProps, BookInfoVie
           </div>
         </div>
         <style jsx>{`
-        img {
-          width: 192px;
-          height: 264px;
-          border-radius: 4px;
-          background-image: url(/assets/empty.png);
-          background-size: cover;
-        }
         .book-info {
           display: flex;
         }

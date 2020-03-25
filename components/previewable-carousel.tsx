@@ -5,6 +5,8 @@ import { BookPreview } from '../types/book';
 import BookDescription from './book/book-description';
 import BookHeader from './book/book-header';
 import BookCover from './book/book-cover';
+import { API } from '../configs/api-config';
+import UploadUtil from '../util/upload-util';
 
 interface PreviewImageViewProps {
   selectedIndex: number,
@@ -57,7 +59,7 @@ export class PreviewableCarousel extends React.Component<PreviewableCarouselProp
               {
                 activities.map((activity: Activity) => (
                   <div className="activity-content" key={activity.id}>
-                    <img src={activity.banner} width="100%" height="52.7%" />
+                    <img src={UploadUtil.absoluteUrl(API.UploadSource, activity.banner)} width="100%" height="52.7%" />
                   </div>)
                 )
               }

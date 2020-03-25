@@ -6,6 +6,7 @@ import { AudioBook } from '../types/audio-book';
 import { fetchMessageByPost } from '../util/network-util';
 import RetryView from './retry-view';
 import BookHeader from './book/book-header';
+import BookCover from './book/book-cover';
 
 const EMPTY_IMAGE = '/assets/empty-audio.png';
 
@@ -62,7 +63,7 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
       <RetryView visible={!loading && retry} onClick={() => this.fetchBook()}>
         <div className="audio-book">
           <div>
-            <img src={book.cover || book.metadata.cover || EMPTY_IMAGE} />
+            <BookCover book={book} />
           </div>
           <div className="body">
             <div><BookHeader book={book} status author /></div>

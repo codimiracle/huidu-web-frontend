@@ -9,6 +9,7 @@ import { ColumnProps, SorterResult } from 'antd/lib/table';
 import { Tag } from 'antd';
 import AudioBookForm from '../../../../components/backend/form/audio-book-form';
 import Link from 'next/link';
+import Cover from '../../../../components/base/cover';
 
 export interface AudioBookManagerProps {
   list: Array<AudioBook>;
@@ -29,7 +30,7 @@ export default class AudioBookManager extends React.Component<AudioBookManagerPr
         title: '电子书封面',
         key: 'cover',
         dataIndex: 'cover',
-        render: (cover) => <img src={cover} style={{ width: '7em', height: '9.4em' }} />
+        render: (cover) => <Cover src={cover} />
       },
       {
         title: '有声书标题',

@@ -1,11 +1,9 @@
-import React from "react";
+import { Icon, message, Upload } from "antd";
 import { UploadChangeParam } from "antd/lib/upload";
 import { UploadFile } from "antd/lib/upload/interface";
+import React from "react";
 import { API } from "../configs/api-config";
-import { message, Upload, Icon } from "antd";
-import LoadingView from "./loading-view";
-
-const EMTPY_IMAGE = "/assets/empty.png";
+import UploadUtil from "../util/upload-util";
 
 export interface ImageUploadProps {
   width?: number | string,
@@ -16,7 +14,7 @@ export interface ImageUploadProps {
 
 export interface ImageUploadState {
   loading: boolean,
-  uploadedUrl: string
+  uploadedRelativeUrl: string
 }
 
 export class ImageUpload extends React.Component<ImageUploadProps, ImageUploadState> {
@@ -24,7 +22,7 @@ export class ImageUpload extends React.Component<ImageUploadProps, ImageUploadSt
     super(props);
     this.state = {
       loading: false,
-      uploadedUrl: null,
+      uploadedRelativeUrl: null,
     }
     this.beforeUpload = this.beforeUpload.bind(this);
   }
@@ -49,20 +47,20 @@ export class ImageUpload extends React.Component<ImageUploadProps, ImageUploadSt
       this.setState({ loading: false });
     }
     if (info.file.status == 'done') {
-      let uploadedUrl = API.UploadSource.toString() + "/" + info.file.response.data.referenceId;
+      let uploadedRelativeUrl = UploadUtil.relativeUrl(info.file.response)
       message.info("上传成功！");
       console.log(info);
-      console.log('uploadedUrl: %s', uploadedUrl);
+      console.log('uploadedRelativeUrl: %s', uploadedRelativeUrl);
       if (onChange) {
-        onChange(uploadedUrl);
+        onChange(uploadedRelativeUrl);
       }
-      this.setState({ loading: false, uploadedUrl: uploadedUrl });
+      this.setState({ loading: false, uploadedRelativeUrl: uploadedRelativeUrl });
     }
   }
   render() {
     const { value } = this.props;
-    const { loading, uploadedUrl } = this.state;
-    let imageUrl = uploadedUrl || value;
+    const { loading, uploadedRelativeUrl } = this.state;
+    let imageUrl = UploadUtil.absoluteUrl(API.UploadSource, uploadedRelativeUrl || value);
     let width = this.props.width || '7em';
     let height = this.props.height || '9.4em';
     return (

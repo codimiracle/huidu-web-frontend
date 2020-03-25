@@ -4,6 +4,8 @@ import DirectLink from './direct-link';
 import { Tag } from 'antd';
 import LoadingView from './loading-view';
 import BookStatusView from './book-status-view';
+import UploadUtil from '../util/upload-util';
+import { API } from '../configs/api-config';
 
 interface BookPreviewViewProps {
   book: Book,
@@ -16,7 +18,7 @@ function BookPreviewView(props: BookPreviewViewProps) {
   const bookPreview = BookPreview.valueOf(book);
   return (
     <div className="book-preview-view">
-      <img src={bookPreview.cover || EMPTY_IMAGE} />
+      <img src={UploadUtil.absoluteUrl(API.CoverSource, bookPreview.cover) || EMPTY_IMAGE} />
       <div className="body">
         <div>
           <DirectLink href={`/bookshop/${book.type}/${book.id}`}><strong>{bookPreview.name}</strong></DirectLink> <BookStatusView book={book} />
