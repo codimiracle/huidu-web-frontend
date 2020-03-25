@@ -28,9 +28,9 @@ if (BACKEND_HOSTNAME) {
 
 export interface APIDefinition {
   url: string,
-  method: "get" | "post" | "put" | "delete",
-  query: any,
-  body: any,
+  method?: "get" | "post" | "put" | "delete",
+  query?: any,
+  body?: any,
 }
 
 export interface APIDefinitionSet {
@@ -41,6 +41,7 @@ export interface APIDefinitionSet {
  * for using API in netwok-util
  */
 export enum API {
+  ServerOrigin = "origin",
   UserCollection = "user.collection",
   LoggedUserData = "user.logged",
   BookJoinCart = "cart.join",
@@ -129,10 +130,10 @@ export enum API {
   SystemSignUp = "system.signUp",
   Search = "search",
   AuthorStatistics = "creator.statistics",
-  Upload = `http://192.168.43.178:4000/api/reference-data/upload`,
-  UploadSource = `http://192.168.43.178:4000/api/reference-data/source`,
-  AvatarSource = `http://192.168.43.178:4000/api/user/avatar`,
-  CoverSource = `http://192.168.43.178:4000/api/books/cover`,
+  Upload = "upload.url",
+  UploadSource = "upload.source",
+  AvatarSource = "upload.avatar",
+  CoverSource = "upload.cover",
   CategorySuggetion = "category.suggestion",
   TagSuggetion = "tag.suggestion",
   ElectronicBookEpisodeUpdate = "ElectronicBookEpisodeUpdate",
@@ -1370,6 +1371,15 @@ export const APIDefinitionData: APIDefinitionSet = {
         }
       }
     }
+  },
+  origin: {
+    url: `${testOrigin}`
+  },
+  upload: {
+    url: `${testOrigin}/api/reference-data/upload`,
+    source: `${testOrigin}/api/reference-data/source`,
+    avatar: `${testOrigin}/api/user/avatar`,
+    cover: `${testOrigin}/api/books/cover`,
   },
   discover: {
     collection: `${testOrigin}/api/recommendation/discover`
