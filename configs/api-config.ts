@@ -43,6 +43,12 @@ export interface APIDefinitionSet {
 /**
  * for using API in netwok-util
  */
+/**
+ * for using API in netwok-util
+ */
+/**
+ * for using API in netwok-util
+ */
 export enum API {
   ServerOrigin = "origin",
   UserCollection = "user.collection",
@@ -263,6 +269,7 @@ export enum API {
   UserCartItems = "user.cart.items",
   UserCartItemsTotalCount = "user.cart.totalCount",
   UserCartItemDelete = "user.cart.item.delete",
+  UserCartItemBulkDelete = "user.cart.item.bulkDelete",
   UserCartItemsByIds = "user.cart.itemsByIds",
   PaperBookCollectionByIds = "paperBook.collectionByIds",
   BackendUserFigureTagCollection = "backend.userFigure.tag.collection",
@@ -1358,6 +1365,13 @@ export const APIDefinitionData: APIDefinitionSet = {
           method: 'delete',
           query: {
             cart_item_id: null
+          }
+        },
+        bulkDelete: {
+          url: `${testOrigin}/api/user/cart?ids=@{ids}`,
+          method: 'delete',
+          query: {
+            ids: '',
           }
         }
       },
