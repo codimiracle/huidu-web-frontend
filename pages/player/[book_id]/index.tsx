@@ -9,7 +9,7 @@ import { AudioBook, AudioEpisode } from '../../../types/audio-book';
 import { History } from '../../../types/history';
 import { BookNotes } from '../../../types/notes';
 import { fetchDataByGet } from '../../../util/network-util';
-import { Affix } from 'antd';
+import { Affix, Alert, message } from 'antd';
 import AudioPlayerView from '../../../components/audio-player-view';
 import UploadUtil from '../../../util/upload-util';
 
@@ -71,7 +71,9 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
         <div className="player">
           <Affix offsetTop={32} style={{ position: 'absolute', right: 0 }}>
             {
-              <AudioPlayerView src={UploadUtil.absoluteUrl(API.UploadSource, audioEpisode.streamUrl)} />
+              audioEpisode ?
+                <AudioPlayerView src={UploadUtil.absoluteUrl(API.UploadSource, audioEpisode.streamUrl)} onError={() => message.error('播放地址无效！')} />
+                : <Alert iconType="warn" message="无章节数据，播放器已隐藏" />
             }
           </Affix>
         </div>
