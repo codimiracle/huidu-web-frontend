@@ -1,16 +1,14 @@
-import React from 'react';
-import HeaderBar from '../../../components/backend/header-bar';
-import EntityManager from '../../../components/backend/entity-manager';
-import { PaperBook } from '../../../types/paper-book';
-import { fetchDataByGet } from '../../../util/network-util';
-import { ListJSON } from '../../../types/api';
-import { API } from '../../../configs/api-config';
-import { SorterResult, ColumnProps } from 'antd/lib/table';
 import { Tag } from 'antd';
-import { COMMODITY_STATUS_COLORS, COMMODITY_STATUS_TEXTS, CommodityStatus, Commodity } from '../../../types/commodity';
+import { ColumnProps, SorterResult } from 'antd/lib/table';
+import React from 'react';
+import EntityManager from '../../../components/backend/entity-manager';
 import PaperBookForm from '../../../components/backend/form/paper-book-form';
-import MoneyUtil from '../../../util/money-util';
+import HeaderBar from '../../../components/backend/header-bar';
 import BookCover from '../../../components/book/book-cover';
+import { API } from '../../../configs/api-config';
+import { CommodityStatus, COMMODITY_STATUS_COLORS, COMMODITY_STATUS_TEXTS } from '../../../types/commodity';
+import { PaperBook } from '../../../types/paper-book';
+import MoneyUtil from '../../../util/money-util';
 
 export interface PaperBookManagerProps {
   list: Array<PaperBook>,

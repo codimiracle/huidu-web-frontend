@@ -22,7 +22,7 @@ export interface SimpleListViewState<T> {
 };
 
 export default class SimpleListView<T> extends React.Component<SimpleListViewProps<T>, SimpleListViewState<T>> {
-  constructor(props) {
+  constructor(props: SimpleListViewProps<T>) {
     super(props);
     this.state = {
       page: null,
@@ -32,12 +32,12 @@ export default class SimpleListView<T> extends React.Component<SimpleListViewPro
       loading: false
     }
   }
-  fetchList(page?: number) {
+  fetchList(page?: number, limit?: number) {
     fetchDataByGet<ListJSON<T>>(this.props.api, {
       filter: this.props.filter || null,
       sorter: this.props.sorter || null,
       page: page || this.state.page,
-      limit: this.state.limit,
+      limit: limit || this.state.limit,
       ...(this.props.getReqeustArguments && this.props.getReqeustArguments())
     }).then((data) => {
       this.setState((state) => ({
@@ -53,7 +53,7 @@ export default class SimpleListView<T> extends React.Component<SimpleListViewPro
     })
   }
   private doInitialize() {
-    this.fetchList(1);
+    this.fetchList(1, 10);
   }
   componentDidMount() {
     this.doInitialize();

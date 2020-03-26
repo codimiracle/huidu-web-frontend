@@ -279,7 +279,7 @@ export enum API {
   CommunityTopicHotCollection = "community.topic.hotCollection",
   BackendCollectionStatistics = "backend.collection.statistics",
   AudioBookHotCollection = "audioBook.hotCollection",
-  PaperbookHotCollection = "paperbook.hotCollection",
+  PaperbookHotCollection = "paperBook.hotCollection",
   ElectronicBookHotCollection = "electronicBook.hotCollection",
   UserOrderShipment = "user.order.shipment",
   UserOrderCancel = "user.order.cancel",
@@ -1024,6 +1024,9 @@ export const APIDefinitionData: APIDefinitionSet = {
       query: {
         filter: null
       }
+    },
+    hotCollection: {
+      url: `${testOrigin}/api/paper-books/hots?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
     },
     publishYears: `${testOrigin}/api/paper-books/publish-years`
   },
