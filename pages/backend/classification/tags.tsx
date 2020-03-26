@@ -2,12 +2,13 @@ import React from 'react';
 import EntityManager from '../../../components/backend/entity-manager';
 import { Tag as TagView } from 'antd';
 import { API } from '../../../configs/api-config';
-import { Tag } from '../../../types/category';
+import { Tag, Category } from '../../../types/category';
 import { ColumnProps } from 'antd/lib/table';
 import HeaderBar from '../../../components/backend/header-bar';
 import { ListJSON } from '../../../types/api';
 import { fetchDataByGet } from '../../../util/network-util';
 import TagForm from '../../../components/backend/form/tag-form';
+import CollectionUtil from '../../../util/collection-util';
 
 export interface TagManagerProps {
   list: Array<Tag>;
@@ -34,7 +35,7 @@ export default class TagManager extends React.Component<TagManagerProps, TagMana
         title: '类别',
         key: 'category',
         dataIndex: 'categories',
-        render: (categories) => categories.length > 0 ? categories.map((category) => <TagView key={category.id}>{category.name}</TagView>) : '(用户标签)'
+        render: (categories: Array<Category>) => categories && categories.length > 0 ? CollectionUtil.map(categories, (category) => <TagView key={category.id}>{category.name}</TagView>) : <span>(用户标签)</span>,
       }
     ];
   }

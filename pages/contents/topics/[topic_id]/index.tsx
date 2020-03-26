@@ -1,97 +1,71 @@
-import { Divider, Typography } from 'antd';
-import { NextPageContext } from 'next';
-import React from 'react';
-import AvatarView from '../../../../components/avatar-view';
-import CommentModularView from '../../../../components/comment-modular-view';
-import ReferenceView from '../../../../components/reference-view';
-import ContentSection from '../../../../components/section-view';
-import { API } from '../../../../configs/api-config';
-import { EntityJSON } from '../../../../types/api';
-import { Topic } from '../../../../types/topic';
-import { User } from '../../../../types/user';
-import DatetimeUtil from '../../../../util/datetime-util';
-import { fetchDataByGet } from '../../../../util/network-util';
+import { Topic } from "../../../../types/topic";
+import React from "react";
+import { API } from "../../../../configs/api-config";
+import { fetchDataByGet } from "../../../../util/network-util";
+import { EntityJSON } from "../../../../types/api";
+import InitializerView from "../../../../components/ui/initializer-view";
+import ContentSection from "../../../../components/section-view";
+import TopicPostView from "../../../../components/community/topic-post-view";
+import AvatarView from "../../../../components/avatar-view";
 
-export interface TopicPostProps {
-  topic: Topic,
+export interface TopicPostPageViewProps {
+  admin?: boolean;
+  topic?: Topic;
+  topicId?: string;
 };
-export interface TopicPostState { };
+export interface TopicPostPageViewState {
+  topic: Topic;
+};
 
-export default class TopicPost extends React.Component<TopicPostProps, TopicPostState> {
-  static async getInitialProps(context: NextPageContext) {
-    const { topic_id } = context.query;
-    let topicData = await fetchDataByGet<EntityJSON<Topic>>(API.TopicEntity, {
-      topic_id: topic_id
-    });
-    return {
-      topic: topicData.entity,
+export default class TopicPostPageView extends React.Component<TopicPostPageViewProps, TopicPostPageViewState> {
+  async getClientSideProps(query) {
+    if (this.props.topic) {
+      return {
+        topic: this.props.topic
+      }
     }
+    if (query.topic_id || this.props.topicId) {
+      let api = this.props.admin ? API.BackendTopicEntity : API.TopicEntity;
+      let topicData = await fetchDataByGet<EntityJSON<Topic>>(api, {
+        topic_id: query.topic_id || this.props.topicId
+      })
+      return {
+        topic: topicData.entity
+      }
+    }
+    return {};
   }
-  constructor(props: TopicPostProps) {
+  constructor(props) {
     super(props);
     this.state = {
-
+      topic: null
     }
   }
   render() {
-    const { topic } = this.props;
+    let topic = this.state.topic;
     return (
-      <>
+      <InitializerView
+        initializer={(query) => this.getClientSideProps(query)}
+        onInitialized={(data) => this.setState(data)}
+      >
         <ContentSection
           aside={
-            <>
-              <div className="topic-author">
-                <AvatarView
-                  size={64}
-                  user={topic.owner}
-                />
-                <div>{
-                  topic.owner.nickname}
-                </div>
-              </div>
-            </>
-          }
-          content={
-            <div className="topic-post">
-              <Typography>
-                <h1>{topic.title}</h1>
-              </Typography>
-              <Typography>
-                {
-                  !topic && <p>内容无效！</p>
-                }
-                <div className="topic-statistic">
-                  <span>正文</span>
-                  <span>{topic.reads} 阅读</span>
-                  <span>{topic.likes} 点赞</span>
-                  <span>{topic.comments} 评论</span>
-                  <span>{DatetimeUtil.fromNow(topic.updateTime)}</span>
-                </div>
-                {
-                  topic &&
-                  <div dangerouslySetInnerHTML={{ __html: topic.content.source }}></div>
-                }
-              </Typography>
-              <div className="topic-reference">
-                <ReferenceView references={topic.references} />
-              </div>
-              <Divider type="horizontal" />
-              <h3>评论</h3>
-              <CommentModularView
-                content={topic}
+            <div className="topic-author">
+              <AvatarView
+                size={64}
+                showNickname
+                user={topic && topic.owner}
               />
             </div>
           }
-        />
-        <style jsx>{`
-          .topic-author {
-            display: flex;
+        >
+          {
+            topic ?
+            <TopicPostView topic={topic} /> :
+            <p>无法读取该内容！</p>
           }
-          .topic-statistic > span + span {
-            padding-left: 4px;
-          }
-        `}</style>
-      </>
+        </ContentSection>
+      </InitializerView>
     )
   }
 }

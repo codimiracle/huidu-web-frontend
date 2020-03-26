@@ -48,7 +48,7 @@ export class ImageUpload extends React.Component<ImageUploadProps, ImageUploadSt
       this.setState({ loading: false });
     }
     if (info.file.status == 'done') {
-      let uploadedRelativeUrl = UploadUtil.relativeUrl(info.file.response)
+      let uploadedRelativeUrl = UploadUtil.relativeUrl(info.file.response.data)
       message.info("上传成功！");
       console.log(info);
       console.log('uploadedRelativeUrl: %s', uploadedRelativeUrl);

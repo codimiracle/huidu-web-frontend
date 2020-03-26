@@ -51,7 +51,7 @@ export default class CategoryManager extends React.Component<CategoryManagerProp
         title: '标签列表',
         key: 'tags',
         dataIndex: 'tags',
-        render: (tags: Array<Tag>) => <span>{tags.length > 0 ?(tags.map((tag) => <TagView id={tag.id}>{tag.name}</TagView>)) : '(无标签)'}</span>
+        render: (tags: Array<Tag>) => <span>{tags.length > 0 ?(tags.map((tag) => <TagView key={tag.id}>{tag.name}</TagView>)) : '(无标签)'}</span>
       }
     ];
   }

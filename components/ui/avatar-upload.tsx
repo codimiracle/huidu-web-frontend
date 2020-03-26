@@ -43,7 +43,7 @@ export default class AvatarUpload extends React.Component<AvatarUploadProps> {
     }
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      let uploadedRelativeUrl = UploadUtil.relativeUrl(info.file.response.data.referenceId);
+      let uploadedRelativeUrl = UploadUtil.relativeUrl(info.file.response.data);
       getBase64(info.file.originFileObj, image =>
         this.setState({
           image,

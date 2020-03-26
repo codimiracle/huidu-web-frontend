@@ -52,6 +52,7 @@ export default class CollectionManager extends React.Component<CollectionManager
           config={{
             list: API.BackendCollectionCollection,
             create: API.BackendCollectionCreate,
+            searchableColumns: [{ name: '榜单名称', field: 'name' }],
             renderCreateForm: (form) => <CategoryForm form={form} collection />,
             getCreateRequestData: (form) => ({...(form.getFieldsValue().category)}),
             update: API.BackendCollectionUpdate,

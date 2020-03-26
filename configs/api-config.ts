@@ -40,6 +40,9 @@ export interface APIDefinitionSet {
 /**
  * for using API in netwok-util
  */
+/**
+ * for using API in netwok-util
+ */
 export enum API {
   ServerOrigin = "origin",
   UserCollection = "user.collection",
@@ -171,6 +174,7 @@ export enum API {
   BackendTopicCollection = "backend.topic.collection",
   BackendTopicAcceptExamination = "backend.topic.accept",
   BackendTopicRejectExamination = "backend.topic.reject",
+  BackendTopicEntity = "backend.topic.entity",
   BackendTopicDelete = "backend.topic.delete",
   BackendCategoryCollection = "backend.category.collection",
   BackendCategoryCreate = "backend.category.create",
@@ -281,7 +285,7 @@ export enum API {
   UserOrderCancel = "user.order.cancel",
   UserOrderReceived = "user.order.received",
   UserOrderLogisticsInformation = "user.order.logisticsInformation",
-  UserOrderEvaluate = "user.order.evaluate"
+  UserOrderEvaluate = "user.order.evaluate",
 }
 
 /**
@@ -561,6 +565,13 @@ export const APIDefinitionData: APIDefinitionSet = {
     },
     topic: {
       delete: {
+        url: `${testOrigin}/api/backend/contents/topics/@{topic_id}`,
+        method: 'delete',
+        query: {
+          topic_id: null
+        }
+      },
+      entity: {
         url: `${testOrigin}/api/backend/contents/topics/@{topic_id}`,
         query: {
           topic_id: null
@@ -1076,8 +1087,14 @@ export const APIDefinitionData: APIDefinitionSet = {
         references: []
       }
     },
-    entity: `${testOrigin}/api/topics/@{topic_id}`,
-    collection: `${testOrigin}/api/topics?limit=@{limit}&page=@{page}`
+    entity: `${testOrigin}/api/community/topics/@{topic_id}`,
+    collection: {
+      url: `${testOrigin}/api/community/topics?filter=@{filter}&sorter=@{sorter}&limit=@{limit}&page=@{page}`,
+      query: {
+        filter: null,
+        sorter: null
+      }
+    }
   },
   content: {
     comment: {

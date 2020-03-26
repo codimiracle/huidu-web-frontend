@@ -25,7 +25,7 @@ export default class UploadUtil {
   }
   static absoluteUrlByRelativeUrl(relativeUrl: string) {
     if (!relativeUrl) {
-      return '/assets/empty.png';
+      return null;
     }
     if (relativeUrl.startsWith('http') || relativeUrl.startsWith('/') || relativeUrl.startsWith('.')) {
       return relativeUrl;
