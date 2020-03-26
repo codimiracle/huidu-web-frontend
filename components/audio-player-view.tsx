@@ -9,6 +9,7 @@ export enum PlayerStatus {
 export interface AudioPlayerViewProps {
   src: string;
   onLoaded?: (src: string, duration: number) => void;
+  onError: (e) => void;
   style?: CSSProperties;
 };
 export interface AudioPlayerViewState {
@@ -115,7 +116,7 @@ export default class AudioPlayerView extends React.Component<AudioPlayerViewProp
             style={{ margin: '0' }}
           />
         </div>
-        <audio ref={this.audioElementRef} src={src} />
+        <audio ref={this.audioElementRef} src={src} onError={this.props.onError} />
         <style jsx>{`
           .audio-player-view {
             height: 72px;
