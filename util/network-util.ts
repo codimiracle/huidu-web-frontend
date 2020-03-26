@@ -12,6 +12,8 @@ export const fetchRaw = async function <T>(api: API, init?: RequestInit): Promis
   let response = await fetch(api, init);
   if (response.status == 401) {
     AuthenticationUtil.destroy();
+    // 以匿名身份重试
+    response = await fetch(api, init);
   }
   if (response.status == 403) {
     throw new Error(`权限不足！`);
