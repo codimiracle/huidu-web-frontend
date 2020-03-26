@@ -109,6 +109,7 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
                               AuthorityUtil.checkAuthority(user, Authority.AuthorAudioBooksService) &&
                               <Menu.Item><Link href="/backend/creator/dashboard"><a>创作中心</a></Link></Menu.Item>
                             }
+                            <Menu.Item><Link href="/user/cart"><a>购物车</a></Link></Menu.Item>
                             <Menu.Item><Link href="/user-central/profile"><a>个人中心</a></Link></Menu.Item>
                             <Menu.Divider />
                             <Menu.Item onClick={() => this.onLogout()}>退出登录</Menu.Item>
