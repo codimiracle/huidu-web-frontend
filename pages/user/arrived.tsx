@@ -10,43 +10,9 @@ import { Book, BookPreview } from '../../types/book';
 import DatetimeUtil from '../../util/datetime-util';
 import { fetchDataByGet, fetchMessageByPost } from '../../util/network-util';
 import UploadUtil from '../../util/upload-util';
+import BookView from '../../components/book-view';
+import BookPreviewView from '../../components/book-preview-view';
 
-const EMPTY_IMAGE = "/assets/empty.png";
-
-interface BookViewProps {
-  book: Book
-}
-
-function BookView(props: BookViewProps) {
-  const { book } = props;
-  const bookPreview = BookPreview.valueOf(book);
-  return (
-    <div className="book-view">
-      <img src={UploadUtil.absoluteUrl(API.CoverSource, bookPreview.cover) || EMPTY_IMAGE} />
-      <div className="body">
-        <strong>{bookPreview.name}</strong>
-        <p title={bookPreview.description}>{bookPreview.description}</p>
-      </div>
-      <style jsx>{`
-        .book-view {
-          display: flex;
-          align-items: center;
-        }
-        img {
-          width: 64px;
-          height: 86px;
-        }
-        .body {
-          padding-left: 0.5em;
-        }
-        p {
-          max-height: 48px;
-          word-break: break-all;
-        }
-      `}</style>
-    </div>
-  );
-}
 
 export interface ArrivedProps {
   arriveddata: ArrivedData;
@@ -165,12 +131,12 @@ export default class Arrived extends React.Component<ArrivedProps, ArrivedState>
                 <Col>
                   <Divider type="vertical" style={{ height: '100%' }} />
                 </Col>
-                <Col>
+                <Col style={{flex: 1}}>
                   <div>今天我读了</div>
                   <List
                     renderItem={(item) => (
                       <List.Item>
-                        <BookView book={item} />
+                        <BookPreviewView book={item.book} />
                       </List.Item>
                     )}
                     dataSource={arriveddata.reads}

@@ -9,6 +9,7 @@ import { withRouter, Router } from 'next/router';
 import { EntityJSON } from '../../../types/api';
 import { fetchDataByGet } from '../../../util/network-util';
 import { API } from '../../../configs/api-config';
+import MoneyUtil from '../../../util/money-util';
 
 export interface OrderDetailsProps {
   order: Order;
@@ -72,7 +73,7 @@ export class OrderDetails extends React.Component<OrderDetailsProps, OrderDetail
               <div className="order-details">
                 <OrderDetailsList dataSource={order.detailsList} />
                 <div className="statistics">
-                  <div className="total"><strong>总价：<span className="huidu-money">{order.totalMoney.amount}</span></strong></div>
+                  <div className="total"><strong>总价：<span className="huidu-money">{MoneyUtil.format(order.totalMoney)}</span></strong></div>
                   <div>(运费：<span className="huidu-money">{order.shipmentMoney.amount}</span>)</div>
                   <div>共 <span>{order.detailsList.map((details) => details.quantity).reduce((pre, cur) => pre + cur, 0)}</span> 个商品</div>
                 </div>

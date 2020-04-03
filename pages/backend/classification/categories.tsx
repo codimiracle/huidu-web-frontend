@@ -75,7 +75,8 @@ export default class CategoryManager extends React.Component<CategoryManagerProp
             getCreateRequestData: (form) => (form.getFieldValue('category')),
             update: API.BackendCategoryUpdate,
             renderUpdateForm: (form, entity) => <CategoryForm form={form} category={entity} />,
-            getUpdateRequestData: (form, entity) => ({category_id: entity.id, ...form.getFieldValue('category')}),
+            getUpdateRequestData: (form, entity) => ({category_id: entity.id,
+               ...form.getFieldValue('category')}),
             delete: API.BackendCategoryDelete,
             getDeleteRequestData: (entity) => ({ category_id: entity.id })
           }}

@@ -1,11 +1,11 @@
 import React from 'react';
-import { Book, BookType } from '../types/book';
-import ElectronicBookView, { ElectronicBookViewProps } from './electronic-book-view';
-import AudioBookView, { AudioBookViewProps } from './audio-book-view';
-import PaperBookView, { PaperBookViewProps } from './paper-book-view';
-import { ElectronicBook } from '../types/electronic-book';
 import { AudioBook } from '../types/audio-book';
+import { Book, BookType } from '../types/book';
+import { ElectronicBook } from '../types/electronic-book';
 import { PaperBook } from '../types/paper-book';
+import AudioBookView from './audio-book-view';
+import ElectronicBookView from './electronic-book-view';
+import PaperBookView from './paper-book-view';
 
 export interface BookViewProps {
   id?: string;
@@ -17,6 +17,9 @@ export interface BookViewState { };
 export default class BookView extends React.Component<BookViewProps, BookViewState> {
   render() {
     const { book } = this.props;
+    if (!book) {
+      return <div>书籍数据无效</div>
+    }
     return (
       <div className="book-view">
         {

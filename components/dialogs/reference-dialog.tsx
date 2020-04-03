@@ -88,7 +88,11 @@ export class ReferenceDialog extends React.Component<ReferenceDialogProps, Refer
   onBookSelected(checked: boolean, item: Book) {
     this.setState((state) => {
       let reference = state.reference;
-      reference.set(item.id, item);
+      if (checked) {
+        reference.set(item.id, item);
+      } else {
+        reference.set(item.id, null);
+      }
       return { reference: reference };
     });
   }

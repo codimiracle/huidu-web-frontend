@@ -1,11 +1,11 @@
+import { Button, Form, Tooltip } from 'antd';
 import React from 'react';
-import { Theme, DEAULT_THEME } from '../../../types/theme';
 import { Episode } from '../../../types/episode';
-import Dommark from '../../../util/dommark-util';
-import { Tooltip, Form, Button, Popover } from 'antd';
-import CreateNotesDialog, { CreateNotesDialogProps } from '../../dialogs/create-notes-dialog';
 import { BookNotes, Note } from '../../../types/notes';
-import DommarkUtil from '../../../util/dommark-util';
+import { DEAULT_THEME, Theme } from '../../../types/theme';
+import { default as Dommark, default as DommarkUtil } from '../../../util/dommark-util';
+import CreateNotesDialog, { CreateNotesDialogProps } from '../../dialogs/create-notes-dialog';
+import LoginRequiredView from '../../user/login-required-view';
 
 export interface DommarkedNote {
   range: Range;
@@ -51,6 +51,25 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
     this.pageViewRef = React.createRef();
     this.onSelectionChange = this.onSelectionChange.bind(this);
   }
+  markRange(range: Range) {
+    let fragment: DocumentFragment = range.extractContents();
+    let textNodes = []
+    fragment.childNodes.forEach((e) => {
+      if (e.nodeType == 3) {
+        textNodes.push(e);
+      }
+    });
+    for (let i = 0; i < fragment.children.length; i++) {
+      fragment.children.item(i).classList.add('dommark-notes');
+    }
+    textNodes.forEach((n: Node) => {
+      let node = document.createElement('strong');
+      node.classList.add('dommark-notes');
+      node.innerHTML = n.nodeValue;
+      fragment.replaceChild(node, n);
+    });
+    range.insertNode(fragment);
+  }
   showMarkedNotes() {
     if (!this.props.bookNotes) {
       return;
@@ -69,10 +88,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
       let selection = window.getSelection();
       selection.addRange(range);
       selection.removeAllRanges();
-      let node = document.createElement('strong');
-      node.style.textDecoration = 'underline #fb617c 0.3em';
-      node.appendChild(range.extractContents());
-      range.insertNode(node);
+      this.markRange(range);
       return { note: note, range: range };
     });
     this.setState({ dommarkedNotes: ranges.filter((r) => r) });
@@ -109,7 +125,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
     }
     let newDommarkedKey = this.props.bookNotes.notes.filter((notes) => notes.episodeId == this.props.episode.id).map((n) => n.id).join('-');
     if (newDommarkedKey != dommarkedKey) {
-      this.setState({dommarkedKey: newDommarkedKey}, () => this.showMarkedNotes());
+      this.setState({ dommarkedKey: newDommarkedKey }, () => this.showMarkedNotes());
     }
   }
   componentWillUnmount() {
@@ -142,9 +158,13 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
   renderMarker() {
     return (
       <div className="marker-actions">
-        <span className="action">
-          <Button type="link" onClick={() => this.setState({ createNotesVisible: true })} style={{ color: 'inherit' }}>笔记</Button>
-        </span>
+        <LoginRequiredView
+          renderNonlogin={(opener) => <span className="action"><Button type="link" onClick={opener} style={{ color: 'inherit' }}>笔记</Button></span>}
+        >
+          <span className="action">
+            <Button type="link" onClick={() => this.setState({ createNotesVisible: true })} style={{ color: 'inherit' }}>笔记</Button>
+          </span>
+        </LoginRequiredView>
         <style jsx>{`
           .action {
             color: white;
@@ -169,9 +189,10 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
           <div className="page-header">
             <h1>{episode.title || ''}</h1>
           </div>
-          <div className="page-content" style={{ fontSize: `${theme.font.size / 10.0}em`, color: theme.color.font }} dangerouslySetInnerHTML={{ __html: episode.content.source }}></div>
+          <div className="page-content"
+            style={{ fontSize: `${theme.font.size / 10.0}em`, color: theme.color.font }}
+            dangerouslySetInnerHTML={{ __html: episode.content.source }}></div>
           <div className="page-footer">
-            {/* {episode.book.episodes / episode.number} */}
           </div>
           {this.renderMarkedNotes()}
         </div>

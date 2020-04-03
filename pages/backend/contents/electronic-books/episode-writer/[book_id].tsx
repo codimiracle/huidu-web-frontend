@@ -113,7 +113,7 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
       <div className="episode-writer">
         <h2>{this.props.episode ? '编辑章节' : '创建新章节'}</h2>
         <Affix offsetTop={16} style={{ position: 'absolute', right: '24px', paddingTop: '8px' }}>
-          <div>
+          <div className="episode-details">
             <BookPreviewView book={this.props.book} />
             <div className="episode-property">
               {episode && <div>字数：{episode.words || 0}</div>}
@@ -159,6 +159,9 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
           })}
         />
         <style jsx>{`
+          .episode-details {
+            width: 172px;
+          }
           .episode-property > div {
             margin: 0.5em 0;
           }

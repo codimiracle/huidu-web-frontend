@@ -4,7 +4,7 @@ import React from 'react';
 import ProfileForm from '../../components/form/profile-form';
 import { API } from '../../configs/api-config';
 import { User } from '../../types/user';
-import { fetchMessageByPost } from '../../util/network-util';
+import { fetchMessageByPost, fetchMessageByPut } from '../../util/network-util';
 import { UserContext } from '../../components/hooks/with-user';
 
 export interface UserCentralProfileProps {
@@ -43,7 +43,7 @@ export class UserCentralProfile extends React.Component<UserCentralProfileProps,
               region: form.getFieldValue('region').join(' '),
             }
           }
-          fetchMessageByPost(API.UserProfile, profile).then((msg) => {
+          fetchMessageByPut(API.UserProfile, profile).then((msg) => {
             if (msg.code == 200) {
               message.success('修改成功!');
             } else {

@@ -29,7 +29,7 @@ export default class FormeDynamic extends React.Component<FormeDynamicProps, For
                         </Col>
                         <Col span={8}>
                           <Sider theme="light">
-                            <AvatarView user={user} />
+                            <AvatarView size={64} showNickname user={user} />
                           </Sider>
                         </Col>
                       </ Row>

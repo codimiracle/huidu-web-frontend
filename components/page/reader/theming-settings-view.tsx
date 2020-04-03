@@ -31,22 +31,35 @@ export default class ThemingSettingsView extends React.Component<ThemingSettings
         >
           <div>背景色：
             <Popover
-              trigger="click"
-              placement="bottom"
-              content={<SketchPicker color={theme.color.background} onChange={(color) => onBackgroundColorChange(color.hex)} />}>
+              trigger="click" placement="bottom"
+              content={
+                <SketchPicker
+                  color={theme.color.background}
+                  onChange={(color) => onBackgroundColorChange(color.hex)}
+                />
+              }>
               <div className="color-preview"><span style={{ backgroundColor: theme.color.background }}>hello</span></div>
             </Popover>
           </div>
           <div>字体色：
             <Popover
-              trigger="click"
-              placement="bottom"
-              content={<SketchPicker color={theme.color.font} onChange={(color) => onFontColorChange(color.hex)} />}
+              trigger="click" placement="bottom"
               style={{ backgroundColor: 'none' }}>
-              <div className="color-preview"><span style={{ backgroundColor: theme.color.background, color: theme.color.font }}>Abc 文字</span></div>
+              content={
+                <SketchPicker
+                  color={theme.color.font}
+                  onChange={(color) => onFontColorChange(color.hex)}
+                />
+              }
+              <div className="color-preview"><span
+                style={{ backgroundColor: theme.color.background, color: theme.color.font }}
+              >Abc 文字</span></div>
             </Popover>
           </div>
-          <div>字体大小：<Slider value={theme.font.size} min={10} step={1} max={30} onChange={(value) => onFontSizeChange(parseInt(value.toString()))} /> <span style={{ fontSize: `${theme.font.size / 10.0}em` }}>Aa文字</span></div>
+          <div>字体大小：<Slider
+            value={theme.font.size} min={10} step={1} max={30}
+            onChange={(value) => onFontSizeChange(parseInt(value.toString()))}
+          /> <span style={{ fontSize: `${theme.font.size / 10.0}em` }}>Aa文字</span></div>
         </Drawer>
         <style jsx>{`
           .color-preview {

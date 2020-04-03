@@ -12,6 +12,7 @@ import { fetchDataByGet } from '../../../util/network-util';
 import { Affix, Alert, message } from 'antd';
 import AudioPlayerView from '../../../components/audio-player-view';
 import UploadUtil from '../../../util/upload-util';
+import AuthenticationUtil from '../../../util/authentication-util';
 
 export interface PlayerPageProps { };
 export interface PlayerPageState {
@@ -47,7 +48,7 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
     }
     let ebookEpisode = (historyData && historyData.entity && historyData.entity.audioEpisode && historyData.entity.audioEpisode.episode) || (audioEpisodeData && audioEpisodeData.entity && audioEpisodeData.entity.episode);
     let bookNotesData = null;
-    if (ebookEpisode) {
+    if (ebookEpisode && AuthenticationUtil.isValidated()) {
       bookNotesData = await fetchDataByGet<EntityJSON<BookNotes>>(API.UserBookNotesEntity, {
         book_id: ebookEpisode.book.id
       });
@@ -59,6 +60,7 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
       bookNotes: bookNotesData && bookNotesData.entity
     }
   }
+  fetchNextEpisode() {}
   render() {
     const { book, audioEpisode, history, bookNotes } = this.state;
     return (
@@ -73,7 +75,7 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
             {
               audioEpisode ?
                 <AudioPlayerView src={UploadUtil.absoluteUrl(API.UploadSource, audioEpisode.streamUrl)} onError={() => message.error('播放地址无效！')} />
-                : <Alert iconType="warn" message="无章节数据，播放器已隐藏" />
+                : <Alert type="warning" showIcon message="无章节数据，播放器已隐藏" closable/>
             }
           </Affix>
         </div>
@@ -83,7 +85,7 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
           bookNotes={bookNotes}
           renderExtraActions={() =>
             <>
-              <ReaderActionButton icon="right" onClick={() => { }} />
+              <ReaderActionButton icon="right" onClick={() => this.fetchNextEpisode()} />
             </>
           }
           renderCatalogs={(drawer, book, closer) =>

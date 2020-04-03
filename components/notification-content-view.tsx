@@ -5,6 +5,7 @@ import { ListJSON } from '../types/api';
 import { Notification } from '../types/notification';
 import { fetchDataByGet, fetchMessageByPost } from '../util/network-util';
 import NotificationItemView from './notification-item-view';
+import { ObjectSet } from '../util/struct/set';
 
 const { TabPane } = Tabs;
 
@@ -20,7 +21,7 @@ interface NotificationListProps {
 }
 
 interface NotificationListState {
-  list: Array<Notification>;
+  list: ObjectSet<Notification>;
   limit: number;
   page: number;
   loading: boolean;
@@ -31,7 +32,7 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
   constructor(props) {
     super(props);
     this.state = {
-      list: [],
+      list: new ObjectSet<Notification>([], (n) => n.id),
       page: 1,
       limit: 10,
       loading: false,
@@ -40,14 +41,22 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
   }
   onMarkAllRead() {
     this.setState({ changingBulk: true })
-    let unreadList = this.state.list.filter((n) => !n.read);
+    let unreadList = [];
+    let readList = [];
+    this.state.list.forEach((n) => {
+      if (n.read) {
+        readList.push(n);
+      } else {
+        unreadList.push(n);
+      }
+    });
     fetchMessageByPost(API.UserNotificationMarkAsReadBulk, {
       ids: unreadList.map((n) => n.id)
     }).then((msg) => {
       if (msg.code == 200) {
         unreadList.forEach((n) => n.read = true);
         this.setState((state) => ({
-          list: state.list.filter((n) => n.read).concat(unreadList)
+          list: new ObjectSet<Notification>(readList.concat(unreadList), (n) => n.id)
         }));
       } else {
         message.error(`全部已读失败：${msg.message}`);
@@ -64,9 +73,10 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
     }).then((msg) => {
       if (msg.code == 200) {
         notification.read = true;
-        this.setState((state) => ({
-          list: state.list.filter((n) => n.id != notification.id)
-        }))
+        this.setState((state) => {
+          state.list.delete(notification);
+          return { list: state.list }
+        })
         message.success("已标记为已读！");
       } else {
         message.error(`标记失败：${msg.message}`)
@@ -77,7 +87,7 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
     })
   }
   refreshNotification() {
-    let list = this.state.list;
+    let list = this.state.list.toArray();
     let firstNotification = list.length > 0 && list[0];
     if (firstNotification) {
       this.fetchNotification(`${parseInt(firstNotification.id) + 1}`, `${parseInt(firstNotification.id) + 10}`);
@@ -86,7 +96,7 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
     }
   }
   previousNotification() {
-    let list = this.state.list;
+    let list = this.state.list.toArray();
     let lastNotification = list.length > 0 && list[list.length - 1];
     this.fetchNotification(lastNotification && lastNotification.id);
   }
@@ -111,7 +121,7 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
       limit: this.state.limit
     }).then((data) => {
       this.setState((state) => {
-        let list = filterLastId.length == 2 ? data.list.concat(state.list) : state.list.concat(data.list)
+        let list = filterLastId.length == 2 ? new ObjectSet<Notification>(data.list.concat(state.list.toArray()), (n) => n.id) : state.list.addAll(...data.list)
         return { list: list, page: data.page, limit: data.limit }
       })
     }).catch((err) => {
@@ -125,6 +135,8 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
   }
   render() {
     const { list, loading } = this.state;
+    let dataSource = [];
+    list.forEach((n) => dataSource.push(n));
     return (
       <>
         <div style={{ textAlign: 'center' }}>
@@ -135,9 +147,9 @@ class NotificationList extends React.Component<NotificationListProps, Notificati
           loading={loading}
           loadMore={<div style={{ textAlign: 'center' }}>
             <Button type="link" loading={this.state.loading} onClick={() => this.previousNotification()}>更多</Button>
-            {this.props.markable && <Button type="link" disabled={this.state.list.length == 0} loading={this.state.changingBulk} onClick={() => this.onMarkAllRead()}>全部已读</Button>}
+            {this.props.markable && <Button type="link" disabled={this.state.list.size == 0} loading={this.state.changingBulk} onClick={() => this.onMarkAllRead()}>全部已读</Button>}
           </div>}
-          dataSource={list}
+          dataSource={dataSource}
         />
       </>
     );

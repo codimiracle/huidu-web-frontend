@@ -36,16 +36,28 @@ export interface Reference<T> {
   ref: T;
 }
 export interface Article extends Content {
-  type: ContentType,
-  title: string,
-  words: number,
+  type: ContentType;
+  title: string;
+  words: number;
   content: {
     type: 'plaintext' | 'html' | 'markdown',
     source: string
-  },
-  status: ContentStatus,
-  references: Array<Reference<any>>
-  reads: number,
+  };
+  status: ContentStatus;
+  references: Array<Reference<any>>;
+  reads: number;
+  examination: Examination;
+  liked: boolean;
+}
+
+export interface Examination {
+  id: string;
+  targetContentId: string;
+  examiner: SocialUser;
+  fromStatus: ContentStatus;
+  toStatus: ContentStatus;
+  reason: string;
+  examineTime: string;
 }
 
 export interface Content {

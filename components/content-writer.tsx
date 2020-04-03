@@ -19,6 +19,7 @@ export interface ContentWriterState {
   title: string;
   words: number;
   source: string;
+  value: ArticleProps;
 };
 
 export default class ContentWriter extends React.Component<ContentWriterProps, ContentWriterState> {
@@ -27,11 +28,20 @@ export default class ContentWriter extends React.Component<ContentWriterProps, C
     this.state = {
       title: props.value && props.value.title || '',
       source: props.value && props.value.content.source || '',
-      words: props.value && props.value.words || 0
+      words: props.value && props.value.words || 0,
+      value: props.value
     }
     this.onTitleChange = this.onTitleChange.bind(this);
     this.onSourceChange = this.onSourceChange.bind(this);
     this.fireChange = this.fireChange.bind(this);
+  }
+  private initState(article: ArticleProps) {
+    this.setState({
+      title: article && article.title || '',
+      source: article && article.content && article.content.source || '',
+      words: article && article.words || 0,
+      value: article
+    })
   }
   private fireChange() {
     this.props.onChange && this.props.onChange({
@@ -48,6 +58,11 @@ export default class ContentWriter extends React.Component<ContentWriterProps, C
   }
   private onSourceChange(source: string, count: number) {
     this.setState({ source: source, words: count }, this.fireChange);
+  }
+  componentDidUpdate() {
+    if (this.props.value != this.state.value) {
+      this.initState(this.props.value);
+    }
   }
   render() {
     return (

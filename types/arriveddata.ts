@@ -1,7 +1,7 @@
-import { Book, BookMetadata } from "./book";
+import { History } from "./history";
 
 export interface ArrivedData {
-  reads: Array<Book>,
+  reads: Array<History>,
   days: number,
   motto: string,
   today: string,

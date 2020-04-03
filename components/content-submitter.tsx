@@ -6,32 +6,31 @@ export interface ContentSubmitterProps {
   saved?: boolean;
   loading?: boolean;
   content?: Article;
+  originalStatus: ContentStatus;
   manager?: 'user' | 'admin';
   title?: React.ReactNode;
   extra?: React.ReactNode;
   onStatusChange: (status: ContentStatus) => void;
-  onSubmit: (status: ContentStatus) => void;
+  onSubmit: () => void;
 };
 export interface ContentSubmitterState {
-  status: ContentStatus;
 };
 
 export default class ContentSubmitter extends React.Component<ContentSubmitterProps, ContentSubmitterState> {
   constructor(props: ContentSubmitterProps) {
     super(props);
-    this.state = {
-      status: null
-    }
+    this.state = {}
   }
   render() {
-    const { saved, content, manager, extra } = this.props;
+    const { content, manager } = this.props;
     let statusDescriptors = [];
     let isContentCreated = content && content.contentId;
     if (isContentCreated) {
       statusDescriptors = [
         { value: ContentStatus.Draft, disabled: false },
         { value: ContentStatus.Examining, disabled: false },
-        { value: ContentStatus.Publish, disabled: true }
+        { value: ContentStatus.Publish, disabled: true },
+        { value: ContentStatus.Rejected, disabled: true}
       ];
       if (manager == 'admin') {
         statusDescriptors = Object.values(ContentStatus).map((status) => ({ value: status, disabled: false }));
@@ -39,7 +38,7 @@ export default class ContentSubmitter extends React.Component<ContentSubmitterPr
     }
     return (
       <div className="content-submitter">
-        <Affix offset={16}>
+        <Affix offsetTop={16}>
           <div>
             {this.props.title && <h2>{this.props.title}</h2>}
             <div className="content-saving-status">
@@ -47,17 +46,17 @@ export default class ContentSubmitter extends React.Component<ContentSubmitterPr
               <span>
                 {
                   isContentCreated &&
-                  <Select value={isContentCreated ? content.status : undefined} onChange={this.props.onStatusChange}>
+                  <Select value={content.status} onChange={this.props.onStatusChange}>
                     {
                       statusDescriptors.map((descriptor) => <Select.Option key={descriptor.value} disabled={descriptor.disabled} value={descriptor.value}>{CONTENT_STATUS_TEXTS[descriptor.value]}</Select.Option>)
                     }
                   </Select>
                 }
               </span>
-              <span>(当前：{isContentCreated ? CONTENT_STATUS_TEXTS[content.status] : '未保存'})</span>
+              <span>(当前：{isContentCreated ? CONTENT_STATUS_TEXTS[this.props.originalStatus] : '未保存'})</span>
             </div>
             <div className="content-submitter-actions">
-              <Button loading={this.props.loading} disabled={this.props.saved} onClick={() => this.props.onSubmit(this.state.status)}>保存</Button>
+              <Button loading={this.props.loading} disabled={this.props.saved} onClick={() => this.props.onSubmit()}>保存</Button>
             </div>
             <div className="content-submitter-extra">{this.props.extra}</div>
           </div>

@@ -15,7 +15,7 @@ interface CommentItemProps {
 }
 
 interface CommentItemState {
-  visible: boolean
+  visible: boolean;
 }
 
 class CommentItem extends React.Component<CommentItemProps, CommentItemState> {
@@ -50,7 +50,8 @@ class CommentItem extends React.Component<CommentItemProps, CommentItemState> {
         {
           replay &&
           <div className="replay-comment-editor" style={{ display: visible ? 'block' : 'none' }}>
-            <CommentEditorView mention={replay ? comment.owner : undefined} contentId={comment.targetContentId} replay={replay} />
+            <CommentEditorView onCommented={() => {
+            }} mention={replay ? comment.owner : undefined} contentId={comment.targetContentId} replay={replay} />
           </div>
         }
         <style jsx>{`
@@ -102,7 +103,7 @@ export default class CommentModularView extends React.Component<CommentModularVi
         hasMoreComments: data.list.length == limit,
         page: data.page,
         limit: data.limit,
-        list: state.list.concat(data.list),
+        list: data.page == 1 ? data.list : state.list.concat(data.list),
         loading: false
       }));
     }).catch((err) => {
@@ -122,14 +123,14 @@ export default class CommentModularView extends React.Component<CommentModularVi
       <div className="comment-modular-view">
         {
           !evaluation &&
-          <CommentEditorView replay={replay} mention={replay ? content.owner : undefined} rate={rate} contentId={content.contentId} />
+          <CommentEditorView onCommented={() => this.fetchCommentList(1, 10)} replay={replay} mention={replay ? content.owner : undefined} rate={rate} contentId={content.contentId} />
         }
         {
           hasComments &&
           <List
             itemLayout="vertical"
             renderItem={(comment) => (
-              <List.Item key={comment.contentId}>
+              <List.Item key={comment.contentId} style={{ display: 'block' }}>
                 <CommentItem
                   replay={replay}
                   rate={rate}
@@ -146,8 +147,8 @@ export default class CommentModularView extends React.Component<CommentModularVi
           <p className="empty-comments">暂无{evaluation ? '评价' : '评论'}</p>
         }
         {
-          hasComments && list.length > 20 && !evaluation &&
-          <CommentEditorView replay={replay} mention={replay ? content.owner : undefined} rate={rate} contentId={content.contentId} />
+          !evaluation && hasComments && list.length > 20 && !evaluation &&
+          <CommentEditorView onCommented={() => this.fetchCommentList(1, 10)} replay={replay} mention={replay ? content.owner : undefined} rate={rate} contentId={content.contentId} />
         }
         <style jsx>{`
           .empty-comments {

@@ -72,7 +72,7 @@ export default class CreateNotesDialog extends React.Component<CreateNotesDialog
           onCancel={onCancel}
           title="添加笔记"
           okText="添加"
-          zIndex={1060}
+          zIndex={1001}
           onOk={() => this.onAddNotes()}
           confirmLoading={creating}
         >

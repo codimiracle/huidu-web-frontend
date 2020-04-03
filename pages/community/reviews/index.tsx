@@ -9,6 +9,8 @@ import ContentList from '../../../components/content-list-view';
 import { ListJSON } from '../../../types/api';
 import SimpleListView from '../../../components/integral/simple-list-view';
 import ReviewItemView from '../../../components/community/review-item-view';
+import { UserContext } from '../../../components/hooks/with-user';
+import { User } from '../../../types/user';
 
 export interface ReviewsProps {
   list: Array<Review>;
@@ -48,11 +50,25 @@ export default class Reviews extends React.Component<ReviewsProps, ReviewsState>
             </>
           }
         >
-          <ContentList
-            api={API.CommunityReviewCollection}
-            initialTotal={total}
-            initialDataSource={list}
-          />
+          <UserContext.Consumer>
+            {
+              (user: User) =><>
+              {user &&
+                <ContentList
+                  api={API.CommunityReviewCollection}
+                />
+              }
+              {
+                !user &&
+                < ContentList
+                  api={API.CommunityReviewCollection}
+                  initialDataSource={list}
+                  initialTotal={total}
+                />
+              }
+            </>
+            }
+          </UserContext.Consumer>
         </SectionView>
       </>
     )

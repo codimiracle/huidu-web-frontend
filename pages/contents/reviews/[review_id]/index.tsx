@@ -12,6 +12,7 @@ import DatetimeUtil from '../../../../util/datetime-util';
 import { fetchDataByGet } from '../../../../util/network-util';
 import { EntityJSON } from '../../../../types/api';
 import { UserContext } from '../../../../components/hooks/with-user';
+import ReviewPostView from '../../../../components/review-post';
 
 export interface ReviewPostProps {
   review: Review;
@@ -43,47 +44,17 @@ export default class ReviewPost extends React.Component<ReviewPostProps, ReviewP
             <div className="review-author">
               <AvatarView
                 size={64}
-                user={review.owner}
-              />
-              <div>{review.owner.nickname}</div>
-            </div>
-          }
-          content={
-            <div className="review-post">
-              <Typography>
-                <h1>{review.title}</h1>
-              </Typography>
-              <p className="review-rate">
-                <Rate defaultValue={review.rate} disabled allowHalf style={{ fontSize: '1em' }} />
-              </p>
-              <Typography>
-                {
-                  !review && <p>内容无效！</p>
-                }
-                <div className="review-statistic">
-                  <span>正文</span>
-                  <span>{review.reads} 阅读</span>
-                  <span>{review.likes} 点赞</span>
-                  <span>{review.comments} 评论</span>
-                  <span>{DatetimeUtil.fromNow(review.updateTime)}</span>
-                </div>
-                {
-                  review &&
-                  <div dangerouslySetInnerHTML={{ __html: review.content.source }}></div>
-                }
-              </Typography>
-              <div className="review-reference">
-                <ReferenceView references={review.references} />
-              </div>
-              <Divider type="horizontal" />
-              <h3>评论</h3>
-              <CommentModularView
-                rate
-                content={review}
+                showNickname
+                user={review && review.owner}
               />
             </div>
-          }
-        />
+          }>
+            {
+              review ?
+              <ReviewPostView review={review} />
+              : <div>点评无效!</div>
+            }
+        </ContentSection>
         <style jsx>{`
           .review-author {
             display: flex;

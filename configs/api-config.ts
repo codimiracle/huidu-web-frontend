@@ -40,15 +40,6 @@ export interface APIDefinitionSet {
 /**
  * for using API in netwok-util
  */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
-/**
- * for using API in netwok-util
- */
 export enum API {
   ServerOrigin = "origin",
   UserCollection = "user.collection",
@@ -88,9 +79,8 @@ export enum API {
   PaperBookComments = "paperBook.comments",
   PaperBookPublishYears = "paperBook.publishYears",
   // frontend
+  BookEntity = "book.entity",
   SystemRealtime = "system.realtime",
-  CommonMostRead = "common.mostRead",
-  CommonRecommends = "common.recommends",
   UserOrderEntity = "user.order.entity",
   UserOrderCollection = "user.order.collection",
   UserOrderring = "user.order.orderring",
@@ -260,6 +250,12 @@ export enum API {
   CommunityDynamicCollection = "community.dynamic.collection",
   CommunityTopicCollection = "community.topic.collection",
   CommunityReviewCollection = "community.review.collection",
+  UserCommunityTopicCreate = "user.community.topic.create",
+  UserCommunityTopicEntity = "user.community.topic.entity",
+  UserCommunityTopicUpdate = "user.community.topic.update",
+  UserCommunityReviewCreate = "user.community.review.create",
+  UserCommunityReviewEntity = "user.community.review.entity",
+  UserCommunityReviewUpdate = "user.community.review.update",
   UserDynamicCollection = "user.community.dynamic.collection",
   UserNotificationMarkAsReadBulk = "user.notification.markAllRead",
   UserAccountBalance = "user.account.balance",
@@ -576,6 +572,26 @@ export const APIDefinitionData: APIDefinitionSet = {
         method: 'delete',
         query: {
           topic_id: null
+        }
+      },
+      accept: {
+        url: `${testOrigin}/api/backend/contents/topics/@{topic_id}/accept`,
+        method: 'post',
+        query: {
+          topic_id: null
+        },
+        body: {
+          reason: null
+        }
+      },
+      reject: {
+        url: `${testOrigin}/api/backend/contents/topics/@{topic_id}/reject`,
+        method: 'post',
+        query: {
+          topic_id: null
+        },
+        body: {
+          reason: null
         }
       },
       entity: {
@@ -1037,6 +1053,9 @@ export const APIDefinitionData: APIDefinitionSet = {
     },
     publishYears: `${testOrigin}/api/paper-books/publish-years`
   },
+  book: {
+    entity: `${testOrigin}/api/books/@{book_id}`,
+  },
   bookMetadata: {
     suggestion: {
       url: `${testOrigin}/api/book-metadatas/suggestion?keyword=@{keyword}`,
@@ -1073,8 +1092,8 @@ export const APIDefinitionData: APIDefinitionSet = {
     collection: `${origin}/api/dynamics?limit=@{limit}&page=@{page}`
   },
   review: {
-    entity: `${origin}/api/reviews/@{review_id}`,
-    collection: `${origin}/api/reviews?limit=@{limit}&page=@{page}`
+    entity: `${testOrigin}/api/community/reviews/@{review_id}`,
+    collection: `${testOrigin}/api/community/reviews?limit=@{limit}&page=@{page}`
   },
   topic: {
     create: {
@@ -1082,8 +1101,9 @@ export const APIDefinitionData: APIDefinitionSet = {
       method: 'post',
       body: {
         title: null,
-        type: '',
-        content: '',
+        words: null,
+        status: null,
+        content: null,
         references: []
       }
     },
@@ -1092,8 +1112,9 @@ export const APIDefinitionData: APIDefinitionSet = {
       method: 'put',
       body: {
         title: null,
-        type: '',
-        content: '',
+        words: 0,
+        status: null,
+        content: null,
         references: []
       }
     },
@@ -1204,10 +1225,9 @@ export const APIDefinitionData: APIDefinitionSet = {
           method: 'post',
           body: {
             title: null,
-            content: {
-              type: 'html',
-              source: ''
-            },
+            content: null,
+            rate: null,
+            status: null,
             references: []
           }
         },
@@ -1219,13 +1239,13 @@ export const APIDefinitionData: APIDefinitionSet = {
           },
           body: {
             title: null,
-            content: {
-              type: 'html',
-              source: ''
-            },
+            content: null,
+            rate: null,
+            status: null,
             references: []
           }
         },
+        entity: `${testOrigin}/api/user/community/reviews/@{review_id}`,
       },
       topic: {
         create: {
@@ -1255,6 +1275,7 @@ export const APIDefinitionData: APIDefinitionSet = {
             references: []
           }
         },
+        entity: `${testOrigin}/api/user/community/topics/@{topic_id}`,
       },
       dynamic: {
         collection: `${testOrigin}/api/user/community/dynamics?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`
@@ -1432,7 +1453,15 @@ export const APIDefinitionData: APIDefinitionSet = {
       url: `${testOrigin}/api/system/sign-out`,
       method: 'post',
     },
-    signUp: `${testOrigin}/api/system/sign-up`,
+    signUp: {
+      url: `${testOrigin}/api/system/sign-up`,
+      method: 'post',
+      body: {
+        accountType: null,
+        userdata: null,
+        password: null
+      }
+    },
     usernameExists: `${testOrigin}/api/system/username-exists?username=@{username}`,
     nicknameExists: `${testOrigin}/api/system/nickname-exists?nickname=@{nickname}`,
     realtime: `${testOrigin}/api/system/realtime`

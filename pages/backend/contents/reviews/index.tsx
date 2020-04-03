@@ -12,6 +12,8 @@ import { ContentStatus, CONTENT_STATUS_COLORS, CONTENT_STATUS_TEXTS, Reference }
 import { Review } from '../../../../types/review';
 import DatetimeUtil from '../../../../util/datetime-util';
 import { fetchDataByGet } from '../../../../util/network-util';
+import EntityAction from '../../../../components/backend/entity-action';
+import WrappedContentExaminingDialog from '../../../../components/backend/form/content-examining-dialog';
 
 export interface ReviewManagerProps {
   list: Array<Review>;
@@ -134,7 +136,18 @@ export default class ReviewManager extends React.Component<ReviewManagerProps, R
               count={this.state.selectedRowKeys.length}
               onClear={() => this.setState({ selectedRowKeys: [], selectedRows: [] })}
             >
-              <a>通过审核</a> <a>驳回</a>
+              <EntityAction
+                entity={null}
+                name="通过"
+                disabled={this.state.selectedRows.length == 0}
+                renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={this.state.selectedRows} accept visible={visible} onCancel={cancelor} />}
+              />
+              <EntityAction
+                entity={null}
+                name="驳回"
+                disabled={this.state.selectedRows.length == 0}
+                renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={this.state.selectedRows} accept={false} visible={visible} onCancel={cancelor} />}
+              />
             </BulkBar>
           }
           actionOptionWidth={178}

@@ -11,6 +11,7 @@ import { History } from '../../../types/history';
 import ElectronicBookCatalogsView from '../../../components/page/reader/electronic-book-catalogs-view';
 import ReaderNotesView from '../../../components/page/reader/reader-notes-view';
 import { Button } from 'antd';
+import AuthenticationUtil from '../../../util/authentication-util';
 
 export interface ReaderPageProps { };
 export interface ReaderPageState {
@@ -35,10 +36,13 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
     } else {
       historyData = await fetchDataByGet<EntityJSON<History>>(API.ElectronicBookLastReadEpisode, args);
     }
-    let bookNotesData = await fetchDataByGet<EntityJSON<BookNotes>>(API.UserBookNotesEntity, args);
+    let bookNotesData = null;
+    if (AuthenticationUtil.isValidated()) {
+      bookNotesData = await fetchDataByGet<EntityJSON<BookNotes>>(API.UserBookNotesEntity, args);
+    }
     return {
       book: bookData.entity,
-      bookNotes: bookNotesData.entity,
+      bookNotes: bookNotesData && bookNotesData.entity,
       episode: episodeData && episodeData.entity,
       history: historyData && historyData.entity
     }
@@ -66,7 +70,7 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
           this.setState((state) => ({
             book: data.book,
             bookNotes: data.bookNotes,
-            episodes: data.episode ? [data.episode] : (data.history.episode ? [data.history.episode] : state.episodes)
+            episodes: data.episode ? [data.episode] : (data.history && data.history.episode ? [data.history.episode] : state.episodes)
           }));
         }}
       >
@@ -88,8 +92,10 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
               onClose={closer}
             />
           )}
+          renderBottom={() =>
+            <div className="huidu-actions-center"><Button type="link" style={{ margin: '1em 0 2em 0' }}>下一章</Button></div>
+          }
         />
-        <div className="huidu-actions-center"><Button type="link" style={{ margin: '1em 0 2em 0' }}>下一章</Button></div>
       </InitializerView>
     )
   }

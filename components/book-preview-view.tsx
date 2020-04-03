@@ -21,7 +21,7 @@ export default class BookPreviewView extends React.Component<BookPreviewViewProp
           <Col>
             <BookCover size="small" book={book} />
           </Col>
-          <Col>
+          <Col style={{ flex: 1 }}>
             <BookHeader book={book} author />
             <BookDescription size="small" book={book} style={{ flex: 1 }} />
           </Col>

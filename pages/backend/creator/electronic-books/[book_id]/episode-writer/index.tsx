@@ -121,6 +121,7 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
               <div>章节状态：{episode && episode.id ? (
                 <Select
                   size="small"
+                  disabled={episode && episode.status === EpisodeStatus.Publish} 
                   defaultValue={EpisodeStatus.Draft}
                   value={episode.status}
                   onChange={(status) => this.setState((state) => {
@@ -134,20 +135,25 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
               ) : <span style={{ color: 'red' }}>未保存</span>}</div>
               {
                 episode && episode.status === EpisodeStatus.Examining &&
-                <p>审核后，在工作人员确认后将会发布</p>
+                <p className="huidu-powerpoint">审核后，在工作人员确认后将会发布</p>
               }
-              <div>章节号：<InputNumber size="small" min={1} value={episode && episode.episodeNumber || undefined} placeholder="章节号" onChange={(value) => this.setState((state) => {
+              {
+                episode && episode.status === EpisodeStatus.Publish &&
+                <p className="huidu-powerpoint">文章已经发布，不能改动</p>
+              }
+              <div>章节号：<InputNumber  disabled={episode && episode.status === EpisodeStatus.Publish}  size="small" min={1} value={episode && episode.episodeNumber || undefined} placeholder="章节号" onChange={(value) => this.setState((state) => {
                 let episode: any = state.episode || { episodeNumber: 0 };
                 episode.episodeNumber = value;
                 return { episode: episode }
               })} /></div>
             </div>
             <div>
-              <Button loading={saving} onClick={() => this.onSave()}>保存</Button>
+              <Button loading={saving} disabled={episode && episode.status === EpisodeStatus.Publish} onClick={() => this.onSave()}>保存</Button>
             </div>
           </div>
         </Affix>
         <PageWriterView
+          disabled={episode && episode.status === EpisodeStatus.Publish} 
           theme={DEAULT_THEME}
           defaultValue={{ title: episode && episode.title || '', content: { type: 'html', source: episode && episode.content && episode.content.source || '' } }}
           onChange={(value) => this.setState((state) => {

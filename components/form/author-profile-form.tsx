@@ -40,7 +40,7 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
     fetchMessageByGet(API.SystemNicknameExists, {
       nickname: value
     }).then((msg) => {
-      if (msg.code == 200) {
+      if (msg.code == 404) {
         callback();
       } else {
         callback(new Error(msg.message));
@@ -53,7 +53,7 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
     fetchMessageByGet(API.SystemUsernameExists, {
       username: value
     }).then((msg) => {
-      if (msg.code == 200) {
+      if (msg.code == 404) {
         callback();
       } else {
         callback(new Error(msg.message));

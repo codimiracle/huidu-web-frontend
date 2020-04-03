@@ -17,6 +17,9 @@ export default class AuthenticationUtil {
       return this.isValidated() && window.localStorage.getItem('token');
     }
   }
+  static hasCredentials() {
+    return window.localStorage.length > 0;
+  }
   static isValidated() {
     if (typeof window == 'object') {
       let expired = window.localStorage.getItem('expired');

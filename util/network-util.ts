@@ -10,6 +10,7 @@ export interface APIMessage {
 
 export const fetchRaw = async function <T>(api: API, init?: RequestInit): Promise<T> {
   let response = await fetch(api, init);
+  //凭据无效
   if (response.status == 401) {
     AuthenticationUtil.destroy();
     // 以匿名身份重试

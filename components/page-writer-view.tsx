@@ -13,15 +13,16 @@ export interface Content {
 }
 
 export interface PageWriterViewProps {
-  theme: Theme,
-  value?: Content,
-  defaultValue?: Content,
-  onChange?: (value: Content) => void
+  disabled?: boolean;
+  theme: Theme;
+  value?: Content;
+  defaultValue?: Content;
+  onChange?: (value: Content) => void;
 };
 export interface PageWriterViewState {
-  title: string,
-  source: string,
-  count: number
+  title: string;
+  source: string;
+  count: number;
 };
 
 export default class PageWriterView extends React.Component<PageWriterViewProps, PageWriterViewState> {
@@ -69,6 +70,7 @@ export default class PageWriterView extends React.Component<PageWriterViewProps,
           <div className="page-header">
             <h1><Input
               placeholder="请输入标题"
+              disabled={this.props.disabled}
               value={renderringContent.title}
               onChange={(e) => this.onTitleChange(e.target.value)}
               style={{ color: 'inherit', fontSize: '1em', backgroundColor: 'inherit' }}
@@ -76,6 +78,7 @@ export default class PageWriterView extends React.Component<PageWriterViewProps,
           </div>
           <div className="page-content" style={{ fontSize: `${theme.font.size / 10.0}em`, color: theme.color.font }} onClick={() => this.focus()}>
             <EditorView
+              disabled={this.props.disabled}
               ref={this.editorRef}
               type="inline"
               value={renderringContent.content.source}

@@ -53,12 +53,7 @@ class ElectronicBookReaderCatalogsView extends React.Component<ElectronicBookRea
               <div>目录</div>
             </>
           }
-          visible={visible}
-          onClose={onClose}
-          placement="left"
-          width="312px"
-          mask={false}
-          maskClosable={false}
+          visible={visible} onClose={onClose}placement="left" width="312px" mask={false} maskClosable={false}
         >
           <InitializerView
             initializer={() => this.getClientSideProps()}

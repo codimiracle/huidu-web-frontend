@@ -11,6 +11,8 @@ import { Topic } from '../../../types/topic';
 import { Review } from '../../../types/review';
 import TopicItemView from '../../../components/community/topic-item-view';
 import ReviewItemView from '../../../components/community/review-item-view';
+import { UserContext } from '../../../components/hooks/with-user';
+import { User } from '../../../types/user';
 
 interface DynamicsProps {
   list: Array<Article>,
@@ -38,21 +40,36 @@ export default class Dynamics extends React.Component<DynamicsProps, DynamicsSta
               <h3>话题热榜</h3>
               <SimpleListView
                 api={API.CommunityTopicCollection}
-                renderItem={(item: Topic) => <List.Item style={{padding: 0, display: 'block'}}><TopicItemView topic={item} /></List.Item>}
+                renderItem={(item: Topic) => <List.Item style={{ padding: 0, display: 'block' }}><TopicItemView topic={item} /></List.Item>}
               />
               <h3>点评热榜</h3>
               <SimpleListView
                 api={API.CommunityReviewCollection}
-                renderItem={(item: Review) => <List.Item style={{padding: 0, display: 'block'}}><ReviewItemView review={item} /></List.Item>}
+                renderItem={(item: Review) => <List.Item style={{ padding: 0, display: 'block' }}><ReviewItemView review={item} /></List.Item>}
               />
             </>
           }
         >
-          <ContentList
-            api={API.CommunityDynamicCollection}
-            initialDataSource={list}
-            initialTotal={total}
-          />
+          <UserContext.Consumer>
+            {
+              (user: User) =>
+                <>
+                  {user &&
+                    <ContentList
+                      api={API.CommunityDynamicCollection}
+                    />
+                  }
+                  {
+                    !user &&
+                    < ContentList
+                      api={API.CommunityDynamicCollection}
+                      initialDataSource={list}
+                      initialTotal={total}
+                    />
+                  }
+                </>
+            }
+          </UserContext.Consumer>
         </SectionView>
       </>
     )

@@ -67,6 +67,9 @@ export default async function (api: API, init?: RequestInit): Promise<Response> 
     init.headers = { 'Content-Type': 'application/json;charset=utf-8', ...init.headers };
     init.body = JSON.stringify(bodyPlaceholderReplacer(apiDefinition, data));
   }
+  if ((init && init.method || 'get').toLowerCase() != 'get') {
+    init.headers = { 'Content-Type': 'application/json;charset=utf-8', ...init.headers };
+  }
   init = requestAuthorization(init);
   console.debug("calling api with: %s", JSON.stringify(init));
   // will normally call fetch if not satisfied conditions. 

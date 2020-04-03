@@ -19,7 +19,7 @@ function UserTypeView(props: UserTypeViewProps) {
   const { value, onChange } = props;
   const buttonStyle = { width: 128, height: 128, fontSize: '2em' };
   return (
-    <>
+    <div>
       <Row type="flex" gutter={16} justify="center">
         <Col>
           <Button type={value == 'user' ? 'primary' : 'default'} onClick={() => onChange('user')} style={buttonStyle}>
@@ -34,7 +34,7 @@ function UserTypeView(props: UserTypeViewProps) {
               </Button>
         </Col>
       </Row>
-    </>
+    </div>
   );
 }
 
@@ -85,6 +85,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
             userdata: {
               username: form.getFieldValue('username'),
               nickname: form.getFieldValue('nickname'),
+              avatar: form.getFieldValue('avatar'),
               extra: {
                 gender: form.getFieldValue('gender'),
                 slogan: form.getFieldValue('slogan'),
@@ -186,7 +187,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 <Result
                   status="success"
                   title="注册成功！"
-                  subTitle={`用户名：${this.state.userdata.username},密码：${this.state.password}`}
+                  subTitle={`用户名：${this.state.userdata.username},密码：${form.getFieldValue('password')}`}
                 >
                   点击 “完成” 转到登录页面
                 </Result>

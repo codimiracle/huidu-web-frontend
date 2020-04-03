@@ -4,10 +4,9 @@ import { Router, withRouter } from 'next/router';
 import React from 'react';
 import { API } from '../../configs/api-config';
 import { User } from '../../types/user';
+import AuthenticationUtil, { UserToken } from '../../util/authentication-util';
 import { fetchDataByPost } from '../../util/network-util';
 import UserSigninForm from '../form/user-signin-from';
-import { EntityJSON } from '../../types/api';
-import AuthenticationUtil, { UserToken } from '../../util/authentication-util';
 
 export interface UserSignInDialogProps {
   form: WrappedFormUtils;
@@ -54,6 +53,7 @@ export class UserSignInDialog extends React.Component<UserSignInDialogProps, Use
           visible={visible}
           onCancel={this.props.onCancel}
           width={376}
+          zIndex={1060}
           footer={null}
         >
           <div className="dialog-header">

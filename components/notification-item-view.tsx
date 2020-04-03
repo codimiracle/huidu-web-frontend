@@ -3,6 +3,7 @@ import React from 'react';
 import { Notification } from '../types/notification';
 import DatetimeUtil from '../util/datetime-util';
 import AvatarView from './avatar-view';
+import Description from './base/description';
 
 export interface NotificationItemViewProps {
   notification: Notification;
@@ -15,12 +16,12 @@ export default class NotificationItemView extends React.Component<NotificationIt
     const { notification } = this.props;
     return (
       <>
-        <Badge dot={!notification.read}>
+        <Badge dot={!notification.read} style={{ margin: '2px 4px 0 0' }}>
           <Row type="flex" gutter={12} style={{ alignItems: 'center' }}>
             <Col>
               <AvatarView user={notification.sender} />
             </Col>
-            <Col>
+            <Col style={{ flex: 1 }}>
               <Row type="flex" gutter={8}>
                 <Col>
                   <strong>{notification.sender.nickname}</strong>
@@ -30,7 +31,7 @@ export default class NotificationItemView extends React.Component<NotificationIt
                 </Col>
               </Row>
               <Row>
-                <p style={{ margin: '0' }}>{notification.message}</p>
+                <Description size="medium" style={{ margin: '0', lineHeight: '1.5em' }} description={notification.message} />
               </Row>
             </Col>
             <Col>

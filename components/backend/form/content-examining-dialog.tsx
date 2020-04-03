@@ -1,7 +1,7 @@
 import React from 'react';
 import ContentExaminingForm from './content-examining-form';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
-import { Modal } from 'antd';
+import { Modal, message, Alert } from 'antd';
 import { Article } from '../../../types/content';
 import { fetchMessageByPost } from '../../../util/network-util';
 import { API } from '../../../configs/api-config';
@@ -15,7 +15,10 @@ export interface ContentExaminingDialogProps {
 };
 export interface ContentExaminingDialogState {
   examining: boolean;
-  result: any;
+  result: {
+    responses: any,
+    failures: any
+  };
 };
 
 export class ContentExaminingDialog extends React.Component<ContentExaminingDialogProps, ContentExaminingDialogState> {
@@ -25,6 +28,7 @@ export class ContentExaminingDialog extends React.Component<ContentExaminingDial
       examining: false,
       result: null
     }
+    this.onExaminating = this.onExaminating.bind(this);
   }
   onExaminating() {
     const { form, entities } = this.props;
@@ -50,6 +54,7 @@ export class ContentExaminingDialog extends React.Component<ContentExaminingDial
             }
           }
         }
+        this.setState({ examining: true });
         ruuner().then(() => {
           this.setState({
             result: {
@@ -57,6 +62,11 @@ export class ContentExaminingDialog extends React.Component<ContentExaminingDial
               failures: failures
             }
           });
+          form.resetFields();
+        }).catch((err) => {
+          message.error(`评审时发生错误：${err.message}`)
+        }).finally(() => {
+          this.setState({ examining: false });
         })
       }
     })
@@ -66,6 +76,7 @@ export class ContentExaminingDialog extends React.Component<ContentExaminingDial
     let isBulk = entities.length > 1;
     return (
       <Modal
+        confirmLoading={this.state.examining}
         visible={this.props.visible}
         onCancel={this.props.onCancel}
         onOk={this.onExaminating}
@@ -75,6 +86,11 @@ export class ContentExaminingDialog extends React.Component<ContentExaminingDial
         }
         {
           !isBulk && <h3>审查 {entities[0].title}</h3>
+        }
+        {
+          this.state.result && Object.values(this.state.result.failures).map((f, index) => (
+            <Alert iconType="error" key={index} message={f}/>
+          ))
         }
         <ContentExaminingForm
           form={this.props.form}

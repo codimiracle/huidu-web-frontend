@@ -2,7 +2,9 @@ export class ObjectSet<T> {
   private originSet: Set<string>;
   private valueMap: Map<string, T>;
   private uniquer: (element: T) => string;
+  private valuesCaches: Array<T>;
   constructor(iterable: Iterable<T>, uniquer?: (element: T) => string) {
+    this.valuesCaches = [];
     this.originSet = new Set();
     this.valueMap = new Map();
     if (!uniquer) {
@@ -15,16 +17,24 @@ export class ObjectSet<T> {
       if (result.done) {
         break;
       }
-      let key = uniquer(result.value);
-      this.originSet.add(key);
-      this.valueMap.set(key, result.value);
+      this.add(result.value);
     }
   }
 
   public get size(): number {
     return this.originSet.size;
   }
- 
+  public toArray(): Array<T> {
+    if (this.valuesCaches.length != this.size) {
+      this.valuesCaches.length = 0;
+    }
+    if (this.valuesCaches) {
+      return this.valuesCaches.concat([]);
+    }
+    let list = new Array(this.size);
+    this.forEach((e) => list.push(e));
+    return list;
+  }
   public values(): IterableIterator<T> {
     return this.valueMap.values();
   }

@@ -9,6 +9,7 @@ import { API } from '../../../configs/api-config';
 import { ListJSON } from '../../../types/api';
 import { Topic } from '../../../types/topic';
 import { fetchDataByGet } from '../../../util/network-util';
+import { User } from '../../../types/user';
 
 export interface TopicsProps {
   list: Array<Topic>;
@@ -58,11 +59,26 @@ export default class Topics extends React.Component<TopicsProps, TopicsState> {
             </>
           }
         >
-          <ContentList
-            api={API.CommunityTopicCollection}
-            initialTotal={total}
-            initialDataSource={list}
-          />
+          <UserContext.Consumer>
+            {
+              (user: User) =>
+              <>
+              {user &&
+                <ContentList
+                  api={API.CommunityTopicCollection}
+                />
+              }
+              {
+                !user &&
+                < ContentList
+                  api={API.CommunityTopicCollection}
+                  initialDataSource={list}
+                  initialTotal={total}
+                />
+              }
+            </>
+            }
+          </UserContext.Consumer>
         </SectionView>
         <WrappedUserSigninDialog visible={this.state.signInDialogVisible} onCancel={() => this.setState({ signInDialogVisible: false })} />
       </>

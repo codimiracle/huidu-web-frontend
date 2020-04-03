@@ -25,9 +25,18 @@ export interface ReaderActionTextButtonProps {
 
 export function ReaderActionButton(props: ReaderActionIconButtonProps | ReaderActionTextButtonProps) {
   if ((props as ReaderActionTextButtonProps).text) {
-    return <Button shape="circle" type={props.actived ? 'primary' : 'default'} size="large" onClick={props.onClick}>{(props as ReaderActionTextButtonProps).text}</Button>
+    return <Button
+      shape="circle"
+      type={props.actived ? 'primary' : 'default'}
+      size="large"
+      onClick={props.onClick}>{(props as ReaderActionTextButtonProps).text}</Button>
   }
-  return <Button shape="circle" type={props.actived ? 'primary' : 'default'} size="large" icon={(props as ReaderActionIconButtonProps).icon} onClick={props.onClick} />
+  return <Button
+    shape="circle"
+    type={props.actived ? 'primary' : 'default'}
+    size="large"
+    icon={(props as ReaderActionIconButtonProps).icon}
+    onClick={props.onClick} />
 }
 
 export interface ReaderProps {
@@ -37,6 +46,7 @@ export interface ReaderProps {
   renderCatalogs: (drawer: DrawerKey, book: Book, closer: () => void) => React.ReactNode;
   renderBookNotes: (drawer: DrawerKey, bookNotes: BookNotes, closer: () => void) => React.ReactNode;
   renderExtraActions?: () => React.ReactNode;
+  renderBottom?: () => React.ReactNode;
 }
 
 export interface ReaderState {
@@ -122,13 +132,25 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
               >
               </List>
+              {
+                this.props.renderBottom && this.props.renderBottom()
+              }
             </div>
           </div>
           <div className="reader-actions">
             {this.props.renderExtraActions && this.props.renderExtraActions()}
-            <ReaderActionButton actived={drawer == DrawerKey.catalogs} icon="bars" onClick={() => this.onDrawerChange(DrawerKey.catalogs)} />
-            <ReaderActionButton actived={drawer == DrawerKey.theme} icon="font-colors" onClick={() => this.onDrawerChange(DrawerKey.theme)} />
-            <ReaderActionButton actived={protectEye} icon="eye" onClick={() => this.onProtectEyeToggle()} />
+            <ReaderActionButton
+              actived={drawer == DrawerKey.catalogs}
+              icon="bars"
+              onClick={() => this.onDrawerChange(DrawerKey.catalogs)} />
+            <ReaderActionButton
+              actived={drawer == DrawerKey.theme}
+              icon="font-colors"
+              onClick={() => this.onDrawerChange(DrawerKey.theme)} />
+            <ReaderActionButton
+              actived={protectEye}
+              icon="eye"
+              onClick={() => this.onProtectEyeToggle()} />
             <LoginRequiredView
               renderNonlogin={(opener) =>
                 <ReaderActionButton actived={drawer == DrawerKey.notes} text="笔" onClick={opener} />

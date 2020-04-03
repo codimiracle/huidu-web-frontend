@@ -25,7 +25,7 @@ export default class ContentList extends React.Component<ContentListProps, Conte
         initialTotal={this.props.initialTotal}
         api={this.props.api}
         renderItem={(article: Article) => (
-          <List.Item>
+          <List.Item style={{ display: 'block' }}>
             <ContentView content={article} />
           </List.Item>
         )}

@@ -42,11 +42,11 @@ class CommentEditor extends React.Component<CommentEditorProps, CommentEditorSta
     let opstr = replay ? '回复' : '评论';
     form.validateFields((errors, values) => {
       if (!errors) {
-        let api = orderNumber ? API.ContentCommentCreate : API.UserOrderEvaluate;
+        let api = orderNumber ? API.UserOrderEvaluate : API.ContentCommentCreate;
         this.setState({ loading: true });
         fetchMessageByPost(api, {
-          orderNumber: orderNumber ? orderNumber : undefined,
-          content_id: orderNumber ? contentId : undefined,
+          orderNumber: orderNumber && orderNumber,
+          content_id: !orderNumber && contentId,
           ...values
         }).then((msg) => {
           if (msg.code == 200) {
