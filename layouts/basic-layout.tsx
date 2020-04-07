@@ -47,7 +47,7 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
       message.loading('正在注销....');
       return;
     }
-    this.setState({signingOut: true});
+    this.setState({ signingOut: true });
     fetchMessageByPost(API.SystemSignOut).then((msg) => {
       if (msg.code == 200) {
         message.success(`退出登录成功！`);
@@ -89,7 +89,10 @@ class BasicLayout extends React.Component<BasicLayoutProps, BasicLayoutState> {
               {
                 (user: User) =>
                   <div className="user-tools">
-                    <SearchView />
+                    {
+                      !this.props.router.pathname.startsWith('/search') &&
+                      <SearchView />
+                    }
                     {
                       user &&
                       <NotificationView style={{ color: 'white' }} />

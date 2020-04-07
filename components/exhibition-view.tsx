@@ -11,6 +11,7 @@ import { fetchDataByGet } from '../util/network-util';
 export interface ExhibitionViewProps<T> {
   category: Category;
   count?: number;
+  getRequestExtraArgument?: () => any;
   grid?: ListGridType;
   renderItem?: (item: T, index: number) => React.ReactNode;
   title?: string;
@@ -42,10 +43,11 @@ export default class ExhibitionView<T> extends React.Component<ExhibitionViewPro
     const { category } = this.props;
     const { selectedTag } = this.state;
     this.setState({ loading: true });
-    fetchDataByGet<ListJSON<T>>(API.CategoryItemsCollection, {
+    fetchDataByGet<ListJSON<T>>(API.CategoryAlbumCollection, {
       category_id: category.id,
       filter: {
-        tagName: selectedTag && [selectedTag.name]
+        tagName: selectedTag && [selectedTag.name],
+        ...this.props.getRequestExtraArgument && this.props.getRequestExtraArgument(),
       },
       sorter: null,
       page: page,

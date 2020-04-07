@@ -3,6 +3,7 @@ import UploadUtil from "../../util/upload-util";
 import { API } from "../../configs/api-config";
 
 export interface CoverProps {
+  background?: boolean;
   src: string;
   size?: 'mini' | 'small' | 'default' | 'large',
   style?: CSSProperties;
@@ -27,11 +28,21 @@ export default function Cover(props: CoverProps) {
   let realCover = error ? '/assets/empty.png' : UploadUtil.absoluteUrl(API.CoverSource, props.src);
   return (
     <>
-      <img src={realCover} onError={() => setError(true)} style={props.style} />
+      {
+        !props.background ?
+          <img src={realCover} onError={() => setError(true)} style={props.style} /> :
+          <span style={{ backgroundImage: `url(${realCover})` }}></span>
+      }
       <style jsx>{`
         img {
           max-width: ${width};
           height: ${height};
+        }
+        span {
+          display: block;
+          max-width: ${width};
+          height: ${height};
+          background-position: left top;
         }
       `}</style>
     </>

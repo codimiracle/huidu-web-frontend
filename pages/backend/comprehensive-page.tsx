@@ -86,7 +86,7 @@ export class ComprehensivePageDesign extends React.Component<ComprehensivePageDe
                 <FormItem label="展示类别">
                   {
                     form.getFieldDecorator('categoryIds', {
-                      initialValue: this.state.categories.map((category) => category.id) || undefined,
+                      initialValue: this.state.categories.filter((e) => e).map((category) => category.id) || undefined,
                       rules: [
                         { required: true, message: '请选择 3 个展览类别' },
                         { validator: (rule, value, callback) => (value.length < 4 ? callback() : callback(new Error("超过 3 个类别"))), message: '最多 3 个展示类别' }

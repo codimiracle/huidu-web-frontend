@@ -37,6 +37,9 @@ export default class InfiniteListView<T> extends React.Component<InfiniteListVie
     }
     this.onFetch = this.onFetch.bind(this);
   }
+  componentDidUpdate() {
+    
+  }
   onFetch(page?: number) {
     if (this.state.loading) {
       return;

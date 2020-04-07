@@ -130,25 +130,37 @@ class ComprehensivePage extends React.Component<ComprehensivePageProps, Comprehe
               <CategoryBar categories={categories} />
             }
           </Row>
-          <ExhibitionView<Book>
-            category={sections[0]}
-            renderItem={(item) => <List.Item><BookView book={item} /></List.Item>}
-            aside={
-              <BookRank category={sections[0]} />
-            }
-          />
-          <ExhibitionView<Book>
-            category={sections[1]}
-            renderItem={(item) => <List.Item><BookView book={item} /></List.Item>}
-            aside={
-              <BookRank category={sections[1]} />
-            }
-          />
-          {/* 
-          <ContentSection category={sections[0]} bookType={BookType.ElectronicBook} title="" asideTitle="悦读榜" />
-          <ContentSection category={sections[1]} bookType={BookType.AudioBook} title="阅读有声" asideTitle="动听榜" /> */}
-
-          {sections[2] && <ExhibitionParisingView category={sections[2]} />}
+          {
+            sections.length > 0 && sections[1] &&
+            <ExhibitionView<Book>
+              category={sections[0]}
+              getRequestExtraArgument={
+                () => ({
+                  type: [BookType.ElectronicBook]
+                })
+              }
+              renderItem={(item) => <List.Item><BookView book={item} /></List.Item>}
+              aside={
+                <BookRank category={sections[0]} type={BookType.ElectronicBook} />
+              }
+            />
+          }
+          {
+            sections.length > 1 && sections[1] &&
+            <ExhibitionView<Book>
+              category={sections[1]}
+              getRequestExtraArgument={
+                () => ({
+                  type: [BookType.AudioBook]
+                })
+              }
+              renderItem={(item) => <List.Item><BookView book={item} /></List.Item>}
+              aside={
+                <BookRank category={sections[1]} type={BookType.AudioBook} />
+              }
+            />
+          }
+          {sections.length > 2 && <ExhibitionParisingView category={sections[2]} />}
           <SectionView
             title="社区动态"
             content={

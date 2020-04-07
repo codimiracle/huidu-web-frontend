@@ -47,6 +47,7 @@ class UserCentralLayout extends React.Component<UserCentralLayoutProps, UserCent
                 <Menu.Item key="orders"><Link href="/user-central/orders"><a>订单</a></Link></Menu.Item>
                 <Menu.Item key="address"><Link href="/user-central/address"><a>收货地址</a></Link>} </Menu.Item>
                 <Menu.Item key="subscribes"><Link href="/user-central/subscribes"><a>订阅</a></Link></Menu.Item>
+                <Menu.Item key="notifications"><Link href="/user-central/notifications"><a>通知</a></Link></Menu.Item>
                 <Menu.Item key="bookshelf"><Link href="/user-central/bookshelf"><a>书架</a></Link></Menu.Item>
                 <Menu.Item key="notes"><Link href="/user-central/notes"><a>笔记</a></Link>}</Menu.Item>
               </Menu>

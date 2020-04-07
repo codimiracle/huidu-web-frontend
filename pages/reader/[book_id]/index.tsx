@@ -1,7 +1,7 @@
 import React from 'react';
 import InitializerView from '../../../components/ui/initializer-view';
-import Reader, { DrawerKey } from '../../../components/reader';
-import { fetchDataByGet } from '../../../util/network-util';
+import Reader, { DrawerKey, ReaderActionButton } from '../../../components/reader';
+import { fetchDataByGet, fetchMessageByPost } from '../../../util/network-util';
 import { API } from '../../../configs/api-config';
 import { BookNotes } from '../../../types/notes';
 import { Episode } from '../../../types/episode';
@@ -10,15 +10,19 @@ import { EntityJSON } from '../../../types/api';
 import { History } from '../../../types/history';
 import ElectronicBookCatalogsView from '../../../components/page/reader/electronic-book-catalogs-view';
 import ReaderNotesView from '../../../components/page/reader/reader-notes-view';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import AuthenticationUtil from '../../../util/authentication-util';
+import Link from 'next/link';
+import LoginRequiredView from '../../../components/user/login-required-view';
 
 export interface ReaderPageProps { };
 export interface ReaderPageState {
   allLoaded: boolean;
   book: ElectronicBook;
   bookNotes: BookNotes;
+  history: History;
   episodes: Array<Episode>;
+  loading: boolean;
 };
 
 export default class ReaderPage extends React.Component<ReaderPageProps, ReaderPageState> {
@@ -32,9 +36,24 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
     let historyData = null;
     let episodeData = null;
     if (episode_id) {
-      episodeData = await fetchDataByGet<EntityJSON<Episode>>(API.ElectronicBookEpisodeEntity, args);
+      if (AuthenticationUtil.isValidated()) {
+        historyData = await fetchDataByGet<EntityJSON<History>>(API.ReaderHistoryEpisode, {
+          bookId: book_id,
+          episodeId: episode_id
+        });
+      } else {
+        episodeData = await fetchDataByGet<EntityJSON<Episode>>(API.ElectronicBookEpisodeEntity, args);
+      }
     } else {
-      historyData = await fetchDataByGet<EntityJSON<History>>(API.ElectronicBookLastReadEpisode, args);
+      if (AuthenticationUtil.isValidated()) {
+        historyData = await fetchDataByGet<EntityJSON<History>>(API.ReaderHistoryLastRead, {
+          bookId: book_id
+        });
+      } else {
+        episodeData = await fetchDataByGet<EntityJSON<History>>(API.ElectronicBookFirstEpisode, {
+          book_id: book_id
+        });
+      }
     }
     let bookNotesData = null;
     if (AuthenticationUtil.isValidated()) {
@@ -54,12 +73,37 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
       bookNotes: null,
       episodes: [],
       allLoaded: false,
+      history: null,
+      loading: false
     }
   }
   fetchNextEpisode() {
-    let lastEpisode = this.state.episodes.length > 0 ? this.state.episodes[this.state.episodes.length - 1] : null;
-    if (lastEpisode) {
-
+    let lastEpisode: Episode = this.state.episodes.length > 0 ? this.state.episodes[this.state.episodes.length - 1] : null;
+    if (!lastEpisode && lastEpisode.next) {
+      // 已加载全部
+      this.setState({ allLoaded: true });
+      message.info('已加载全部章节。');
+      return;
+    }
+    if (lastEpisode && !this.state.allLoaded) {
+      this.setState({ loading: true });
+      fetchDataByGet<EntityJSON<Episode>>(API.ElectronicBookEpisodeEntity, {
+        book_id: this.state.book.id,
+        episode_id: lastEpisode.next
+      }).then((data) => {
+        if (data.entity) {
+          this.setState((state) => ({
+            episodes: state.episodes.concat(data.entity)
+          }));
+        } else {
+          this.setState({ allLoaded: true });
+          message.info('已经看到底了！');
+        }
+      }).catch((err) => {
+        message.error(`加载下一章失败：${err.message}`);
+      }).finally(() => {
+        this.setState({ loading: false });
+      });
     }
   }
   render() {
@@ -69,8 +113,9 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
         onInitialized={(data: any) => {
           this.setState((state) => ({
             book: data.book,
+            history: data.history,
             bookNotes: data.bookNotes,
-            episodes: data.episode ? [data.episode] : (data.history && data.history.episode ? [data.history.episode] : state.episodes)
+            episodes: (data.history && data.history.episode ? [data.history.episode] : data.episode ? [data.episode] : state.episodes)
           }));
         }}
       >
@@ -78,6 +123,26 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
           book={this.state.book}
           bookNotes={this.state.bookNotes}
           episodes={this.state.episodes}
+          progress={this.state.history && this.state.history.progress}
+          onReadingProgress={(bookId, episodeId, progress) => {
+            console.debug("recording: (%s %s %s)", bookId, episodeId, progress);
+            if (AuthenticationUtil.isValidated()) {
+              fetchMessageByPost(API.ReaderHistoryRecord, {
+                bookId: bookId,
+                episodeId: episodeId,
+                progress: progress
+              });
+            }
+          }}
+          renderExtraActions={
+            () => this.state.allLoaded ? (
+              <LoginRequiredView
+                renderNonlogin={(opener) => <ReaderActionButton text="评" onClick={opener} />}
+              >
+                <Link href={`/contents/reviews/review-writer?book_id=${this.state.book && this.state.book.id}`}><ReaderActionButton text="评" /></Link>
+              </LoginRequiredView>
+            ) : undefined
+          }
           renderCatalogs={(drawer, book, closer) => (
             <ElectronicBookCatalogsView
               book={book as ElectronicBook}
@@ -93,7 +158,9 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
             />
           )}
           renderBottom={() =>
-            <div className="huidu-actions-center"><Button type="link" style={{ margin: '1em 0 2em 0' }}>下一章</Button></div>
+            <div className="huidu-actions-center">
+              <Button type="link" disabled={this.state.allLoaded} loading={this.state.loading} style={{ margin: '1em 0 2em 0' }} onClick={() => this.fetchNextEpisode()}>{this.state.allLoaded ? '已加载全部' : '下一章'}</Button>
+            </div>
           }
         />
       </InitializerView>

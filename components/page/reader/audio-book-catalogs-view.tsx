@@ -68,7 +68,7 @@ class AudioBookReaderCatalogsView extends React.Component<AudioBookReaderCatalog
               {
                 catalogs.map((catalog) =>
                   <Menu.Item key={catalog.audioEpisodeId}>
-                    <Link href={`/player/[book_id]?episode_id=${catalog.audioEpisodeId}`} as={`/player/${book.id}?episode_id=${catalog.audioEpisodeId}`}><a>{catalog.title}</a></Link>
+                    <Link href={`/player/[book_id]?episode_id=${catalog.audioEpisodeId}`} as={`/player/${book.id}?episode_id=${catalog.audioEpisodeId}`}><a title={catalog.title} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{catalog.title}</a></Link>
                   </Menu.Item>
                 )
               }

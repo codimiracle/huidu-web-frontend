@@ -13,25 +13,33 @@ const ListItem = List.Item;
 
 export interface ReaderActionIconButtonProps {
   actived?: boolean;
+  disabled?: boolean;
+  loading?: boolean;
   icon: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export interface ReaderActionTextButtonProps {
   actived?: boolean;
+  disabled?: boolean;
+  loading?: boolean;
   text: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export function ReaderActionButton(props: ReaderActionIconButtonProps | ReaderActionTextButtonProps) {
   if ((props as ReaderActionTextButtonProps).text) {
     return <Button
+      loading={props.loading}
+      disabled={props.disabled}
       shape="circle"
       type={props.actived ? 'primary' : 'default'}
       size="large"
       onClick={props.onClick}>{(props as ReaderActionTextButtonProps).text}</Button>
   }
   return <Button
+    loading={props.loading}
+    disabled={props.disabled}
     shape="circle"
     type={props.actived ? 'primary' : 'default'}
     size="large"
@@ -43,6 +51,9 @@ export interface ReaderProps {
   book: Book;
   bookNotes: BookNotes;
   episodes: Array<Episode>;
+  // for first episode
+  progress?: number;
+  onReadingProgress?: (bookId: string, episodeId: string, progress: number) => void;
   renderCatalogs: (drawer: DrawerKey, book: Book, closer: () => void) => React.ReactNode;
   renderBookNotes: (drawer: DrawerKey, bookNotes: BookNotes, closer: () => void) => React.ReactNode;
   renderExtraActions?: () => React.ReactNode;
@@ -51,9 +62,11 @@ export interface ReaderProps {
 
 export interface ReaderState {
   theme: Theme,
-  drawer: DrawerKey,
-  backup: Theme,
-  protectEye: boolean,
+  drawer: DrawerKey;
+  backup: Theme;
+  protectEye: boolean;
+  scrollProgress: number;
+  firstEpisodeId: string;
 }
 export enum DrawerKey {
   catalogs,
@@ -68,7 +81,15 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       drawer: null,
       backup: DEAULT_THEME,
       protectEye: false,
+      scrollProgress: 0,
+      firstEpisodeId: null,
     }
+  }
+  onProgress(bookId: string, episodeId: string, progress: number) {
+    if (this.props.progress && episodeId == this.state.firstEpisodeId && progress <= this.props.progress) {
+      return;
+    }
+    this.props.onReadingProgress && this.props.onReadingProgress(bookId, episodeId, progress);
   }
   onDrawerChange(key: DrawerKey) {
     const { drawer } = this.state;
@@ -108,6 +129,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       return { theme: theme };
     })
   }
+  componentDidUpdate() {
+    if (this.props.progress && (this.props.progress - this.state.scrollProgress) > 1) {
+      let viewportHeight = document.body.scrollHeight - window.outerHeight;
+      window.scrollTo(0, ((this.props.progress - 0.47) * viewportHeight) / 100);
+      this.setState({ scrollProgress: this.props.progress, firstEpisodeId: this.props.episodes[0].id });
+    }
+  }
   render() {
     const { book, episodes, bookNotes } = this.props;
     const { theme, drawer, protectEye } = this.state;
@@ -126,7 +154,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                         notable
                         episode={item}
                         bookNotes={bookNotes}
-                        theme={theme} />
+                        theme={theme}
+                        onProgress={(progress) => this.onProgress(book.id, item.id, progress)}
+                      />
                     </ListItem>
                   )
                 }

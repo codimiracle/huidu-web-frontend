@@ -31,7 +31,7 @@ export class UserCentralProfile extends React.Component<UserCentralProfileProps,
         if (!errors) {
           this.setState({ editing: false, saving: true });
           let profile: Partial<User> = {
-            nickname: form.getFieldValue('nickname'),
+            avatar: form.getFieldValue('avatar'),
             extra: {
               gender: form.getFieldValue('gender'),
               slogan: form.getFieldValue('slogan'),

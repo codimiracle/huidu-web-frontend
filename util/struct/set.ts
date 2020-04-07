@@ -45,7 +45,7 @@ export class ObjectSet<T> {
     return this;
   }
   public addAll(...elements: T[]): this {
-    elements.forEach((e) => this.add(e));
+    elements.filter((e) => e).forEach((e) => this.add(e));
     return this;
   }
   public delete(element: T): boolean {

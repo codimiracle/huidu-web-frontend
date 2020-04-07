@@ -15,6 +15,7 @@ export interface DommarkedNote {
 const WrappedCreateNotesDialog = Form.create<CreateNotesDialogProps>({ name: 'create-notes-form' })(CreateNotesDialog);
 
 export interface ReaderEpisodeViewProps {
+  onProgress?: (progress: number) => void;
   episode: Episode,
   notable?: boolean,
   bookNotes?: BookNotes,
@@ -35,6 +36,7 @@ export interface ReaderEpisodeViewState {
 
 export default class ReaderEpisodeView extends React.Component<ReaderEpisodeViewProps, ReaderEpisodeViewState> {
   private pageViewRef: React.RefObject<HTMLDivElement>;
+  private pageContentRef: React.RefObject<HTMLDivElement>;
   constructor(props: ReaderEpisodeViewProps) {
     super(props);
     this.state = {
@@ -49,7 +51,9 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
       dommarkedNotes: []
     }
     this.pageViewRef = React.createRef();
+    this.pageContentRef = React.createRef();
     this.onSelectionChange = this.onSelectionChange.bind(this);
+    this.onScrollProgress = this.onScrollProgress.bind(this);
   }
   markRange(range: Range) {
     let fragment: DocumentFragment = range.extractContents();
@@ -115,8 +119,21 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
       this.setState({ markVisible: false });
     }
   }
+  onScrollProgress() {
+    let scrollTopInPage = this.pageViewRef.current.offsetTop;
+    let scrollY = window.scrollY;
+    let scrollHeightInPage = this.pageViewRef.current.scrollHeight - window.outerHeight;
+    let scrollYInPage = scrollY - scrollTopInPage;
+    if (scrollYInPage > scrollHeightInPage) {
+      scrollYInPage = scrollHeightInPage;
+    }
+    if (scrollYInPage > 0 && scrollYInPage <= scrollHeightInPage) {
+      this.props.onProgress && this.props.onProgress(Math.trunc((scrollYInPage / scrollHeightInPage) * 10000) / 100);
+    }
+  }
   componentDidMount() {
     document.addEventListener('selectionchange', this.onSelectionChange);
+    window.addEventListener('scroll', this.onScrollProgress);
   }
   componentDidUpdate() {
     const { dommarkedKey } = this.state;
@@ -130,6 +147,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
   }
   componentWillUnmount() {
     document.removeEventListener("selectionchange", this.onSelectionChange);
+    window.removeEventListener('scroll', this.onScrollProgress);
   }
   private getRange() {
     let selection = window.getSelection();
@@ -181,7 +199,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
     const { episode } = this.props;
     let theme = this.props.theme || DEAULT_THEME;
     return (
-      <>
+      <div className="reader-episode-view">
         <div id={`episode-${episode.id}`} ref={this.pageViewRef} className="page-view">
           <Tooltip getPopupContainer={() => this.pageViewRef.current} visible={markVisible} overlay={this.renderMarker()} placement="top">
             <span style={{ position: 'absolute', left: `${markLeft}px`, top: `${markTop}px`, height: `${markHeight}px` }}></span>
@@ -189,7 +207,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
           <div className="page-header">
             <h1>{episode.title || ''}</h1>
           </div>
-          <div className="page-content"
+          <div ref={this.pageContentRef} className="page-content"
             style={{ fontSize: `${theme.font.size / 10.0}em`, color: theme.color.font }}
             dangerouslySetInnerHTML={{ __html: episode.content.source }}></div>
           <div className="page-footer">
@@ -204,6 +222,9 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
           onCancel={() => this.setState({ createNotesVisible: false })}
         />
         <style jsx>{`
+          .reader-episode-view {
+            margin: 1.5em auto;
+          }
           .page-header {
             padding-bottom: 1em;
             border-bottom: 1px solid lightgrey;
@@ -225,7 +246,6 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
             position: relative;
             width: 744px;
             min-height: 1056px;
-            margin: 1.5em auto;
             padding: 1em 1.5em;
             box-shadow: 0 4px 12px 2px darkgrey;
           }
@@ -252,7 +272,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
             background-color: #009955!important;
           }
         `}</style>
-      </>
+      </div>
     )
   }
 }

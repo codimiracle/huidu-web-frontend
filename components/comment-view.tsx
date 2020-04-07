@@ -3,6 +3,7 @@ import React from 'react';
 import { Comment } from '../types/comment';
 import DatetimeUtil from '../util/datetime-util';
 import ContentInteractor from './content-interactor';
+import AvatarView from './avatar-view';
 
 export interface CommentViewProps {
   comment: Comment;
@@ -42,10 +43,7 @@ export default class CommentView extends React.Component<CommentViewProps, Comme
       <AntdComment
         author={<a>{comment.owner.nickname}</a>}
         avatar={
-          <Avatar
-            alt={comment.owner.nickname}
-            src={comment.owner.avatar}
-          />
+          <AvatarView  user={comment.owner} />
         }
         content={
           <>

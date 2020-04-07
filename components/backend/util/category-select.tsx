@@ -22,7 +22,8 @@ export interface CategorySelectState {
 export default class CategorySelect extends React.Component<CategorySelectProps, CategorySelectState> {
   constructor(props: CategorySelectProps) {
     super(props);
-    let set = new ObjectSet<Category>(props.initialDataSource || [], (category) => category.id);
+    let categories = props.initialDataSource && props.initialDataSource.filter((e) => e);
+    let set = new ObjectSet<Category>(categories || [], (category) => category.id);
     this.state = {
       fetching: false,
       categories: set,

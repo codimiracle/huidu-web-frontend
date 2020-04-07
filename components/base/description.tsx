@@ -7,7 +7,7 @@ export interface DescriptionProps {
 }
 export default function Description(props: DescriptionProps) {
   let size = props.size;
-  let description = props.description
+  let description = props.description || ''
   let className = '';
   description = description.substr(0, 72) + '...';
   if (size === 'small') {

@@ -88,9 +88,9 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
               avatar: form.getFieldValue('avatar'),
               extra: {
                 gender: form.getFieldValue('gender'),
-                slogan: form.getFieldValue('slogan'),
+                slogan: form.getFieldValue('slogan') || "这个人好懒，什么都没写!",
                 age: null,
-                introduction: form.getFieldValue('introduction'),
+                introduction: form.getFieldValue('introduction') || '简介什么的，不存在的！',
                 birthdate: form.getFieldValue('birthdate'),
                 email: form.getFieldValue('email'),
                 phone: form.getFieldValue('phone'),
@@ -100,7 +100,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
           }));
         }
         if (step == 2) {
-          this.setState({ submiting: true });
+          this.setState({ submiting: true, password: form.getFieldValue('password')});
           fetchMessageByPost(API.SystemSignUp, {
             accountType: this.state.accountType,
             userdata: this.state.userdata,

@@ -7,6 +7,7 @@ import { fetchDataByGet } from '../util/network-util';
 
 export interface ExhibitionRankingAsideViewProps<T> {
   category: Category,
+  getRequestExtraArgument?: () => any;
   renderItem: (item: T, index: number, selected: boolean) => React.ReactNode,
   renderPreview: (item: T) => React.ReactNode
 };
@@ -28,9 +29,11 @@ export default class ExhibitionRankingAsideView<T> extends React.Component<Exhib
   fetchRanks() {
     const { category } = this.props;
     this.setState({ loading: true });
-    fetchDataByGet<ListJSON<T>>(API.CategoryItemsCollection, {
+    fetchDataByGet<ListJSON<T>>(API.CategoryAlbumCollection, {
       category_id: category.id,
-      filter: null,
+      filter: {
+        ...this.props.getRequestExtraArgument && this.props.getRequestExtraArgument()
+      },
       sorter: {
         field: 'hotDegree',
         order: 'descend'

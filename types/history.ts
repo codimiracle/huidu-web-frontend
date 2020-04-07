@@ -9,5 +9,6 @@ export interface History {
   book: Book;
   audioEpisode: AudioEpisode;
   episode: Episode;
-  readTime: string
+  readTime: string;
+  progress: number;
 }

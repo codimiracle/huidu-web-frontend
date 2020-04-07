@@ -51,8 +51,7 @@ export enum API {
   CategoryBookTypeRelated = 'category.related',
   CategoryEntity = 'category.entity',
   CategoryItemsCollection = "category.items.collection",
-  CategoryItemsMostRead = "category.items.mostread",
-  CategoryItemsRecommends = "category.items.recommends",
+  CategoryAlbumCollection = "category.album.collection",
   DiscoverCollection = 'discover.collection',
   // book
   BackendBookSuggestion = "backend.book.suggestion",
@@ -61,11 +60,11 @@ export enum API {
   ElectronicBookLastUpdate = "electronicBook.lastUpdate",
   ElectronicBookPublishYears = "electronicBook.publishYears",
   ElectronicBookEpisodeEntity = "electronicBook.episode.entity",
-  ElectronicBookLastReadEpisode = "electronicBook.episode.lastRead",
+  ElectronicBookFirstEpisode = "electronicBook.episode.firstEpisode",
   ElectronicBookCatalogs = "electronicBook.catalogs",
   ElectronicBookEpisodeCreate = "ElectronicBookEpisodeCreate",
   ElectronicBookLastEditedEpisode = "electronicBook.lastUpdate",
-  AudioBookLastReadEpisode = "audioBook.episode.lastRead",
+  AudioBookFirstEpisode = "audioBook.episode.firstEpisode",
   AudioBookEpisodeEntity = "audioBook.episode.entity",
   AudioBookEntity = "audioBook.entity",
   AudioBookLastUpdate = "audioBook.lastUpdate",
@@ -103,6 +102,16 @@ export enum API {
   UserBookNotesEntity = "user.bookNotes.entity",
   UserArrived = "user.arrive.signin",
   UserArriveToday = "user.arrive.today",
+
+  // reader
+  ReaderHistoryRecord = "reader.history.recordHistory",
+  ReaderHistoryLastRead = "reader.history.lastRead",
+  ReaderHistoryEpisode = "reader.history.episode",
+  // player
+  PlayerHistoryRecord = "player.history.recordHistory",
+  PlayerHistoryLastRead = "player.history.lastRead",
+  PlayerHistoryEpisode = "player.history.episode",
+
   // content
   CreateComment = "comment.create",
   ContentCommentCollection = "content.comment.collection",
@@ -1009,7 +1018,7 @@ export const APIDefinitionData: APIDefinitionSet = {
     catalogs: `${testOrigin}/api/electronic-books/@{book_id}/catalogs`,
     episode: {
       suggestion: `${testOrigin}/api/creator/episodes/suggestion?keyword=@{keyword}`,
-      lastRead: `${testOrigin}/api/electronic-books/@{book_id}/episodes/last-read`,
+      firstEpisode: `${testOrigin}/api/electronic-books/@{book_id}/episodes/first-episode`,
       collection: `${testOrigin}/api/electronic-books/@{book_id}/episodes?page=@{page}&limit=@{limit}`,
       entity: `${testOrigin}/api/electronic-books/@{book_id}/episodes/@{episode_id}`,
     },
@@ -1024,7 +1033,7 @@ export const APIDefinitionData: APIDefinitionSet = {
     lastUpdate: `${testOrigin}/api/audio-books/@{book_id}/last-updated-episode`,
     comments: `${testOrigin}/api/audio-books/@{book_id}/comments?page=@{page}&limit=@{limit}`,
     episode: {
-      lastRead: `${testOrigin}/api/audio-books/@{book_id}/episodes/last-read`,
+      firstEpisode: `${testOrigin}/api/audio-books/@{book_id}/episodes/first-episode`,
       collection: `${testOrigin}/api/audio-books/@{book_id}/episodes?page=@{page}&limit=@{limit}`,
       entity: `${testOrigin}/api/audio-books/@{book_id}/episodes/@{episode_id}`,
     },
@@ -1084,9 +1093,52 @@ export const APIDefinitionData: APIDefinitionSet = {
     entity: `${testOrigin}/api/categories/@{category_id}`,
     items: {
       collection: `${testOrigin}/api/categories/@{category_id}/items?page=@{page}&limit=@{limit}&filter=@{filter}&sorter=@{sorter}`,
-      mostread: `${testOrigin}/api/categories/@{category_id}/items/most-read`,
-      recommends: `${testOrigin}/api/categories/@{category_id}/items/recommends`,
     },
+    album: {
+      collection: `${testOrigin}/api/categories/@{category_id}/album?page=@{page}&limit=@{limit}&filter=@{filter}&sorter=@{sorter}`,
+    },
+  },
+  reader: {
+    history: {
+      episode: {
+        url: `${testOrigin}/api/user/reader/history?book_id=@{bookId}&episode_id=@{episodeId}`,
+        method: 'get',
+      },
+      lastRead: {
+        url: `${testOrigin}/api/user/reader/history/last-read?book_id=@{bookId}`,
+        method: 'get'
+      },
+      recordHistory: {
+        url: `${testOrigin}/api/user/reader/history`,
+        method: 'post',
+        body: {
+          bookId: null,
+          episodeId: null,
+          progress: 0.0
+        }
+      }
+    }
+  },
+  player: {
+    history: {
+      episode: {
+        url: `${testOrigin}/api/user/player/history?book_id=@{bookId}&episode_id=@{episodeId}`,
+        method: 'get',
+      },
+      lastRead: {
+        url: `${testOrigin}/api/user/player/history/last-read?book_id=@{bookId}`,
+        method: 'get'
+      },
+      recordHistory: {
+        url: `${testOrigin}/api/user/player/history`,
+        method: 'post',
+        body: {
+          bookId: null,
+          audioEpisodeId: null,
+          progress: 0.0
+        }
+      }
+    }
   },
   dynamic: {
     collection: `${origin}/api/dynamics?limit=@{limit}&page=@{page}`

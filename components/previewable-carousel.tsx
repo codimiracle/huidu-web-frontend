@@ -7,6 +7,7 @@ import BookHeader from './book/book-header';
 import BookCover from './book/book-cover';
 import { API } from '../configs/api-config';
 import UploadUtil from '../util/upload-util';
+import Cover from './base/cover';
 
 interface PreviewImageViewProps {
   selectedIndex: number,
@@ -16,8 +17,14 @@ interface PreviewImageViewProps {
 function PreviewImageView(props: PreviewImageViewProps) {
   const { selectedIndex, index, activity } = props;
   return (
-    <div className={index === selectedIndex ? 'selected' : ''}>
-      <BookCover book={activity.book} style={{width: '100%'}}/>
+    <div className={index === selectedIndex ? 'selected' : ''} style={{
+      overflow: 'hidden'
+    }}>
+      {
+        activity.book ?
+          <BookCover book={activity.book} style={{ width: '100%' }} /> :
+          <Cover background src={activity.banner} />
+      }
       <style jsx>{`
         div.selected {
           outline: 0.1em solid grey;
@@ -47,10 +54,10 @@ export class PreviewableCarousel extends React.Component<PreviewableCarouselProp
     const { activities } = this.props;
     const { selectedIndex } = this.state;
     let selectedActivity = (selectedIndex < activities.length && activities[selectedIndex]);
-    let referBook = selectedActivity.book;
-    if (!referBook) {
+    if (!selectedActivity) {
       return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
     }
+    let referBook = selectedActivity.book;
     return (
       <>
         <Row gutter={8}>
@@ -82,11 +89,12 @@ export class PreviewableCarousel extends React.Component<PreviewableCarouselProp
                 dataSource={activities}
               />
             </Row>
-            {referBook &&
+            {referBook ?
               <Row>
                 <BookHeader book={referBook} style={{ fontSize: '1.5em' }} />
                 <BookDescription book={referBook} size="medium" />
-              </Row>
+              </Row> :
+              <a target="_blank" href={selectedActivity.url}>查看活动</a>
             }
           </Col>
         </Row>

@@ -29,7 +29,7 @@ export default class BookSelect extends React.Component<BookSelectProps, BookSel
     fetchDataByGet<ListJSON<Book>>(API.BackendBookSuggestion, {
       keyword: keyword
     }).then((data) => {
-      this.setState({ list: data.list });
+      this.setState({ list: data.list || [] });
     }).catch((err) => {
       message.error(`读取书籍数据失败：${err}`)
     }).finally(() => {

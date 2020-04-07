@@ -32,7 +32,7 @@ export default class ActivityManager extends React.Component<ActivityManagerProp
         title: '关联图书',
         key: 'book',
         dataIndex: 'book',
-        render: (book) => book ? (<Popover title={<BookPreviewView book={book} />}><span>{book.title || book.metadata.name}</span></Popover>) : `(无关联)`
+        render: (book) => book ? (<Popover title={<BookPreviewView book={book} />}><span>{book.title || book.metadata && book.metadata.name}</span></Popover>) : `(无关联)`
       }, {
         title: '链接',
         key: 'url',

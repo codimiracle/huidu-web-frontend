@@ -8,7 +8,7 @@ import { EntityJSON } from '../../../types/api';
 import { AudioBook, AudioEpisode } from '../../../types/audio-book';
 import { History } from '../../../types/history';
 import { BookNotes } from '../../../types/notes';
-import { fetchDataByGet } from '../../../util/network-util';
+import { fetchDataByGet, fetchMessageByPost } from '../../../util/network-util';
 import { Affix, Alert, message } from 'antd';
 import AudioPlayerView from '../../../components/audio-player-view';
 import UploadUtil from '../../../util/upload-util';
@@ -20,6 +20,8 @@ export interface PlayerPageState {
   audioEpisode: AudioEpisode;
   history: History;
   bookNotes: BookNotes;
+  loading: boolean;
+  allLoaded: boolean;
 };
 
 export default class PlayerPage extends React.Component<PlayerPageProps, PlayerPageState> {
@@ -29,7 +31,9 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
       book: null,
       audioEpisode: null,
       bookNotes: null,
-      history: null
+      history: null,
+      loading: false,
+      allLoaded: false,
     }
   }
   async getClientSideProps(query) {
@@ -42,9 +46,24 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
     let audioEpisodeData = null;
     let historyData = null;
     if (episode_id) {
-      audioEpisodeData = await fetchDataByGet<EntityJSON<AudioEpisode>>(API.AudioBookEpisodeEntity, args);
+      if (AuthenticationUtil.isValidated()) {
+        historyData = await fetchDataByGet<EntityJSON<History>>(API.PlayerHistoryEpisode, {
+          bookId: book_id,
+          episodeId: episode_id
+        });
+      } else {
+        audioEpisodeData = await fetchDataByGet<EntityJSON<AudioEpisode>>(API.AudioBookEpisodeEntity, args);
+      }
     } else {
-      historyData = await fetchDataByGet<EntityJSON<History>>(API.AudioBookLastReadEpisode, args);
+      if (AuthenticationUtil.isValidated()) {
+        historyData = await fetchDataByGet<EntityJSON<History>>(API.PlayerHistoryLastRead, {
+          bookId: book_id
+        });
+      } else {
+        audioEpisodeData = await fetchDataByGet<EntityJSON<History>>(API.AudioBookFirstEpisode, {
+          book_id: book_id
+        });
+      }
     }
     let ebookEpisode = (historyData && historyData.entity && historyData.entity.audioEpisode && historyData.entity.audioEpisode.episode) || (audioEpisodeData && audioEpisodeData.entity && audioEpisodeData.entity.episode);
     let bookNotesData = null;
@@ -60,22 +79,85 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
       bookNotes: bookNotesData && bookNotesData.entity
     }
   }
-  fetchNextEpisode() {}
+
+  fetchNextEpisode() {
+    let audioEpisode = this.state.audioEpisode;
+    if (audioEpisode && !audioEpisode.next) {
+      message.info('已经加载全部章节！');
+      this.setState({ allLoaded: true });
+      return;
+    }
+    if (audioEpisode && !this.state.allLoaded) {
+      this.setState({ loading: true });
+      if (AuthenticationUtil.isValidated()) {
+        fetchDataByGet<EntityJSON<History>>(API.PlayerHistoryEpisode, {
+          bookId: this.state.book.id,
+          episodeId: audioEpisode.next
+        }).then((data) => {
+          if (data.entity && data.entity.audioEpisode) {
+            this.setState((state) => ({
+              history: data.entity,
+              audioEpisode: data.entity.audioEpisode
+            }));
+          } else {
+            this.setState({ allLoaded: true });
+            message.info('已经看到底了！');
+          }
+        }).catch((err) => {
+          message.error(`加载下一章失败：${err.message}`);
+        }).finally(() => {
+          this.setState({ loading: false });
+        });;
+      } else {
+        fetchDataByGet<EntityJSON<AudioEpisode>>(API.AudioBookEpisodeEntity, {
+          book_id: this.state.book.id,
+          episode_id: audioEpisode.next,
+        }).then((data) => {
+          if (data.entity) {
+            this.setState((state) => ({
+              audioEpisode: data.entity
+            }));
+          } else {
+            this.setState({ allLoaded: true });
+            message.info('已经看到底了！');
+          }
+        }).catch((err) => {
+          message.error(`加载下一章失败：${err.message}`);
+        }).finally(() => {
+          this.setState({ loading: false });
+        });
+      }
+    }
+  }
   render() {
     const { book, audioEpisode, history, bookNotes } = this.state;
     return (
       <InitializerView
         initializer={(query) => this.getClientSideProps(query)}
-        onInitialized={(data) => {
-          this.setState(data);
+        onInitialized={(data: any) => {
+          this.setState({
+            book: data.book,
+            audioEpisode: data.audioEpisode || data.history.audioEpisode,
+            history: data.history,
+            bookNotes: data.bookNotes,
+          });
         }}
       >
         <div className="player">
           <Affix offsetTop={32} style={{ position: 'absolute', right: 0 }}>
             {
               audioEpisode ?
-                <AudioPlayerView src={UploadUtil.absoluteUrl(API.UploadSource, audioEpisode.streamUrl)} onError={() => message.error('播放地址无效！')} />
-                : <Alert type="warning" showIcon message="无章节数据，播放器已隐藏" closable/>
+                <AudioPlayerView progress={history && history.progress} onProgress={(progress) => {
+                  console.debug("recording: (%s %s %s)", book.id, audioEpisode.id, progress);
+                  if (AuthenticationUtil.isValidated()) {
+                    fetchMessageByPost(API.PlayerHistoryRecord, {
+                      bookId: book.id,
+                      audioEpisodeId: audioEpisode.id,
+                      progress: progress
+                    });
+                  }
+                }} src={UploadUtil.absoluteUrl(API.UploadSource, audioEpisode.streamUrl)} onError={() => message.error('播放地址无效！')} />
+                : <Alert type="warning" showIcon message="无章节数据，播放器已隐藏" closable />
             }
           </Affix>
         </div>
@@ -83,9 +165,10 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
           book={this.state.book}
           episodes={audioEpisode && audioEpisode.episode ? [audioEpisode.episode] : []}
           bookNotes={bookNotes}
+          progress={history && history.progress}
           renderExtraActions={() =>
             <>
-              <ReaderActionButton icon="right" onClick={() => this.fetchNextEpisode()} />
+              <ReaderActionButton icon="right" disabled={this.state.allLoaded || !audioEpisode} loading={this.state.loading} onClick={() => this.fetchNextEpisode()} />
             </>
           }
           renderCatalogs={(drawer, book, closer) =>

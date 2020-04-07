@@ -28,7 +28,7 @@ export default class CategoryBar extends React.Component<CategoryBarProps, Categ
                 </Link>
               </Col>
               {
-                renderringCategories.map((category: Category) => (
+                renderringCategories.filter((e) => e).map((category: Category) => (
                   <Col span={7} key={category.id}>
                     <Row type="flex" gutter={4}>
                       <Col span={4}>{category.name}</Col>

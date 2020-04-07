@@ -8,6 +8,8 @@ export enum PlayerStatus {
 
 export interface AudioPlayerViewProps {
   src: string;
+  progress: number;
+  onProgress?: (progress: number) => void;
   onLoaded?: (src: string, duration: number) => void;
   onError: (e) => void;
   style?: CSSProperties;
@@ -18,6 +20,7 @@ export interface AudioPlayerViewState {
   played: number;
   selecting: boolean;
   selectedPos: number;
+  startProgress: number;
 };
 
 export default class AudioPlayerView extends React.Component<AudioPlayerViewProps, AudioPlayerViewState> {
@@ -29,7 +32,8 @@ export default class AudioPlayerView extends React.Component<AudioPlayerViewProp
       duration: 0,
       played: 0,
       selecting: false,
-      selectedPos: 0
+      selectedPos: 0,
+      startProgress: 0.0
     }
     this.audioElementRef = React.createRef<HTMLAudioElement>();
     this.onPlaying = this.onPlaying.bind(this);
@@ -50,6 +54,7 @@ export default class AudioPlayerView extends React.Component<AudioPlayerViewProp
   }
 
   onPlaying() {
+    this.props.onProgress && this.props.onProgress(Math.trunc(this.audioElementRef.current.currentTime / this.audioElementRef.current.duration * 10000) / 100);
     this.setState({ played: this.audioElementRef.current.currentTime, duration: this.audioElementRef.current.duration });
   }
   onPaused() {
@@ -73,6 +78,16 @@ export default class AudioPlayerView extends React.Component<AudioPlayerViewProp
     this.audioElementRef.current.addEventListener('play', this.onPlaying);
     this.audioElementRef.current.addEventListener('pause', this.onPaused);
     this.audioElementRef.current.addEventListener('timeupdate', this.onPlaying);
+  }
+  componentDidUpdate() {
+    if (this.props.progress && this.props.progress - this.state.startProgress > 1) {
+      this.setState({ startProgress: this.props.progress });
+      let setter = () => {
+        this.audioElementRef.current.currentTime = this.audioElementRef.current.duration * this.props.progress;
+        this.audioElementRef.current.removeEventListener('canplay', setter);
+      }
+      this.audioElementRef.current.addEventListener('canplay', setter);
+    }
   }
   onPositionChange() {
     this.setState({ selecting: false });

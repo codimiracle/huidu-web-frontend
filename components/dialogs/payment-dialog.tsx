@@ -181,7 +181,7 @@ export class PaymentDialog extends React.Component<PaymentDialogProps, PaymentDi
               <Result
                 status="info"
                 title="您的订单尚未支付"
-                subTitle={<span>订单编号：<Link href={`/api/user/orders/${order.orderNumber}`}><a>{order.orderNumber}</a></Link></span>}
+                subTitle={<span>订单编号：<Link href={`/user-central/order-details/[order_number]`} as={`/user-central/order-details/${order.orderNumber}`}><a>{order.orderNumber}</a></Link></span>}
               />
             </div>
           }

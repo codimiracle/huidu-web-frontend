@@ -44,13 +44,13 @@ export default class ThemingSettingsView extends React.Component<ThemingSettings
           <div>字体色：
             <Popover
               trigger="click" placement="bottom"
-              style={{ backgroundColor: 'none' }}>
+              style={{ backgroundColor: 'none' }}
               content={
                 <SketchPicker
                   color={theme.color.font}
                   onChange={(color) => onFontColorChange(color.hex)}
                 />
-              }
+              }>
               <div className="color-preview"><span
                 style={{ backgroundColor: theme.color.background, color: theme.color.font }}
               >Abc 文字</span></div>

@@ -82,7 +82,11 @@ export const fetchMessageByDelete = async function (api: API, data?: any): Promi
   return await fetcMessageWithMethod(api, "delete", data);
 }
 
-async function fetcDataWithMethod<T>(api: API, method: "get" | "post" | "delete" | "put", data?: any): Promise<T> {
+async function fetcDataWithMethod<T>(
+  api: API,
+  method: "get" | "post" | "delete" | "put",
+  data?: any
+): Promise<T> {
   let init: RequestInit = undefined;
   if (data) {
     init = {
