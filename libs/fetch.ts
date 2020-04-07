@@ -5,6 +5,7 @@ import ApiUtil from '../util/api-util';
 
 export function queryPlaceholderReplacer(apiDefinition: APIDefinition, data: any) {
   let url = apiDefinition.url;
+  console.warn('api definition query is undefined, using data to replace will not efficiency.')
   let args = { ...apiDefinition.query, ...data }
   for (let key in args) {
     let obj = args[key];
