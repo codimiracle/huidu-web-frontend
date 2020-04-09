@@ -79,7 +79,7 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
   }
   fetchNextEpisode() {
     let lastEpisode: Episode = this.state.episodes.length > 0 ? this.state.episodes[this.state.episodes.length - 1] : null;
-    if (!lastEpisode && lastEpisode.next) {
+    if (!lastEpisode || !lastEpisode.next) {
       // 已加载全部
       this.setState({ allLoaded: true });
       message.info('已加载全部章节。');
