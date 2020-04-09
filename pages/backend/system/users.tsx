@@ -1,21 +1,13 @@
-import React from 'react';
-import EntityManager from '../../../components/backend/entity-manager';
-import { API } from '../../../configs/api-config';
-import { Router } from 'next/router';
-import { User } from '../../../types/user';
-import { SorterResult, ColumnProps } from 'antd/lib/table';
-import { SignUp } from '../../signup';
-import AuthorProfileForm from '../../../components/form/author-profile-form';
-import ProfileForm from '../../../components/form/profile-form';
-import { fetchDataByGet } from '../../../util/network-util';
-import { ListJSON } from '../../../types/api';
-import { Divider } from 'antd';
-import HeaderBar from '../../../components/backend/header-bar';
-import UserForm from '../../../components/backend/form/user-form';
-import WrappedChangePasswordDialog from '../../../components/dialogs/change-password-dialog';
-import EntityAction from '../../../components/backend/entity-action';
-import WrappedResetPasswordDialog, { ResetPasswordDialog } from '../../../components/backend/form/reset-password-dialog';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
+import { ColumnProps, SorterResult } from 'antd/lib/table';
+import React from 'react';
+import EntityAction from '../../../components/backend/entity-action';
+import EntityManager from '../../../components/backend/entity-manager';
+import WrappedResetPasswordDialog from '../../../components/backend/form/reset-password-dialog';
+import UserForm from '../../../components/backend/form/user-form';
+import HeaderBar from '../../../components/backend/header-bar';
+import { API } from '../../../configs/api-config';
+import { User } from '../../../types/user';
 
 export interface UserMangerProps {
   list: Array<User>,
@@ -65,8 +57,8 @@ export default class UserManger extends React.Component<UserMangerProps, UserMan
       nickname: form.getFieldValue('nickname'),
       avatar: form.getFieldValue('avatar'),
       extra: {
-        introduction: form.getFieldValue('introduction'),
-        slogan: form.getFieldValue('slogan'),
+        introduction: form.getFieldValue('introduction') || '还没写个人简介...',
+        slogan: form.getFieldValue('slogan') || '还没写个人签名...',
         birthdate: form.getFieldValue('birthdate').format('YYYY-MM-DD'),
         gender: form.getFieldValue('gender'),
         region: form.getFieldValue('region').join(' '),
@@ -98,7 +90,9 @@ export default class UserManger extends React.Component<UserMangerProps, UserMan
               ...extractData(form)
             }),
             delete: API.BackendUserDelete,
-            getDeleteRequestData: (entity) => ({ user_id: entity.id })
+            getDeleteRequestData: (entity) => ({ user_id: entity.id }),
+            bulkDelete: API.BackendUserBulkDelete,
+            getBulkDeleteRequestData: (entities) => ({ ids: entities.map((entity) => entity.id) })
           }}
           actionOptionsExtra={(entity, index) => <span>
             <EntityAction

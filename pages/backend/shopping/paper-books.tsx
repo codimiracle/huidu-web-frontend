@@ -36,7 +36,7 @@ export default class PaperBookManager extends React.Component<PaperBookManagerPr
         title: '书名',
         key: 'title',
         dataIndex: 'commodity',
-        render: (commodity) => commodity.name
+        render: (commodity) => commodity ? commodity.name : '无数据或已删除'
       },
       {
         title: '作者',
@@ -51,7 +51,7 @@ export default class PaperBookManager extends React.Component<PaperBookManagerPr
         onFilter: (value, record) => record.commodity.status == value,
         filteredValue: filter && (filter as any).commodityStatus || null,
         dataIndex: 'commodity',
-        render: (commodity) => <Tag color={COMMODITY_STATUS_COLORS[commodity.status]}>{COMMODITY_STATUS_TEXTS[commodity.status]}</Tag>
+        render: (commodity) => commodity ? <Tag color={COMMODITY_STATUS_COLORS[commodity.status]}>{COMMODITY_STATUS_TEXTS[commodity.status]}</Tag> : <span>(无数据或已删除)</span>
       },
       {
         title: '发布年份',
@@ -66,7 +66,7 @@ export default class PaperBookManager extends React.Component<PaperBookManagerPr
         key: 'commoditySales',
         sorter: (a, b) => a.commodity.sales - b.commodity.sales,
         sortOrder: sorter && sorter.columnKey === 'commoditySales' ? sorter.order : false,
-        render: (commodity) => commodity.sales,
+        render: (commodity) => commodity ? commodity.sales : '(无数据或已删除)',
         dataIndex: 'commodity',
       },
       {
@@ -75,7 +75,7 @@ export default class PaperBookManager extends React.Component<PaperBookManagerPr
         dataIndex: 'commodity',
         sorter: (a, b) => a.commodity.prices.amount - b.commodity.prices.amount,
         sortOrder: sorter && sorter.columnKey === 'commodityPrices' ? sorter.order : false,
-        render: (commodity) => <span className="huidu-money">{MoneyUtil.format(commodity.prices)}</span>
+        render: (commodity) => <span className="huidu-money">{MoneyUtil.format(commodity && commodity.prices)}</span>
       }
     ];
   }

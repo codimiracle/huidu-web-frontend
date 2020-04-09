@@ -14,14 +14,13 @@ import DatetimeUtil from '../../../../util/datetime-util';
 import { fetchDataByGet } from '../../../../util/network-util';
 import EntityAction from '../../../../components/backend/entity-action';
 import WrappedContentExaminingDialog from '../../../../components/backend/form/content-examining-dialog';
+import Link from 'next/link';
 
 export interface ReviewManagerProps {
   list: Array<Review>;
   total: number;
 };
 export interface ReviewManagerState {
-  selectedRowKeys: Array<string>;
-  selectedRows: Array<Review>;
 };
 
 export default class ReviewManager extends React.Component<ReviewManagerProps, ReviewManagerState> {
@@ -40,10 +39,7 @@ export default class ReviewManager extends React.Component<ReviewManagerProps, R
   constructor(props: ReviewManagerProps) {
     super(props);
     this.state = {
-      selectedRowKeys: [],
-      selectedRows: []
     }
-    this.onChange = this.onChange.bind(this);
   }
   getColumns(filter: Partial<Record<keyof Review, string[]>>, sorter: SorterResult<Review>): Array<ColumnProps<Review>> {
     return [
@@ -105,15 +101,7 @@ export default class ReviewManager extends React.Component<ReviewManagerProps, R
       }
     ];
   }
-  onChange(selectedRowKeys: Array<string>, selectedRows: Array<Review>) {
-    this.setState({ selectedRowKeys: selectedRowKeys, selectedRows: selectedRows });
-  }
   render() {
-    let rowSelection: TableRowSelection<Review> = {
-      selectedRowKeys: this.state.selectedRowKeys,
-      onChange: this.onChange,
-      getCheckboxProps: (reviews) => ({ disabled: reviews.status == ContentStatus.Draft })
-    }
     return (
       <>
         <HeaderBar
@@ -125,33 +113,48 @@ export default class ReviewManager extends React.Component<ReviewManagerProps, R
             list: API.BackendReviewCollection,
             searchableColumns: [{ name: '点评标题', field: 'title' }, { name: '用户名', field: 'owner' }]
           }}
-          actionOptionsExtra={(entity, index) =>
+          actionOptionsExtra={(entity, index, updater) =>
             <>
-              <a>查看</a>
-              {entity.status == ContentStatus.Examining && <><Divider type="vertical" /><a>通过审核</a><Divider type="vertical" /><a>驳回</a></>}
-            </>
+              <Link href="reviews/[topic_id]" as={`reviews/${entity.contentId}`}><a target="blank">查看</a></Link>
+              {entity.status == ContentStatus.Examining && <>
+                <Divider type="vertical" />
+                <EntityAction
+                  entity={entity}
+                  name="通过"
+                  renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} accept visible={visible} onExamined={(entities) => updater(entities[0] as Review)} onCancel={cancelor} />}
+                />
+                <Divider type="vertical" />
+                <EntityAction
+                  entity={entity}
+                  name="驳回"
+                  renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} accept={false} visible={visible} onExamined={(entities) => updater(entities[0] as Review)} onCancel={cancelor} />}
+                />
+              </>}</>
           }
-          toolsBarExtra={
-            <BulkBar
-              count={this.state.selectedRowKeys.length}
-              onClear={() => this.setState({ selectedRowKeys: [], selectedRows: [] })}
-            >
-              <EntityAction
-                entity={null}
-                name="通过"
-                disabled={this.state.selectedRows.length == 0}
-                renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={this.state.selectedRows} accept visible={visible} onCancel={cancelor} />}
-              />
-              <EntityAction
-                entity={null}
-                name="驳回"
-                disabled={this.state.selectedRows.length == 0}
-                renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={this.state.selectedRows} accept={false} visible={visible} onCancel={cancelor} />}
-              />
-            </BulkBar>
+          bulkBarExtra={
+            (selectedRowKeys, selectedRows, clearer, refersher) => {
+              let isSelectedExamining = selectedRowKeys.length > 0 && selectedRows.every((topic) => topic.status == ContentStatus.Examining);
+              let clearBulkState = () => {
+                clearer();
+                refersher();
+              }
+              return <>
+                <EntityAction
+                  entity={null}
+                  name="通过"
+                  disabled={!isSelectedExamining}
+                  renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog onExamined={clearBulkState} entities={selectedRows} accept visible={visible} onCancel={cancelor} />}
+                />
+                <EntityAction
+                  entity={null}
+                  name="驳回"
+                  disabled={!isSelectedExamining}
+                  renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog onExamined={clearBulkState} entities={selectedRows} accept={false} visible={visible} onCancel={cancelor} />}
+                />
+              </>
+            }
           }
           actionOptionWidth={178}
-          rowSelection={rowSelection}
           scroll={{ x: 1280 }}
           rowKey={(review) => review.contentId}
           columns={this.getColumns}

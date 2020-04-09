@@ -4,10 +4,15 @@ import EntityManager from '../../../components/backend/entity-manager';
 import { fetchDataByGet } from '../../../util/network-util';
 import { ListJSON } from '../../../types/api';
 import { API } from '../../../configs/api-config';
-import { ColumnProps, SorterResult } from 'antd/lib/table';
+import { ColumnProps, SorterResult, TableRowSelection } from 'antd/lib/table';
 import { ContentStatus, CONTENT_STATUS_TEXTS, CONTENT_STATUS_COLORS } from '../../../types/content';
-import { Tag, Popover } from 'antd';
+import { Tag, Popover, Divider, Popconfirm, Button } from 'antd';
 import { Comment } from '../../../types/comment';
+import BulkBar from '../../../components/backend/bulk-bar';
+import { Topic } from '../../../types/topic';
+import EntityAction from '../../../components/backend/entity-action';
+import WrappedContentExaminingDialog from '../../../components/backend/form/content-examining-dialog';
+import Link from 'next/link';
 
 interface ContentPreviewViewProps {
   contentId: string
@@ -39,7 +44,8 @@ export interface CommentMangerProps {
   list: Array<Comment>,
   total: number
 };
-export interface CommentMangerState { };
+export interface CommentMangerState {
+};
 
 export default class CommentManger extends React.Component<CommentMangerProps, CommentMangerState> {
   static async getInitialProps() {
@@ -57,10 +63,7 @@ export default class CommentManger extends React.Component<CommentMangerProps, C
   constructor(props: CommentMangerProps) {
     super(props);
     this.state = {
-      selectedRowKeys: [],
-      selectedRows: []
     }
-    this.getColumns = this.getColumns.bind(this);
   }
   getColumns(filter: Partial<Record<keyof Comment, string[]>>, sorter: SorterResult<Comment>): Array<ColumnProps<Comment>> {
     return [{
@@ -101,13 +104,16 @@ export default class CommentManger extends React.Component<CommentMangerProps, C
       render: (comments) => <strong>{comments}</strong>
     },
     {
-      title: '评论状态',
+      title: '状态',
       key: 'status',
       dataIndex: 'status',
       filters: Object.values(ContentStatus).map((status) => ({ text: CONTENT_STATUS_TEXTS[status], value: status })),
       render: (status) => <Tag color={CONTENT_STATUS_COLORS[status]}>{CONTENT_STATUS_TEXTS[status] || '未知'}</Tag>
     },
     ];
+  }
+  onSelectionChange(selectedRowKeys: string[], selectedRows: Comment[]) {
+    this.setState({ selectedRowKeys: selectedRowKeys, selectedRows: selectedRows })
   }
   render() {
     return (
@@ -121,8 +127,47 @@ export default class CommentManger extends React.Component<CommentMangerProps, C
             list: API.BackendCommentCollection,
             searchableColumns: [{ name: '评论内容', field: 'content' }, { name: '目标内容', field: 'target' }, { name: '评论者', field: 'owner' }],
             delete: API.BackendCommentDelete,
-            getDeleteRequestData: (entity) => ({comment_id: entity.contentId})
+            getDeleteRequestData: (entity) => ({ comment_id: entity.contentId }),
+            bulkDelete: API.BackendCommentBulkDelete,
+            getBulkDeleteRequestData: (entities) => ({ ids: entities.map((comment) => comment.contentId) })
           }}
+          bulkBarExtra={(selectedRowKeys, selectedRows, clearer, refersher) => {
+            let isSelectedExamining = selectedRowKeys.length > 0 && selectedRows.every((topic) => topic.status == ContentStatus.Examining);
+            let clearBulkState = () => {
+              clearer();
+              refersher();
+            }
+            return <>
+              <EntityAction
+                entity={null}
+                name="通过"
+                disabled={!isSelectedExamining}
+                renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={selectedRows} onExamined={clearBulkState} accept visible={visible} onCancel={cancelor} />}
+              />
+              <EntityAction
+                entity={null}
+                name="驳回"
+                disabled={!isSelectedExamining}
+                renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={selectedRows} onExamined={clearBulkState} accept={false} visible={visible} onCancel={cancelor} />}
+              />
+            </>
+          }
+          }
+          actionOptionsExtra={(entity, index) =>
+            entity.status == ContentStatus.Examining && <>
+              <EntityAction
+                entity={entity}
+                name="通过"
+                renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} accept visible={visible} onCancel={cancelor} />}
+              />
+              <Divider type="vertical" />
+              <EntityAction
+                entity={entity}
+                name="驳回"
+                renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} accept={false} visible={visible} onCancel={cancelor} />}
+              />
+            </>
+          }
           rowKey={(comment) => comment.contentId}
           columns={this.getColumns}
           initialDataSource={this.props.list}

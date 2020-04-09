@@ -76,8 +76,6 @@ export interface TopicManagerProps {
   total: number
 };
 export interface TopicManagerState {
-  selectedRowKeys: Array<string>,
-  selectedRows: Array<Topic>
 };
 
 export default class TopicManager extends React.Component<TopicManagerProps, TopicManagerState> {
@@ -93,48 +91,13 @@ export default class TopicManager extends React.Component<TopicManagerProps, Top
       total: topicsData.total
     }
   }
-  constructor(props: TopicManagerProps) {
-    super(props);
-    this.state = {
-      selectedRowKeys: [],
-      selectedRows: []
-    }
-    this.onSelectionChange = this.onSelectionChange.bind(this);
-  }
-  onSelectionChange(selectedRowKeys: string[], selectedRows: Topic[]) {
-    this.setState({ selectedRowKeys: selectedRowKeys, selectedRows: selectedRows })
-  }
   render() {
-    let rowSelection: TableRowSelection<Topic> = {
-      selectedRowKeys: this.state.selectedRowKeys,
-      getCheckboxProps: (topic) => ({ disabled: topic.status == ContentStatus.Draft }),
-      onChange: this.onSelectionChange
-    }
-
     return (
       <>
         <HeaderBar
           title="话题管理"
           hint="管理已经在系统中的话题"
         />
-        <BulkBar
-          count={this.state.selectedRowKeys.length}
-          onClear={() => this.setState({ selectedRowKeys: [], selectedRows: [] })}
-        >
-          批量操作：
-        <EntityAction
-            entity={null}
-            name="通过"
-            disabled={this.state.selectedRows.length == 0}
-            renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={this.state.selectedRows} accept visible={visible} onCancel={cancelor} />}
-          />
-          <EntityAction
-            entity={null}
-            name="驳回"
-            disabled={this.state.selectedRows.length == 0}
-            renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={this.state.selectedRows} accept={false} visible={visible} onCancel={cancelor} />}
-          />
-        </BulkBar>
         <div>
           <EntityManager
             config={{
@@ -143,7 +106,7 @@ export default class TopicManager extends React.Component<TopicManagerProps, Top
               delete: API.BackendTopicDelete,
               getDeleteRequestData: (entity) => ({ topic_id: entity.contentId })
             }}
-            actionOptionsExtra={(entity, index) =>
+            actionOptionsExtra={(entity, index, updater) =>
               <>
                 <Link href="topics/[topic_id]" as={`topics/${entity.contentId}`}><a target="blank">查看</a></Link>
                 {entity.status == ContentStatus.Examining && <>
@@ -151,19 +114,39 @@ export default class TopicManager extends React.Component<TopicManagerProps, Top
                   <EntityAction
                     entity={entity}
                     name="通过"
-                    renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} accept visible={visible} onCancel={cancelor} />}
+                    renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} onExamined={(entities) => updater(entities[0] as Topic)} accept visible={visible} onCancel={cancelor} />}
                   />
                   <Divider type="vertical" />
                   <EntityAction
                     entity={entity}
                     name="驳回"
-                    renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} accept={false} visible={visible} onCancel={cancelor} />}
+                    renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} onExamined={(entities) => updater(entities[0] as Topic)} accept={false} visible={visible} onCancel={cancelor} />}
                   />
                 </>}
               </>
             }
+            bulkBarExtra={(selectedRowKeys, selectedRows, clearer, refersher) => {
+              let isSelectedExamining = selectedRowKeys.length > 0 && selectedRows.every((topic) => topic.status == ContentStatus.Examining);
+              let clearBulkState = () => {
+                clearer();
+                refersher();
+              }
+              return <>
+                <EntityAction
+                  entity={null}
+                  name="通过"
+                  disabled={!isSelectedExamining}
+                  renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={selectedRows} onExamined={clearBulkState} accept visible={visible} onCancel={cancelor} />}
+                />
+                <EntityAction
+                  entity={null}
+                  name="驳回"
+                  disabled={!isSelectedExamining}
+                  renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={selectedRows} onExamined={clearBulkState} accept={false} visible={visible} onCancel={cancelor} />}
+                />
+              </>
+            }}
             scroll={{ x: 1300 }}
-            rowSelection={rowSelection}
             rowKey={(topic) => topic.contentId}
             columns={getColumns}
             initialDataSource={this.props.list}

@@ -1,7 +1,6 @@
-import { Divider, Tag } from 'antd';
-import { ColumnProps, SorterResult, TableRowSelection } from 'antd/lib/table';
+import { Divider, message, Tag } from 'antd';
+import { ColumnProps, SorterResult } from 'antd/lib/table';
 import React from 'react';
-import BulkBar from '../../../components/backend/bulk-bar';
 import EntityAction from '../../../components/backend/entity-action';
 import EntityManager from '../../../components/backend/entity-manager';
 import { SearchableColumn } from '../../../components/backend/entity-search';
@@ -12,6 +11,7 @@ import { API } from '../../../configs/api-config';
 import { Order, OrderStatus, OrderType, ORDER_STATUS_COLORS, ORDER_STATUS_TEXTS, ORDER_TYPE_TEXTS, PAY_TYPE_TEXTS } from '../../../types/order';
 import { User } from '../../../types/user';
 import DatetimeUtil from '../../../util/datetime-util';
+import { fetchMessageByDelete } from '../../../util/network-util';
 
 function moneyFormat(m: number): string {
   let s = m + "";
@@ -92,18 +92,13 @@ export interface ShoppingOrdersProps {
   total: number
 };
 export interface ShoppingOrdersState {
-  selectedRowKeys: Array<string>,
-  selectedRows: Array<Order>
 };
 
 export default class ShoppingOrders extends React.Component<ShoppingOrdersProps, ShoppingOrdersState> {
   constructor(props: ShoppingOrdersProps) {
     super(props);
     this.state = {
-      selectedRowKeys: [],
-      selectedRows: []
     };
-    this.onChange = this.onChange.bind(this);
   }
   getSearchableColumns(): Array<SearchableColumn<Order>> {
     return [
@@ -117,32 +112,24 @@ export default class ShoppingOrders extends React.Component<ShoppingOrdersProps,
       }
     ];
   }
-  onChange(selectedRowKeys: string[], selectedRows: Order[]) {
-    this.setState({ selectedRowKeys: selectedRowKeys, selectedRows: selectedRows });
-  }
   render() {
-    const { selectedRowKeys } = this.state;
-    let rowSelection: TableRowSelection<Order> = {
-      selectedRowKeys,
-      onChange: this.onChange
-    }
     return (
       <>
         <HeaderBar
           title="订单管理"
-          hint="这里列出了系统中存在的订单，您可以设置订单的状态，这将反馈给用户。"
+          hint="这里列出了系统中存在的订单，您可以对订单进行操作，这将反馈给用户。"
         />
         <div>
           <h3>快捷操作操作</h3>
         </div>
         <Divider type="horizontal" />
         <EntityManager
-          toolsBarExtra={
-            <BulkBar
-              count={this.state.selectedRowKeys.length}
-              onClear={() => this.setState({ selectedRowKeys: [], selectedRows: [] })}>
-              总金额：<span className="huidu-money">{moneyFormat(this.state.selectedRows.map((o) => o.totalMoney.amountMinorLong).reduce((a, b) => a + b, 0))}</span> 元
-            </BulkBar>
+          bulkBarExtra={
+            (selectedRowKeys, selectedRows) => {
+              return <>
+                无，总金额：<span className="huidu-money">{moneyFormat(selectedRows.map((o) => o.totalMoney.amountMinorLong).reduce((a, b) => a + b, 0))}</span> 元
+              </>
+            }
           }
           actionOptionsExtra={(entity, index, updater) =>
             <>
@@ -165,7 +152,6 @@ export default class ShoppingOrders extends React.Component<ShoppingOrdersProps,
                         orderNumber={entity.orderNumber}
                         logisticsInformation={entity.logisticsInformation}
                         onUpdated={(updatedLogisticsInformation) => {
-                          debugger;
                           entity.logisticsInformation = updatedLogisticsInformation;
                           updater(entity);
                         }}
@@ -183,14 +169,25 @@ export default class ShoppingOrders extends React.Component<ShoppingOrdersProps,
                   <EntityAction
                     entity={entity}
                     name="退单"
-                    renderDialog={(entity, visible, cancelor) => <></>}
+                    onClick={(entity, setLoading) => {
+                      setLoading(true);
+                      fetchMessageByDelete(API.BackendOrderChargeback, {
+                        order_number: entity.orderNumber
+                      }).then((data) => {
+                        message.success('退单成功！');
+                        updater(entity);
+                      }).catch((err) => {
+                        message.error(`退单失败：${err.message}`)
+                      }).finally(() => {
+                        setLoading(false);
+                      })
+                    }}
                   />
                 </>
               }
             </>
           }
           rowKey={(entity) => entity.orderNumber}
-          rowSelection={rowSelection}
           config={{
             list: API.BackendOrderCollection,
             searchableColumns: this.getSearchableColumns()

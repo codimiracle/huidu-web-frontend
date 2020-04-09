@@ -80,13 +80,6 @@ export default class CategoryManager extends React.Component<CategoryManagerProp
             delete: API.BackendCategoryDelete,
             getDeleteRequestData: (entity) => ({ category_id: entity.id })
           }}
-          toolsBarExtra={
-            <BulkBar
-              count={this.state.selectedRowKeys.length}
-              onClear={() => this.setState({ selectedRowKeys: [], selectedRows: [] })}
-            />
-          }
-          rowSelection={rowSelection}
           columns={this.getColumns}
           rowKey={(category) => category.id}
           initialDataSource={this.props.list}
