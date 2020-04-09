@@ -19,6 +19,7 @@ export interface Note {
 export interface BookNotes {
   bookId: string;
   book: ElectronicBook;
+  notes: Array<Note>;
   noteCount: number;
   createTime: string;
   updateTime: string;
