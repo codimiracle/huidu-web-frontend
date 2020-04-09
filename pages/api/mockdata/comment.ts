@@ -2,6 +2,7 @@ import { Comment } from "../../../types/comment";
 import { getMockReference } from "./reference";
 import { ContentType, ContentStatus } from "../../../types/content";
 import { getMockSocialUser } from "./user";
+import { getMockExamination } from "./examination";
 
 export const getMockComment = (): Comment => {
   let contentId = Math.trunc(Math.random() * 1000000);
@@ -27,6 +28,7 @@ export const getMockComment = (): Comment => {
     rate: Math.random() * 5,
     reposts: Math.random() * 1000,
     commentList: [],
+    examination: getMockExamination(),
     createTime: new Date().toISOString(),
     updateTime: new Date().toISOString(),
     references: new Array(10).fill(0).map(() => getMockReference())
