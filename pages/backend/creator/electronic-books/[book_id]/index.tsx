@@ -8,6 +8,7 @@ import { Catalogs, ElectronicBook, ELECTRONIC_BOOK_STATUS_COLORS, ELECTRONIC_BOO
 import { Episode } from '../../../../../types/episode';
 import { fetchDataByGet, fetchMessageByDelete } from '../../../../../util/network-util';
 import UploadUtil from '../../../../../util/upload-util';
+import BookDescription from '../../../../../components/book/book-description';
 const EMPTY_IMAGE = "/assets/empty.png";
 
 export interface MyBookDetailsProps {
@@ -68,17 +69,18 @@ export default class MyBookDetails extends React.Component<MyBookDetailsProps, M
         <h2>作品详情</h2>
         <div>
           <Row type="flex">
-            <Col>
+            <Col span={16}>
               <div className="book-details-view">
                 <img src={book && UploadUtil.absoluteUrl(API.CoverSource, book.metadata.cover) || EMPTY_IMAGE} />
                 <div className="body">
                   <strong>{book.metadata.name} <Tag color={ELECTRONIC_BOOK_STATUS_COLORS[book.status]}>{ELECTRONIC_BOOK_STATUS_TEXTS[book.status]}</Tag></strong>
-                  <p>{book.metadata.description}</p>
+                  <BookDescription size="large" book={book} />
                 </div>
               </div>
             </Col>
             <Col>
               <Link href="./[book_id]/edit" as={`./${book.id}/edit`}><a>编辑书籍数据</a></Link>
+              <div>若图书仍处于待审状态，请联系管理员哦。</div>
             </Col>
           </Row>
           <div>

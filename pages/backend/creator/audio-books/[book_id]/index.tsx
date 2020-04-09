@@ -9,6 +9,7 @@ import { Episode } from '../../../../../types/episode';
 import { fetchDataByGet, fetchMessageByDelete } from '../../../../../util/network-util';
 import AudioPlayerView from '../../../../../components/audio-player-view';
 import UploadUtil from '../../../../../util/upload-util';
+import BookDescription from '../../../../../components/book/book-description';
 const EMPTY_IMAGE = "/assets/empty.png";
 
 export interface MyBookDetailsProps {
@@ -69,17 +70,18 @@ export default class MyBookDetails extends React.Component<MyBookDetailsProps, M
         <h2>作品详情</h2>
         <div>
           <Row type="flex">
-            <Col>
+            <Col span={16}>
               <div className="book-details-view">
                 <img src={book && UploadUtil.absoluteUrl(API.CoverSource, book.cover) || EMPTY_IMAGE} />
                 <div className="body">
                   <strong>{book.title} <Tag color={AUDIO_BOOK_STATUS_COLORS[book.status]}>{AUDIO_BOOK_STATUS_TEXTS[book.status]}</Tag></strong>
-                  <p>{book.description}</p>
+                  <BookDescription size="large" book={book} />
                 </div>
               </div>
             </Col>
             <Col>
               <Link href="./[book_id]/edit" as={`./${book.id}/edit`}><a>编辑书籍数据</a></Link>
+              <div>若图书仍处于待审状态，请联系管理员哦。</div>
             </Col>
           </Row>
           <div>
@@ -91,7 +93,7 @@ export default class MyBookDetails extends React.Component<MyBookDetailsProps, M
                 lastEditedEpisode &&
                 <div>
                   <strong>{lastEditedEpisode.title}</strong>
-                  <AudioPlayerView src={UploadUtil.absoluteUrl(API.UploadSource, lastEditedEpisode.streamUrl)} style={{ borderRadius: '0', border: '1px solid #dcdcdc' }} />
+                  <AudioPlayerView src={UploadUtil.absoluteUrl(API.UploadSource, lastEditedEpisode.streamUrl)} style={{ borderRadius: '0', border: '1px solid #dcdcdc' }} onError={() => message.error('无法播放媒体源！')} />
                 </div>
               }
               {!lastEditedEpisode && <p>暂无章节</p>}
