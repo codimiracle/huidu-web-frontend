@@ -16,11 +16,11 @@ export default function BookMiniView(props: BookMiniViewProps) {
     <div className="book-mini-view">
       <BookCover book={book} />
       <div className="body">
-        <BookHeader book={book} status author/>
+        <BookHeader book={book}/>
         <Rate disabled defaultValue={book.rate} style={{ fontSize: '1.2em' }} />
         <BookDescription book={book} size="small" />
         <div className="huidu-actions-left">
-          <DirectLink href={`/${book.type == BookType.ElectronicBook ? 'reader' : 'player'}/[book_id]`} as={`/${book.type == BookType.ElectronicBook ? 'reader' : 'player'}/${book.id}`}><Button>{book.type == BookType.ElectronicBook ? '在线阅读' : '在线听书'}</Button></DirectLink>
+          <DirectLink href={`/${book.type == BookType.ElectronicBook ? 'reader' : 'player'}/[book_id]`} as={`/${book.type == BookType.ElectronicBook ? 'reader' : 'player'}/${book.id}`}><Button size="small">{book.type == BookType.ElectronicBook ? '在线阅读' : '在线听书'}</Button></DirectLink>
         </div>
       </div>
       <style jsx>{`
