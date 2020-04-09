@@ -79,7 +79,7 @@ export default class InfiniteListView<T> extends React.Component<InfiniteListVie
         >
           {
             this.state.loading &&
-            <Spin spinning={this.state.loading}></Spin>
+            <Spin spinning={this.state.loading} style={{padding: '16px'}}></Spin>
           }
         </List>
       </InfiniteScroll>
