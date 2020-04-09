@@ -4,6 +4,7 @@ export interface UserToken {
   expireTime: string;
   token: string;
   user: User;
+  valid: boolean;
 }
 export default class AuthenticationUtil {
   static save(token: UserToken) {
