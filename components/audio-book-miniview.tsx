@@ -7,6 +7,7 @@ import { fetchMessageByPost } from '../util/network-util';
 import RetryView from './retry-view';
 import BookHeader from './book/book-header';
 import BookCover from './book/book-cover';
+import LoginRequiredView from './user/login-required-view';
 
 const EMPTY_IMAGE = '/assets/empty-audio.png';
 
@@ -29,8 +30,13 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
       book: props.book,
       loading: !!props.id,
       retry: false,
-      joined: false,
+      joined: props.book && props.book.joinedShelf,
       joining: false
+    }
+  }
+  componentDidUpdate() {
+    if (this.props.book.joinedShelf && !this.state.joined) {
+      this.setState({ joined: this.props.book.joinedShelf });
     }
   }
   private onJoinShelfClick() {
@@ -67,10 +73,16 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
           </div>
           <div className="body">
             <div><BookHeader book={book} status author /></div>
-            <div><Rate defaultValue={2.5} disabled style={{ fontSize: '1em' }} /></div>
+            <div><Rate defaultValue={book.rate} disabled style={{ fontSize: '1em' }} /></div>
             <p className="description">{book.description || book.metadata.description}</p>
             <div className="huidu-actions-left">
-              <Button size="small" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
+              <LoginRequiredView
+                renderNonlogin={(opener) =>
+                  <Button size="small" onClick={opener}>加入书架</Button>
+                }
+              >
+                <Button size="small" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
+              </LoginRequiredView>
             </div>
           </div>
         </div>

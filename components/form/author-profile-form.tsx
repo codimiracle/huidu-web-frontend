@@ -140,7 +140,12 @@ export default class AuthorProfileForm extends React.Component<AuthorProfileForm
         <Row gutter={32}>
           <Col span={12}>
             <FormItem label="笔名" key="nickname">
+            {
+                userdata &&
+                <strong>{userdata.nickname}</strong>
+              }
               {
+                !userdata &&
                 form.getFieldDecorator('nickname', {
                   initialValue: userdata && userdata.nickname || undefined,
                   rules: [

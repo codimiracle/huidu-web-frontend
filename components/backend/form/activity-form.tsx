@@ -22,7 +22,7 @@ export default class ActivityForm extends React.Component<ActivityFormProps, Act
             {
               form.getFieldDecorator('banner', {
                 initialValue: activity && activity.banner || undefined,
-                rules: [{required: true, message: '请上传一张 Banner'}]
+                rules: [{ required: true, message: '请上传一张 Banner' }]
               })(<BannerUpload />)
             }
           </FormItem>
@@ -40,7 +40,8 @@ export default class ActivityForm extends React.Component<ActivityFormProps, Act
           <FormItem label="关联书籍">
             {
               form.getFieldDecorator('bookId', {
-                initialValue: activity && activity.book && activity.book.id || undefined
+                initialValue: activity && activity.book && activity.book.id || undefined,
+                rules: [{ required: true, message: '需要选择相应的图书' }]
               })(
                 <BookSelect initialBook={activity && activity.book || undefined} />
               )

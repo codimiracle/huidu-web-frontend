@@ -16,7 +16,7 @@ export interface CategorySelectProps {
 export interface CategorySelectState {
   fetching: boolean;
   categories: ObjectSet<Category>;
-  value: string;
+  value: string | string[];
 };
 
 export default class CategorySelect extends React.Component<CategorySelectProps, CategorySelectState> {

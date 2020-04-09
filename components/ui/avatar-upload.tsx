@@ -54,7 +54,6 @@ export default class AvatarUpload extends React.Component<AvatarUploadProps> {
       onChange && onChange(uploadedRelativeUrl);
     }
   };
-
   render() {
     const uploadButton = (
       <div>

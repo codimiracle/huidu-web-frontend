@@ -35,7 +35,7 @@ export class ResetPasswordDialog extends React.Component<ResetPasswordDialogProp
             message.success("重置密码成功！");
             this.props.onCancel();
           } else {
-            message.error(msg.message);
+            message.error(`重置密码失败：${msg.message}`);
           }
         }).catch((err) => {
           message.error(`重置密码失败：${err}`);

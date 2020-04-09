@@ -4,6 +4,7 @@ import { Review } from '../types/review';
 import DatetimeUtil from '../util/datetime-util';
 import ReferenceView from './reference-view';
 import CommentModularView from './comment-modular-view';
+import LikeIconButton from './ui/like-icon-button';
 
 interface ReviewPostViewProps {
   review: Review;
@@ -35,10 +36,13 @@ export default class ReviewPostView extends React.Component<ReviewPostViewProps,
         <div className="review-reference">
           <ReferenceView references={review.references} />
         </div>
+        <div>
+          <h3>喜欢这篇文章吗？点个赞如何？</h3>
+          <LikeIconButton contentId={review.contentId} liked={review.liked} likes={review.likes} />
+        </div>
         <Divider type="horizontal" />
         <h3>评论</h3>
         <CommentModularView
-          rate
           content={review}
         />
       </div>

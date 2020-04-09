@@ -33,6 +33,11 @@ export default class AudioUpload extends React.Component<AudioUploadProps, Audio
         this.setState({ loading: true });
       }
       if (info.file.status === 'done') {
+        if (info.file.response.code != 200) {
+          message.error(`上传失败：${info.file.response.message}`);
+          this.setState({ loading: false });
+          return;
+        }
         message.success('上传成功，可以使用播放控件播放哟。');
         let path = UploadUtil.relativeUrl(info.file.response.data);
         this.setState({ loading: false, value: path });
@@ -67,7 +72,7 @@ export default class AudioUpload extends React.Component<AudioUploadProps, Audio
         </Upload>
         {
           value &&
-          <AudioPlayerView src={value} style={{ borderRadius: '0', border: '1px solid #dcdcdc' }} />
+          <AudioPlayerView src={value} style={{ borderRadius: '0', border: '1px solid #dcdcdc' }} onError={() => message.error('加载媒体源失败！')} />
         }
       </>
     )

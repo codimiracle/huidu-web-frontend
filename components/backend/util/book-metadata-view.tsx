@@ -1,6 +1,8 @@
 import { BookMetadata } from "../../../types/book";
 import { API } from "../../../configs/api-config";
 import UploadUtil from "../../../util/upload-util";
+import Cover from "../../base/cover";
+import Description from "../../base/description";
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
@@ -12,10 +14,10 @@ export function BookMetadataView(props: BookMetadataProps) {
   const { metadata } = props;
   return (
     <div className="book-metadata-view">
-      <img src={UploadUtil.absoluteUrl(API.UploadSource, metadata.cover) || EMPTY_IMAGE} />
+      <Cover src={UploadUtil.absoluteUrl(API.UploadSource, metadata.cover)} />
       <div className="body">
         <div><strong>{metadata.name}</strong> <span>{metadata.author}</span></div>
-        <p>{metadata.description}</p>
+        <Description description={metadata.description} />
       </div>
       <style jsx>{`
         .book-metadata-view {

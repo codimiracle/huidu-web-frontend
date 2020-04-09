@@ -1,17 +1,14 @@
+import { Button, message, Rate } from 'antd';
 import React from 'react';
-import { AudioBook } from '../types/audio-book';
-import { Tag, Button, Rate, message } from 'antd';
-import RetryView from './retry-view';
-import DirectLink from './direct-link';
-import Link from 'next/link';
-import { fetchMessageByPost } from '../util/network-util';
 import { API } from '../configs/api-config';
-import AudioBookStatusView from './audio-book-status-view';
-import BookHeader from './book/book-header';
-import BookDescription from './book/book-description';
+import { AudioBook } from '../types/audio-book';
+import { fetchMessageByPost } from '../util/network-util';
 import BookCover from './book/book-cover';
-
-const EMPTY_IMAGE = '/assets/empty-audio.png';
+import BookDescription from './book/book-description';
+import BookHeader from './book/book-header';
+import DirectLink from './direct-link';
+import RetryView from './retry-view';
+import LoginRequiredView from './user/login-required-view';
 
 export interface AudioBookViewProps {
   id?: string,
@@ -32,8 +29,13 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
       book: props.book,
       loading: !!props.id,
       joined: false,
-      joining: false,
+      joining: props.book && props.book.joinedShelf,
       retry: false
+    }
+  }
+  componentDidUpdate() {
+    if (this.props.book.joinedShelf && !this.state.joined) {
+      this.setState({joined: this.props.book.joinedShelf});
     }
   }
   private onJoinShelfClick() {
@@ -73,7 +75,11 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
             <div><Rate defaultValue={book.rate} disabled style={{ fontSize: '18px' }} /></div>
             <BookDescription book={book} size="small" style={{ flex: 1 }} />
             <div className="actions">
-              <DirectLink href={`/player/[book_id]`} as={`/player/${book.id}`}><Button size="small">在线听书</Button></DirectLink> <Button size="small" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
+              <DirectLink href={`/player/[book_id]`} as={`/player/${book.id}`}><Button size="small">在线听书</Button></DirectLink> <LoginRequiredView
+                renderNonlogin={(opener) =>
+                  <Button size="small" onClick={opener}>加入书架</Button>
+                }
+              ><Button size="small" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button></LoginRequiredView>
             </div>
           </div>
         </div>

@@ -38,7 +38,8 @@ export interface EntityManagerProps<T> {
     scrollToFirstRowOnChange?: boolean;
   };
   actionOptionWidth?: string | number;
-  toolsBarExtra?: (selectedRowKeys: Array<string>, selectedRows: Array<T>, clearer: () => void, refresher: () => void) => ReactNode;
+  toolsBarExtra?: React.ReactNode;
+  bulkBarExtra?: (selectedRowKeys: Array<string>, selectedRows: Array<T>, clearer: () => void, refresher: () => void) => ReactNode;
   actionOptionsExtra?: (entity: T, index: number, updater: (entity: T) => void) => ReactNode;
   rowKey: string | ((record: T, index: number) => string);
   expandedRowRender?: (record: T, index: number, indent: number, expanded: boolean) => React.ReactNode;
@@ -205,8 +206,11 @@ export class EntityManager<T> extends React.Component<EntityManagerProps<T>, Ent
             }
           </div>
           <div className="table-tools-bar-extra">
+            {this.props.toolsBarExtra}
+          </div>
+          <div className="table-bulk-bar-extra">
             {
-              (this.props.config.bulkDelete || this.props.toolsBarExtra) &&
+              (this.props.config.bulkDelete || this.props.bulkBarExtra) &&
               <BulkBar
                 count={selectedRowCount}
                 onClear={() => this.setState({ selectedRowKeys: [], selectedRows: [] })}
@@ -225,7 +229,7 @@ export class EntityManager<T> extends React.Component<EntityManagerProps<T>, Ent
                     />
                   </Popconfirm>
                 }
-                {this.props.toolsBarExtra && this.props.toolsBarExtra(this.state.selectedRowKeys, this.state.selectedRows, () => this.clearSelection(), () => this.reloadList())}
+                {this.props.bulkBarExtra && this.props.bulkBarExtra(this.state.selectedRowKeys, this.state.selectedRows, () => this.clearSelection(), () => this.reloadList())}
               </BulkBar>
             }
           </div>
@@ -262,7 +266,7 @@ export class EntityManager<T> extends React.Component<EntityManagerProps<T>, Ent
           onChange={this.onChange}
           rowKey={this.props.rowKey}
           loading={this.state.loading}
-          rowSelection={(this.props.toolsBarExtra || this.props.config.bulkDelete) && rowSelection}
+          rowSelection={(this.props.bulkBarExtra || this.props.config.bulkDelete) && rowSelection}
           expandedRowRender={this.props.expandedRowRender}
           pagination={pagination}
           columns={renderringColumns}

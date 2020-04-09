@@ -9,14 +9,18 @@ export default function Description(props: DescriptionProps) {
   let size = props.size;
   let description = props.description || ''
   let className = '';
-  description = description.substr(0, 72) + '...';
+  description = props.description.substr(0, 72) + '...';
   if (size === 'small') {
-    description = description.substr(0, 48) + '...';
+    description = props.description.substr(0, 48) + '...';
     className = '-small';
   }
   if (size === 'medium') {
-    description = description.substr(0, 96) + '...';
+    description = props.description.substr(0, 96) + '...';
     className = '-medium';
+  }
+  if (size === 'large') {
+    description = props.description;
+    className = '-large';
   }
   return (
     <p className={`huidu${className}-description huidu${className}-ellipsis`} title={description} style={props.style}>{description}</p>

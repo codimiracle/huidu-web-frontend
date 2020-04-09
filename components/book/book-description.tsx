@@ -19,6 +19,10 @@ export default function BookDescription(props: BookDescriptionProps) {
     description = bookPreview.description.substr(0, 96) + '...';
     className = '-medium';
   }
+  if (size === 'large') {
+    description = bookPreview.description;
+    className = '-large';
+  }
   return (
     <p className={`huidu${className}-description huidu${className}-ellipsis`} title={bookPreview.description} style={props.style}>{description}</p>
   );

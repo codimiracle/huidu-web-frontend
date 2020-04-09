@@ -4,6 +4,7 @@ import { Typography, Divider } from 'antd';
 import DatetimeUtil from '../../util/datetime-util';
 import ReferenceView from '../reference-view';
 import CommentModularView from '../comment-modular-view';
+import LikeIconButton from '../ui/like-icon-button';
 
 export interface TopicPostProps {
   topic: Topic;
@@ -33,6 +34,10 @@ export default class TopicPost extends React.Component<TopicPostProps, TopicPost
         </Typography>
         <div className="topic-reference">
           <ReferenceView references={topic.references} />
+        </div>
+        <div>
+          <h2>喜欢这篇文章吗？点个赞如何？</h2>
+          <LikeIconButton contentId={topic.contentId} liked={topic.liked} likes={topic.likes} />
         </div>
         <Divider type="horizontal" />
         <h3>评论</h3>

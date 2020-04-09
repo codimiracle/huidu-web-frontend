@@ -1,4 +1,4 @@
-import { Input, Radio } from 'antd';
+import { Input, Radio, InputNumber } from 'antd';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import React from 'react';
@@ -29,6 +29,14 @@ export default class AudioEpisodeForm extends React.Component<AudioEpisodeFormPr
               )
             }
           </FormItem>
+          <FormItem label="章节号">
+            {
+              form.getFieldDecorator('mediaNumber', {
+                initialValue: audioEpisode && audioEpisode.mediaNumber,
+                rules: [{ required: true, message: '需要设定章节号' }]
+              })(<InputNumber min={1} />)
+            }
+          </FormItem>
           <FormItem label="章节状态">
             {
               form.getFieldDecorator('status', {
@@ -41,6 +49,15 @@ export default class AudioEpisodeForm extends React.Component<AudioEpisodeFormPr
               )
             }
           </FormItem>
+          <div>
+            {
+              audioEpisode && audioEpisode && audioEpisode.examination &&
+              <div style={{ color: 'red', fontWeight: 'bold' }}>
+                <div>章节审核：{AUDIO_EPISODE_STATUS_TEXTS[audioEpisode.examination.toStatus]}</div>
+                <div>{audioEpisode.examination.reason}</div>
+              </div>
+            }
+          </div>
           <FormItem label="电子书章节">
             {
               form.getFieldDecorator('episodeId', {

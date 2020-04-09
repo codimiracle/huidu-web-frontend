@@ -2,6 +2,8 @@ import React from 'react';
 import { Tooltip, Icon, message } from 'antd';
 import { API } from '../../configs/api-config';
 import { fetchMessageByPost } from '../../util/network-util';
+import AuthenticationUtil from '../../util/authentication-util';
+import LoginRequiredView from '../user/login-required-view';
 
 interface LikeIconButtonProps {
   contentId: string;
@@ -48,12 +50,16 @@ export default class LikeIconButton extends React.Component<LikeIconButtonProps,
     });
   }
   render() {
-    const { likes, liked} = this.state;
+    const { likes, liked } = this.state;
     return (
       <>
-        <Tooltip title="点赞">
-          <span key="comment-like"  onClick={() => this.onLike()}><Icon type="like" theme={liked ? "filled" : "outlined"}/><span style={{ paddingLeft: '8px' }}>{likes}</span></span>
-        </Tooltip>
+        <LoginRequiredView
+          renderNonlogin={(opener) => <span key="comment-like" onClick={opener}><Icon type="like" theme={liked ? "filled" : "outlined"} /><span style={{ paddingLeft: '8px' }}>{likes}</span></span>}
+        >
+          <Tooltip title="点赞">
+            <span key="comment-like" onClick={() => this.onLike()}><Icon type="like" theme={liked ? "filled" : "outlined"} /><span style={{ paddingLeft: '8px' }}>{likes}</span></span>
+          </Tooltip>
+        </LoginRequiredView>
       </>
     )
   }

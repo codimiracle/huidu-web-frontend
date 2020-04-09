@@ -7,6 +7,7 @@ import Description from './base/description';
 
 export interface NotificationItemViewProps {
   notification: Notification;
+  complete?: boolean;
   onMarkAsRead: (notification: Notification) => void;
 };
 export interface NotificationItemViewState { };
@@ -31,7 +32,7 @@ export default class NotificationItemView extends React.Component<NotificationIt
                 </Col>
               </Row>
               <Row>
-                <Description size="medium" style={{ margin: '0', lineHeight: '1.5em' }} description={notification.message} />
+                <Description size={this.props.complete ? 'large' : 'default'} style={{ margin: '0', lineHeight: '1.5em' }} description={notification.message} />
               </Row>
             </Col>
             <Col>

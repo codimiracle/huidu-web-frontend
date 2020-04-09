@@ -8,7 +8,7 @@ export enum PlayerStatus {
 
 export interface AudioPlayerViewProps {
   src: string;
-  progress: number;
+  progress?: number;
   onProgress?: (progress: number) => void;
   onLoaded?: (src: string, duration: number) => void;
   onError: (e) => void;

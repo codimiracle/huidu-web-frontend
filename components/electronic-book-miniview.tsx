@@ -8,6 +8,7 @@ import book from './book';
 import BookCover from './book/book-cover';
 import BookHeader from './book/book-header';
 import BookDescription from './book/book-description';
+import LoginRequiredView from './user/login-required-view';
 
 
 export interface ElectronicBookMiniViewProps {
@@ -25,9 +26,14 @@ export default class ElectronicBookMiniView extends React.Component<ElectronicBo
     super(props);
     this.state = {
       book: props.book,
-      joined: false,
+      joined: props.book && props.book.joinedShelf,
       joining: false
     };
+  }
+  componentDidUpdate() {
+    if (this.props.book.joinedShelf && !this.state.joined) {
+      this.setState({ joined: this.props.book.joinedShelf });
+    }
   }
   private onJoinShelfClick() {
     const { book } = this.props;
@@ -60,7 +66,13 @@ export default class ElectronicBookMiniView extends React.Component<ElectronicBo
           <div><Rate defaultValue={renderringBook.rate} disabled style={{ fontSize: '1em' }} /></div>
           <BookDescription size="small" book={renderringBook} />
           <div className="huidu-actions-left">
-            <Button size="small" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
+            <LoginRequiredView
+              renderNonlogin={(opener) =>
+                <Button size="small" onClick={opener}>加入书架</Button>
+              }
+            >
+              <Button size="small" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
+            </LoginRequiredView>
           </div>
         </Col>
       </Row>

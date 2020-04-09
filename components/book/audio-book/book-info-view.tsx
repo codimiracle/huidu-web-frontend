@@ -7,6 +7,7 @@ import DirectLink from "../../direct-link";
 import BookCover from "../book-cover";
 import BookDescription from "../book-description";
 import BookHeader from "../book-header";
+import LoginRequiredView from "../../user/login-required-view";
 
 export interface BookInfoProps {
   book: AudioBook
@@ -20,8 +21,13 @@ export default class BookInfo extends React.Component<BookInfoProps, BookInfoSta
   constructor(props: BookInfoProps) {
     super(props);
     this.state = {
-      joined: false,
+      joined: props.book && props.book.joinedShelf,
       joining: false
+    }
+  }
+  componentDidUpdate() {
+    if (this.props.book.joinedShelf && !this.state.joined) {
+      this.setState({joined: this.props.book.joinedShelf});
     }
   }
   private onJoinShelfClick() {
@@ -52,7 +58,11 @@ export default class BookInfo extends React.Component<BookInfoProps, BookInfoSta
           <div>{book.metadata.author} 著</div>
           <BookDescription book={book} size="large" style={{ flex: 1 }} />
           <div className="huidu-actions-left">
-            <DirectLink href={`/player/[book_id]`} as={`/player/${book.id}`}><Button size="large" type="primary">在线听书</Button></DirectLink> <Button size="large" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
+            <DirectLink href={`/player/[book_id]`} as={`/player/${book.id}`}><Button size="large" type="primary">在线听书</Button></DirectLink> <LoginRequiredView
+              renderNonlogin={(opener) =>
+                <Button size="large" onClick={opener}>加入书架</Button>
+              }
+            ><Button size="large" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button></LoginRequiredView>
           </div>
         </div>
         <style jsx>{`

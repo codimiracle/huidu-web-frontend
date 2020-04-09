@@ -4,10 +4,10 @@ import { API } from "../../../configs/api-config";
 import { ElectronicBook } from "../../../types/electronic-book";
 import { fetchMessageByPost } from "../../../util/network-util";
 import DirectLink from "../../direct-link";
-import ElectronicBookStatusView from "../../electronic-book-status-view";
-import BookHeader from "../book-header";
-import BookDescription from "../book-description";
+import LoginRequiredView from "../../user/login-required-view";
 import BookCover from "../book-cover";
+import BookDescription from "../book-description";
+import BookHeader from "../book-header";
 
 export interface BookInfoViewProps {
   book: ElectronicBook
@@ -22,8 +22,13 @@ export class BookInfoView extends React.Component<BookInfoViewProps, BookInfoVie
   constructor(props: BookInfoViewProps) {
     super(props);
     this.state = {
-      joined: false,
+      joined: props.book.joinedShelf,
       joining: false
+    }
+  }
+  componentDidUpdate() {
+    if (this.props.book.joinedShelf && !this.state.joined) {
+      this.setState({joined: this.props.book.joinedShelf});
     }
   }
   private onJoinShelfClick() {
@@ -54,7 +59,11 @@ export class BookInfoView extends React.Component<BookInfoViewProps, BookInfoVie
           <div>{book.metadata.author} 著</div>
           <BookDescription book={book} size="large" style={{ flex: 1 }} />
           <div className="huidu-actions-left">
-            <DirectLink href="/reader/[book_id]" as={`/reader/${book.id}`}><Button type="primary" size="large">在线阅读</Button></DirectLink> <Button size="large" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button>
+            <DirectLink href="/reader/[book_id]" as={`/reader/${book.id}`}><Button type="primary" size="large">在线阅读</Button></DirectLink> <LoginRequiredView
+              renderNonlogin={(opener) =>
+                <Button size="large" onClick={opener}>加入书架</Button>
+              }
+            ><Button size="large" loading={joining} disabled={joined} onClick={() => this.onJoinShelfClick()}>{joined ? '已加入' : '加入书架'}</Button></LoginRequiredView>
           </div>
         </div>
         <style jsx>{`
