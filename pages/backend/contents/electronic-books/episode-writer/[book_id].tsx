@@ -1,4 +1,4 @@
-import { Affix, Button, Select, message, InputNumber } from 'antd';
+import { Affix, Button, Select, message, InputNumber, Divider } from 'antd';
 import React from 'react';
 import PageWriterView from '../../../../../components/page-writer-view';
 import { ElectronicBook, ElectronicBookStatus } from '../../../../../types/electronic-book';
@@ -11,6 +11,8 @@ import { API } from '../../../../../configs/api-config';
 import { NextPageContext } from 'next';
 import DatetimeUtil from '../../../../../util/datetime-util';
 import { Router, withRouter } from 'next/router';
+import EntityAction from '../../../../../components/backend/entity-action';
+import WrappedContentExaminingDialog from '../../../../../components/backend/form/content-examining-dialog';
 
 export interface EpisodeWriterProps {
   book: ElectronicBook;
@@ -41,7 +43,7 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
   constructor(props: EpisodeWriterProps) {
     super(props);
     this.state = {
-      episode: props.episode || null,
+      episode: { ...props.episode } || null,
       saving: false
     };
   }
@@ -122,6 +124,7 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
                 <Select
                   size="small"
                   defaultValue={EpisodeStatus.Draft}
+                  disabled={this.props.episode.status == EpisodeStatus.Examining}
                   value={episode.status}
                   onChange={(status) => this.setState((state) => {
                     let episode = state.episode;
@@ -132,14 +135,37 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
                   {Object.values(EpisodeStatus).map((status) => <Select.Option key={status} value={status}>{EPISODE_STATUS_TEXTS[status]}</Select.Option>)}
                 </Select>
               ) : <span style={{ color: 'red' }}>未保存</span>}</div>
-              <div>章节号：<InputNumber size="small" min={1} value={episode && episode.episodeNumber || undefined} placeholder="章节号" onChange={(value) => this.setState((state) => {
+              {
+                this.props.episode.status == EpisodeStatus.Publish &&
+                <p style={{ color: 'red' }}>当前章节已经发布，你不应该作任何修改！</p>
+              }
+              {
+                this.state.episode.status == EpisodeStatus.Examining &&
+                <div>内容评审：
+                  <EntityAction
+                    entity={{
+                      contentId: this.props.episode.contentId
+                    }}
+                    name="通过"
+                    renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} onExamined={(entities) => this.setState({ episode: { ...this.state.episode, status: EpisodeStatus.Publish } })} accept visible={visible} onCancel={cancelor} />}
+                  />
+                  <Divider type="vertical" />
+                  <EntityAction
+                    entity={{ contentId: this.props.episode.contentId }}
+                    name="驳回"
+                    renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} onExamined={(entities) => this.setState({ episode: { ...this.state.episode, status: EpisodeStatus.Rejected } })} accept={false} visible={visible} onCancel={cancelor} />}
+                  />
+                </div>
+              }
+              <p></p>
+              <div>章节号：<InputNumber size="small" min={1} disabled={this.props.episode.status == EpisodeStatus.Examining} value={episode && episode.episodeNumber || undefined} placeholder="章节号" onChange={(value) => this.setState((state) => {
                 let episode: any = state.episode || {};
                 episode.episodeNumber = value;
                 return { episode: episode }
               })} /></div>
             </div>
             <div>
-              <Button loading={saving} onClick={() => this.onSave()}>保存</Button>
+              <Button disabled={this.props.episode.status == EpisodeStatus.Examining} loading={saving} onClick={() => this.onSave()}>保存</Button>
             </div>
           </div>
         </Affix>
