@@ -40,6 +40,9 @@ export interface APIDefinitionSet {
 /**
  * for using API in netwok-util
  */
+/**
+ * for using API in netwok-util
+ */
 export enum API {
   ServerOrigin = "origin",
   UserCollection = "user.collection",
@@ -102,7 +105,6 @@ export enum API {
   UserBookNotesEntity = "user.bookNotes.entity",
   UserArrived = "user.arrive.signin",
   UserArriveToday = "user.arrive.today",
-
   // reader
   ReaderHistoryRecord = "reader.history.recordHistory",
   ReaderHistoryLastRead = "reader.history.lastRead",
@@ -111,7 +113,6 @@ export enum API {
   PlayerHistoryRecord = "player.history.recordHistory",
   PlayerHistoryLastRead = "player.history.lastRead",
   PlayerHistoryEpisode = "player.history.episode",
-
   // content
   CreateComment = "comment.create",
   ContentCommentCollection = "content.comment.collection",
@@ -176,9 +177,13 @@ export enum API {
   CreatorAudioBookLastEditedEpisode = "creator.audioBook.episode.lastUpdatedEpisode",
   // backend
   BackendOrderCollection = "backend.order.collection",
+  BackendOrderLogisticsInformationUpdate = "backend.order.logisticsInformation.update",
+  BackendOrderChargeback = "backend.order.chargeback",
   BackendTopicCollection = "backend.topic.collection",
-  BackendTopicAcceptExamination = "backend.topic.accept",
-  BackendTopicRejectExamination = "backend.topic.reject",
+  BackendContentAcceptExamination = "backend.content.accept",
+  BackendContentRejectExamination = "backend.content.reject",
+  BackendContentBulkAcceptExamination = "backend.content.bulkAccept",
+  BackendContentBulkRejectExamination = "backend.content.bulkReject",
   BackendTopicEntity = "backend.topic.entity",
   BackendTopicDelete = "backend.topic.delete",
   BackendCategoryCollection = "backend.category.collection",
@@ -196,6 +201,7 @@ export enum API {
   BackendUserEntity = "backend.user.entity",
   BackendUserCollection = "backend.user.collection",
   BackendUserDelete = "backend.user.delete",
+  BackendUserResetPassword = "backend.user.resetPassword",
   BackendUserChangePassword = 'backend.user.changePassword',
   BackendCommodityCollection = "backend.commodity.collection",
   BackendCommodityCreate = "backend.commodity.create",
@@ -223,6 +229,7 @@ export enum API {
   BackendAudioBookUpdate = "backend.audioBook.update",
   BackendAudioBookEntity = "backend.audioBook.entity",
   BackendAudioBookEpisodeCollection = "backend.audioBook.episode.collection",
+  BackendAudioBookEpisodeLastNumber = "backend.audioBook.episode.lastEpisodeNumber",
   BackendAudioBookEpisodeDelete = "backend.audioBook.episode.delete",
   BackendActivityCollection = "backend.activity.collection",
   BackendActivityCreate = "backend.activity.create",
@@ -231,6 +238,7 @@ export enum API {
   BackendAudioBookEpisodeCreate = "backend.audioBook.episode.create",
   BackendAudioBookEpisodeUpdate = "backend.audioBook.episode.update",
   BackendCommentDelete = "backend.comment.delete",
+  BackendCommentBulkDelete = "backend.comment.bulkDelete",
   BackendTagCollection = "backend.tag.collection",
   BackendTagCreate = "backend.tag.create",
   BackendTagUpdate = "backend.tag.update",
@@ -240,6 +248,7 @@ export enum API {
   BackendCollectionCreate = "backend.collection.create",
   BackendCollectionUpdate = "backend.collection.update",
   BackendCollectionDelete = "backend.collection.delete",
+  BackendCollectionBulkDelete = "backend.collection.bulkDelete",
   BackendComprehensivePage = "backend.comprehensivePage",
   ComprehensivePageCategories = "comprehensivePage.categories",
   ComprehensivePageCollections = "comprehensivePage.collections",
@@ -248,8 +257,6 @@ export enum API {
   CategorySuggestion = "category.suggestion",
   RecommendationInteresting = "recommendation.interesting",
   RecommendationSameInteresting = "recommendation.sameInteresting",
-  BackendUserResetPassword = "BackendUserResetPassword",
-  BackendOrderLogisticsInformationUpdate = "backend.order.logisticsInformation.update",
   ElectronicBookEpisodeSuggestion = "electronicBook.episode.suggestion",
   ElectronicBookComments = "electronic.book.comments",
   UserNotificationCollection = "user.notification.collection",
@@ -298,6 +305,7 @@ export enum API {
   UserOrderReceived = "user.order.received",
   UserOrderLogisticsInformation = "user.order.logisticsInformation",
   UserOrderEvaluate = "user.order.evaluate",
+  BackendUserBulkDelete = "backend.user.bulkDelete"
 }
 
 /**
@@ -371,9 +379,17 @@ export const APIDefinitionData: APIDefinitionSet = {
     },
     order: {
       collection: `${testOrigin}/api/backend/shopping/orders?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+      chargeback: {
+        url: `${testOrigin}/api/backend/shopping/orders/@{order_number}/chargeback`,
+        query: {
+          order_number: null
+        },
+        method: 'delete'
+      },
       logisticsInformation: {
         update: {
           url: `${testOrigin}/api/backend/shopping/orders/@{order_number}/logistics-information`,
+          method: 'post',
           body: {
             expressNumber: null,
             expressCompany: null,
@@ -507,6 +523,7 @@ export const APIDefinitionData: APIDefinitionSet = {
             book_id: null,
             title: null,
             status: null,
+            mediaNumber: null,
             streamUrl: null,
             episodeId: null
           }
@@ -521,6 +538,7 @@ export const APIDefinitionData: APIDefinitionSet = {
             title: null,
             status: null,
             streamUrl: null,
+            mediaNumber: null,
             episodeId: null
           }
         },
@@ -532,6 +550,7 @@ export const APIDefinitionData: APIDefinitionSet = {
           }
         },
         entity: `${testOrigin}/api/backend/contents/audio-books/@{book_id}/episodes/@{episode_id}`,
+        lastEpisodeNumber: `${testOrigin}/api/backend/contents/audio-books/@{book_id}/episodes/last-episode-number`,
         collection: `${testOrigin}/api/backend/contents/audio-books/@{book_id}/episodes?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
       }
     },
@@ -575,32 +594,50 @@ export const APIDefinitionData: APIDefinitionSet = {
       collection: `${testOrigin}/api/backend/shopping/paper-books?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
       collectionByIds: `${testOrigin}/api/backend/shopping/paper-books/by-ids?ids=@{ids}`,
     },
+    content: {
+      accept: {
+        url: `${testOrigin}/api/backend/contents/@{content_id}/accept`,
+        method: 'post',
+        query: {
+          topic_id: null
+        },
+        body: {
+          reason: null
+        }
+      },
+      bulkAccept: {
+        url: `${testOrigin}/api/backend/contents/@{content_id}/accept`,
+        method: 'post',
+        body: {
+          ids: [],
+          reason: null
+        }
+      },
+      reject: {
+        url: `${testOrigin}/api/backend/contents/@{content_id}/reject`,
+        method: 'post',
+        query: {
+          topic_id: null
+        },
+        body: {
+          reason: null
+        }
+      },
+      bulkReject: {
+        url: `${testOrigin}/api/backend/contents/reject`,
+        method: 'post',
+        body: {
+          ids: [],
+          reason: null
+        }
+      },
+    },
     topic: {
       delete: {
         url: `${testOrigin}/api/backend/contents/topics/@{topic_id}`,
         method: 'delete',
         query: {
           topic_id: null
-        }
-      },
-      accept: {
-        url: `${testOrigin}/api/backend/contents/topics/@{topic_id}/accept`,
-        method: 'post',
-        query: {
-          topic_id: null
-        },
-        body: {
-          reason: null
-        }
-      },
-      reject: {
-        url: `${testOrigin}/api/backend/contents/topics/@{topic_id}/reject`,
-        method: 'post',
-        query: {
-          topic_id: null
-        },
-        body: {
-          reason: null
         }
       },
       entity: {
@@ -708,7 +745,14 @@ export const APIDefinitionData: APIDefinitionSet = {
       collection: `${testOrigin}/api/backend/classification/categories?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`
     },
     comment: {
-      delete: `${testOrigin}/api/backend/contents/commnents/@{comment_id}`,
+      delete: `${testOrigin}/api/backend/contents/comments/@{comment_id}`,
+      bulkDelete: {
+        url: `${testOrigin}/api/backend/contents/comments`,
+        method: 'delete',
+        body: {
+          ids: []
+        }
+      },
       collection: `${testOrigin}/api/backend/contents/comments?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`
     },
     role: {
@@ -743,6 +787,23 @@ export const APIDefinitionData: APIDefinitionSet = {
     },
     user: {
       entity: `${testOrigin}/api/backend/system/users/@{user_id}`,
+      bulkDelete: {
+        url: `${testOrigin}/api/backend/system/users`,
+        method: 'delete',
+        body: {
+          ids: []
+        }
+      },
+      resetPassword: {
+        url: `${testOrigin}/api/backend/system/users/@{user_id}/reset-password`,
+        method: 'post',
+        query: {
+          user_id: null
+        },
+        body: {
+          password: null
+        }
+      },
       create: {
         url: `${testOrigin}/api/backend/system/users`,
         method: 'post',
@@ -859,6 +920,7 @@ export const APIDefinitionData: APIDefinitionSet = {
         }
       },
       episode: {
+        lastEpisodeNumber: `${testOrigin}/api/creator/audio-books/@{audio_book_id}/episodes/last-episode-number`,
         lastUpdatedEpisode: `${testOrigin}/api/creator/audio-books/@{audio_book_id}/episodes/last-updated-episode`,
         entity: `${testOrigin}/api/creator/audio-books/@{audio_book_id}/episodes/@{episode_id}`,
         create: {
@@ -868,6 +930,7 @@ export const APIDefinitionData: APIDefinitionSet = {
           },
           body: {
             title: null,
+            mediaNumber: null,
             status: null,
             streamUrl: null,
             episodeId: null
@@ -882,6 +945,7 @@ export const APIDefinitionData: APIDefinitionSet = {
           body: {
             title: null,
             streamUrl: null,
+            mediaNumber: null,
             status: null,
             episodeId: null
           }
@@ -1012,7 +1076,13 @@ export const APIDefinitionData: APIDefinitionSet = {
   },
   electronicBook: {
     search: `${testOrigin}/api/electronic-books/search?q=@{keyword}`,
-    entity: `${testOrigin}/api/electronic-books/@{book_id}`,
+    entity: {
+      url: `${testOrigin}/api/electronic-books/@{book_id}?details=@{details}`,
+      query: {
+        book_id: null,
+        details: false
+      }
+    },
     lastUpdate: `${testOrigin}/api/electronic-books/@{book_id}/last-updated-episode`,
     comments: `${origin}/api/electronic-books/@{book_id}/comments?page=@{page}&limit=@{limit}`,
     catalogs: `${testOrigin}/api/electronic-books/@{book_id}/catalogs`,
