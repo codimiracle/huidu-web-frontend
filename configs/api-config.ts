@@ -1371,7 +1371,7 @@ export const APIDefinitionData: APIDefinitionSet = {
       },
       topic: {
         create: {
-          url: `${origin}/api/user/community/topics`,
+          url: `${testOrigin}/api/user/community/topics`,
           method: 'post',
           body: {
             title: null,
@@ -1383,7 +1383,7 @@ export const APIDefinitionData: APIDefinitionSet = {
           }
         },
         update: {
-          url: `${origin}/api/user/community/topics/@{topic_id}`,
+          url: `${testOrigin}/api/user/community/topics/@{topic_id}`,
           method: 'put',
           query: {
             topic_id: null
