@@ -75,7 +75,7 @@ class CategoryPage extends React.Component<CategoryPageProps, CategoryPageState>
     return tag == selectedTag || (selectedTag && tag && selectedTag.id === tag.id);
   }
   fetchList(page?: number, limit?: number) {
-    this.setState({loading: true});
+    this.setState({ loading: true });
     fetchDataByGet<ListJSON<Book>>(API.CategoryItemsCollection, {
       category_id: this.props.category.id,
       filter: {
@@ -100,6 +100,7 @@ class CategoryPage extends React.Component<CategoryPageProps, CategoryPageState>
   render() {
     const { category } = this.props;
     const { list } = this.state;
+    let allLoaded = this.state.page * this.state.limit >= this.state.total;
     return (
       <>
         <h2>{category.name}</h2>
@@ -112,7 +113,7 @@ class CategoryPage extends React.Component<CategoryPageProps, CategoryPageState>
         </div>
         <Divider type="horizontal" />
         <div className="pagination">
-          <Pagination size="small" onChange={(page, limit) => this.fetchList(page, limit)}/>
+          <Pagination size="small" onChange={(page, limit) => this.fetchList(page, limit)} />
         </div>
         <div>
           <List
@@ -122,13 +123,13 @@ class CategoryPage extends React.Component<CategoryPageProps, CategoryPageState>
             dataSource={list}
           />
           <div className="huidu-actions-center">
-              <Button loading={this.state.loading} disabled={this.state.list.length == 0} type="link" onClick={() => {
-                this.fetchList(this.state.page + 1, this.state.limit);
-                window.scrollTo({ 
-                  top: 128, 
-                  behavior: "smooth" 
+            <Button loading={this.state.loading} disabled={allLoaded} type="link" onClick={() => {
+              this.fetchList(this.state.page + 1, this.state.limit);
+              window.scrollTo({
+                top: 128,
+                behavior: "smooth"
               });
-              }}>下一页</Button>
+            }}>{allLoaded ? '已加载全部' : '下一页'}</Button>
           </div>
         </div>
         <style jsx>{`
