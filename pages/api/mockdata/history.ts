@@ -11,6 +11,7 @@ export const getMockHistory = (): History => {
     book: getMockElectronicBook(),
     audioEpisode: getMockAudioEpisode(),
     episode: getMockEpisode(),
+    progress: Math.random() * 100,
     readTime: new Date().toISOString()
   }
 }

@@ -1,6 +1,7 @@
 import { AudioEpisode, AudioEpisodeStatus } from "../../../types/audio-book";
 import { getMockAudioBook } from "./audio-book";
 import { getMockEpisode } from "./episode";
+import { getMockExamination } from "./examination";
 
 export const getMockAudioEpisode = (id?: number): AudioEpisode => {
   id = id || Math.trunc(Math.random() * 100000);
@@ -16,6 +17,9 @@ export const getMockAudioEpisode = (id?: number): AudioEpisode => {
     commodity: null,
     createTime: new Date().toISOString(),
     updateTime: new Date().toISOString(),
+    mediaNumber: Math.random() * 1000,
+    contentId: `${Math.random() * 100000}`,
+    examination: getMockExamination(),
     status: status[Math.trunc(Math.random() * status.length) % status.length]
   }
 }

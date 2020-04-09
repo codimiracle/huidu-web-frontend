@@ -4,6 +4,7 @@ import { Comment } from '../../../../types/comment';
 import { ContentType, ContentStatus } from '../../../../types/content';
 import { UNKNOW_USER } from '../../../../types/user';
 import { APIMessage } from '../../../../util/network-util';
+import { getMockComment } from '../../mockdata/comment';
 
 export default function (request: NextApiRequest, response: NextApiResponse) {
   if (request.method.toLowerCase() == 'get') {
@@ -12,30 +13,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
     let limitInt = parseInt(limit.toString());
     let list: Array<Comment> = [];
     for (let index = 0; index < limitInt; index++) {
-      list.push({
-        title: 'user-comment',
-        mentions: [],
-        liked: false,
-        words: 32423,
-        content: {
-          type: "plaintext",
-          source: "hello this is a comments"
-        },
-        status: [ContentStatus.Draft, ContentStatus.Examining, ContentStatus.Publish][index % 3],
-        owner: UNKNOW_USER,
-        targetContentId: `content-${index}`,
-        contentId: `comment-${pageInt * limitInt + index}`,
-        type: ContentType.Comment,
-        references: [],
-        likes: Math.trunc(Math.random() * 1000),
-        comments: Math.trunc(Math.random() * 100),
-        reposts: Math.trunc(Math.random() * 100),
-        reads: Math.trunc(Math.random() * 1000),
-        rate: Math.trunc(Math.random() * 5),
-        commentList: [],
-        createTime: '2020-01-28T13:59:54.925Z',
-        updateTime: '2020-01-28T13:59:54.925Z'
-      });
+      list.push(getMockComment());
     }
     let data: ListJSON<Comment> = {
       list: list,

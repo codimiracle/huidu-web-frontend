@@ -1,9 +1,10 @@
 import { ArrivedData } from "../../../types/arriveddata";
 import { getMockElectronicBook } from "./electronic-book";
+import { getMockHistory } from "./history";
 
 export const getMockArrivedData = (): ArrivedData => {
   return {
-    reads: [getMockElectronicBook()],
+    reads: [getMockHistory()],
     history: {
       '2020-02-05': true,
     },

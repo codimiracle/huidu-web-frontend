@@ -8,5 +8,7 @@ export const getMockPaperBook = (id?: number): PaperBook => {
     ...getMockElectronicBook(id),
     type: BookType.PaperBook,
     commodity: getMockCommodity(),
+    joinedCart: Math.random() * 10 > 5,
+    joinedShelf: Math.random() * 10 > 5
   }
 }

@@ -3,6 +3,7 @@ import { APIResponse } from '../../../../types/api';
 import { Comment } from '../../../../types/comment';
 import { ContentType, ContentStatus } from '../../../../types/content';
 import { UNKNOW_USER } from '../../../../types/user';
+import { getMockExamination } from '../../mockdata/examination';
 
 export interface CommentListJSON {
   commentList: Array<Comment>,
@@ -23,6 +24,7 @@ export default function (request: NextApiRequest, response: NextApiResponse) {
         type: "plaintext",
         source: "Hello, this is a comment"
       },
+      examination: getMockExamination(),
       targetContentId: '342',
       mentions: [],
       liked: false,

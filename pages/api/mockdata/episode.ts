@@ -1,5 +1,6 @@
 import { Episode, EpisodeStatus } from "../../../types/episode";
 import { getMockElectronicBook } from "./electronic-book";
+import { getMockExamination } from "./examination";
 
 export const getMockEpisode = (id?: number): Episode => {
   id = id || Math.trunc(Math.random() * 1000000);
@@ -19,6 +20,8 @@ export const getMockEpisode = (id?: number): Episode => {
       type: 'html',
       source: `<p>${source}</p>`
     },
+    examination: getMockExamination(),
+    contentId: `${Math.random() * 1000000}`,
     book: getMockElectronicBook(),
   }
 }

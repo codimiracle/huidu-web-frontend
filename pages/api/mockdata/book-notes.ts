@@ -27,6 +27,7 @@ export const getMockBookNotes = (): BookNotes => {
     bookId: `${Math.random() * 100000}`,
     book: getMockElectronicBook(),
     notes: new Array(10).fill(0).map(() => getMockNote()),
+    noteCount: Math.trunc(Math.random() * 10),
     createTime: new Date().toISOString(),
     updateTime: new Date().toISOString()
   }
