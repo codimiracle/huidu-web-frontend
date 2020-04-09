@@ -121,7 +121,7 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
               <div>章节状态：{episode && episode.id ? (
                 <Select
                   size="small"
-                  disabled={episode && episode.status === EpisodeStatus.Publish} 
+                  disabled={episode && episode.status === EpisodeStatus.Publish}
                   defaultValue={EpisodeStatus.Draft}
                   value={episode.status}
                   onChange={(status) => this.setState((state) => {
@@ -141,7 +141,7 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
                 episode && episode.status === EpisodeStatus.Publish &&
                 <p className="huidu-powerpoint">文章已经发布，不能改动</p>
               }
-              <div>章节号：<InputNumber  disabled={episode && episode.status === EpisodeStatus.Publish}  size="small" min={1} value={episode && episode.episodeNumber || undefined} placeholder="章节号" onChange={(value) => this.setState((state) => {
+              <div>章节号：<InputNumber disabled={episode && episode.status === EpisodeStatus.Publish} size="small" min={1} value={episode && episode.episodeNumber || undefined} placeholder="章节号" onChange={(value) => this.setState((state) => {
                 let episode: any = state.episode || { episodeNumber: 0 };
                 episode.episodeNumber = value;
                 return { episode: episode }
@@ -150,10 +150,18 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
             <div>
               <Button loading={saving} disabled={episode && episode.status === EpisodeStatus.Publish} onClick={() => this.onSave()}>保存</Button>
             </div>
+            {
+              episode && episode.examination &&
+              <div style={{ color: 'red', fontWeight: 700 }}>
+                <div>评审结果：({EPISODE_STATUS_TEXTS[episode.examination.toStatus]})</div>
+                原因：
+                <p>{episode.examination.reason}</p>
+              </div>
+            }
           </div>
         </Affix>
         <PageWriterView
-          disabled={episode && episode.status === EpisodeStatus.Publish} 
+          disabled={episode && episode.status === EpisodeStatus.Publish}
           theme={DEAULT_THEME}
           defaultValue={{ title: episode && episode.title || '', content: { type: 'html', source: episode && episode.content && episode.content.source || '' } }}
           onChange={(value) => this.setState((state) => {

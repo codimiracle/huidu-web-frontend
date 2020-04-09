@@ -2,14 +2,13 @@ import { Col, Divider, List, message, Popconfirm, Row, Tabs, Tag } from 'antd';
 import { NextPageContext } from 'next';
 import Link from 'next/link';
 import React from 'react';
+import AudioPlayerView from '../../../../../components/audio-player-view';
+import BookDescription from '../../../../../components/book/book-description';
 import { API } from '../../../../../configs/api-config';
 import { EntityJSON } from '../../../../../types/api';
-import { AudioBook, AudioCatalogs, AUDIO_BOOK_STATUS_COLORS, AUDIO_BOOK_STATUS_TEXTS, AudioEpisode } from '../../../../../types/audio-book';
-import { Episode } from '../../../../../types/episode';
+import { AudioBook, AudioCatalogs, AudioEpisode, AUDIO_BOOK_STATUS_COLORS, AUDIO_BOOK_STATUS_TEXTS } from '../../../../../types/audio-book';
 import { fetchDataByGet, fetchMessageByDelete } from '../../../../../util/network-util';
-import AudioPlayerView from '../../../../../components/audio-player-view';
 import UploadUtil from '../../../../../util/upload-util';
-import BookDescription from '../../../../../components/book/book-description';
 const EMPTY_IMAGE = "/assets/empty.png";
 
 export interface MyBookDetailsProps {
@@ -101,7 +100,7 @@ export default class MyBookDetails extends React.Component<MyBookDetailsProps, M
           </div>
           <Tabs defaultActiveKey="episodes">
             <Tabs.TabPane tab="章节" key="episodes">
-              <Link href="./[book_id]/episode-creator" as={`./${book.id}/episode-creator`}><a>添加章节</a></Link>
+              <Link href="/backend/creator/audio-books/[book_id]/episode-creator" as={`/backend/creator/audio-books/${book.id}/episode-creator`}><a>添加章节</a></Link>
               <p>在播放器切换下一章时，将遵照这里的章节显示顺序进行切换。</p>
               <List
                 renderItem={(item, index) => (
