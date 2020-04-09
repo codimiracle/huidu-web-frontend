@@ -1,4 +1,4 @@
-import { Icon, Layout, Menu } from 'antd';
+import { Icon, Layout, Menu, message } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import React from 'react';
 import AvatarView from '../components/avatar-view';
@@ -8,19 +8,28 @@ import NotificationView from '../components/notification-view';
 import { BASE_URL, getNavigationMenus } from '../configs/backend-config';
 import { User } from '../types/user';
 import AuthorityUtil from '../util/authority-util';
+import Link from 'next/link';
+import { fetchMessageByPost } from '../util/network-util';
+import { API } from '../configs/api-config';
+import AuthenticationUtil from '../util/authentication-util';
+import { Router, withRouter } from 'next/router';
 
 const { Header, Sider, Content, Footer } = Layout;
 
-export interface BackendLayoutProps { };
+export interface BackendLayoutProps {
+  router: Router;
+};
 export interface BackendLayoutState {
   collapsed: boolean;
+  signingOut: boolean;
 };
 
-export default class BackendLayout extends React.Component<BackendLayoutProps, BackendLayoutState> {
+export class BackendLayout extends React.Component<BackendLayoutProps, BackendLayoutState> {
   constructor(props: BackendLayoutProps) {
     super(props);
     this.state = {
-      collapsed: false
+      collapsed: false,
+      signingOut: false
     }
     this.toggle = this.toggle.bind(this);
   }
@@ -28,6 +37,26 @@ export default class BackendLayout extends React.Component<BackendLayoutProps, B
     this.setState((state) => ({
       collapsed: !state.collapsed
     }));
+  }
+  onLogout() {
+    if (this.state.signingOut) {
+      message.loading('正在注销....');
+      return;
+    }
+    this.setState({ signingOut: true });
+    fetchMessageByPost(API.SystemSignOut).then((msg) => {
+      if (msg.code == 200) {
+        message.success(`退出登录成功！`);
+        AuthenticationUtil.destroy();
+        this.props.router.replace("/");
+      } else {
+        message.error(`退出登录失败：${msg.message}`)
+      }
+    }).catch((err) => {
+      message.error(`退出登录失败：${err}`)
+    }).finally(() => {
+      this.setState({ signingOut: false });
+    })
   }
   renderMenuItem(menus: Array<any>) {
     return menus.map((menu) => {
@@ -101,7 +130,27 @@ export default class BackendLayout extends React.Component<BackendLayoutProps, B
                   {
                     (user: User) => <>
                       {user && <NotificationView />}
-                      <AvatarView user={user} />
+                      { user ? (
+                        <Menu
+                          mode="horizontal"
+                          theme="light"
+                        >
+                          <SubMenu title={<Link href="/backend/personal/profile"><a><AvatarView user={user} /></a></Link>}>
+                            <Menu.Item><Link href="/backend/personal/profile"><a>个人信息</a></Link></Menu.Item>
+                            <Menu.Divider />
+                            <Menu.Item onClick={() => this.onLogout()}>退出登录</Menu.Item>
+                          </SubMenu>
+                        </Menu>
+                      ) : (
+                          <Menu
+                            mode="horizontal"
+                            theme="light"
+                          >
+                            <SubMenu title={<Link href="/signin"><a><AvatarView user={user} /></a></Link>}>
+                            </SubMenu>
+                          </Menu>
+                        )
+                    }
                     </>
                   }
                 </UserContext.Consumer>
@@ -146,3 +195,7 @@ export default class BackendLayout extends React.Component<BackendLayoutProps, B
     );
   }
 }
+
+const WithRouterBackendLayout = withRouter(BackendLayout);
+
+export default WithRouterBackendLayout;

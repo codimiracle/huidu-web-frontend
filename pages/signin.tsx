@@ -28,6 +28,10 @@ export class SignIn extends React.Component<SignInProps, SignInState> {
       if (!errors) {
         this.setState({ signing: true });
         fetchDataByPost<UserToken>(API.SystemSignIn, values).then((data) => {
+          if (!data.valid) {
+            message.error('用户不可用或凭据无效！');
+            return;
+          }
           AuthenticationUtil.save(data);
           router.replace('/');
         }).catch((err) => {
