@@ -48,12 +48,13 @@ export class EntityUdAction<T> extends React.Component<EntityUdActionProps<T>, E
     });
   }
   render() {
+    let extraActions = this.props.extra && this.props.extra(this.props.entity, this.props.index);
     return (
       <span>
         {
-          this.props.extra && this.props.extra(this.props.entity, this.props.index)
+          extraActions
         }
-        {this.props.extra && (this.props.updateApi || this.props.deleteApi) && <Divider type="vertical" />}
+        {extraActions && (this.props.updateApi || this.props.deleteApi) && <Divider type="vertical" />}
         {
           this.props.updateApi &&
           <>

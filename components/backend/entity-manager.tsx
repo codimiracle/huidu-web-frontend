@@ -1,14 +1,16 @@
-import { Button, message, Table } from 'antd';
+import { Button, message, Table, Popconfirm } from 'antd';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import { ColumnProps, PaginationConfig, SorterResult, TableCurrentDataSource, TableRowSelection } from 'antd/lib/table';
 import { Router } from 'next/router';
 import React, { ReactNode } from 'react';
 import { API } from '../../configs/api-config';
 import { ListJSON } from '../../types/api';
-import { fetchDataByGet } from '../../util/network-util';
+import { fetchDataByGet, fetchMessageByDelete } from '../../util/network-util';
 import { EntityCreateDialog, EntityCreateDialogProps } from './entity-create-dialog';
 import EntitySearch, { SearchableColumn } from './entity-search';
 import { EntityUdAction } from './entity-ud-action';
+import BulkBar from './bulk-bar';
+import BulkAction from './bulk-action';
 
 const WrappedCreateEntityDialog = Form.create<EntityCreateDialogProps<any>>({ name: 'entity-create-dialog' })(EntityCreateDialog);
 
@@ -19,8 +21,10 @@ export interface Config<T> {
   list: API;
   getListingRequestExtraData?: () => any,
   searchableColumns?: Array<SearchableColumn<T>>;
-  getDeleteRequestData?: (entity: T) => any;
   delete?: API;
+  getDeleteRequestData?: (entity: T) => any;
+  bulkDelete?: API;
+  getBulkDeleteRequestData?: (entities: Array<T>) => any;
   getUpdateRequestData?: (form: WrappedFormUtils, entity: T) => any;
   renderUpdateForm?: (form: WrappedFormUtils, entity: T) => ReactNode;
   update?: API;
@@ -34,10 +38,9 @@ export interface EntityManagerProps<T> {
     scrollToFirstRowOnChange?: boolean;
   };
   actionOptionWidth?: string | number;
-  toolsBarExtra?: ReactNode;
+  toolsBarExtra?: (selectedRowKeys: Array<string>, selectedRows: Array<T>, clearer: () => void, refresher: () => void) => ReactNode;
   actionOptionsExtra?: (entity: T, index: number, updater: (entity: T) => void) => ReactNode;
   rowKey: string | ((record: T, index: number) => string);
-  rowSelection?: TableRowSelection<T>;
   expandedRowRender?: (record: T, index: number, indent: number, expanded: boolean) => React.ReactNode;
   columns: Array<ColumnProps<T>> | ((filter: Partial<Record<keyof T, string[]>>, sorter: SorterResult<T>) => Array<ColumnProps<T>>);
   initialDataSource?: Array<T>;
@@ -46,15 +49,18 @@ export interface EntityManagerProps<T> {
 
 export interface EntityManagerState<T> {
   loading: boolean;
-  createDialogVisible: boolean,
-  searchingField: string,
+  createDialogVisible: boolean;
+  searchingField: string;
+  bulkDeleting: boolean;
   filter: Partial<Record<keyof T, string[]>>;
-  sorter: SorterResult<T>,
+  sorter: SorterResult<T>;
   dataSource: Array<T>;
   keyword: string;
   total: number;
   page: number;
   limit: number;
+  selectedRowKeys: Array<string>;
+  selectedRows: Array<T>;
 };
 
 export class EntityManager<T> extends React.Component<EntityManagerProps<T>, EntityManagerState<T>> {
@@ -65,15 +71,19 @@ export class EntityManager<T> extends React.Component<EntityManagerProps<T>, Ent
       loading: true,
       searchingField: null,
       createDialogVisible: false,
+      bulkDeleting: false,
       filter: null,
       sorter: null,
       keyword: '',
       total: 0,
       page: 1,
       limit: 10,
+      selectedRowKeys: [],
+      selectedRows: []
     };
     this.onChange = this.onChange.bind(this);
     this.onRouterChangeComplete = this.onRouterChangeComplete.bind(this);
+    this.onSelectionChange = this.onSelectionChange.bind(this);
   }
   fetchList(filter: Partial<Record<keyof T, string[]>>, sorter: SorterResult<T>, page: number, limit: number) {
     this.setState({ loading: true });
@@ -97,6 +107,9 @@ export class EntityManager<T> extends React.Component<EntityManagerProps<T>, Ent
       this.setState({ loading: false });
     });
   }
+  reloadList() {
+    this.fetchList(null, null, 1, 10);
+  }
   onChange(pagination: PaginationConfig, filters: Partial<Record<keyof T, string[]>>, sorter: SorterResult<T>, extra: TableCurrentDataSource<T>) {
     console.log(arguments);
     this.setState({ filter: filters, sorter: sorter });
@@ -117,6 +130,29 @@ export class EntityManager<T> extends React.Component<EntityManagerProps<T>, Ent
   }
   componentWillUnmount() {
     Router.events.off('routeChangeComplete', this.onRouterChangeComplete);
+  }
+  clearSelection() {
+    this.setState({ selectedRowKeys: [], selectedRows: [] });
+  }
+  onBulkDelete(entities: Array<T>) {
+    this.setState({ bulkDeleting: true });
+    fetchMessageByDelete(this.props.config.bulkDelete, this.props.config.getBulkDeleteRequestData(entities))
+      .then((msg) => {
+        if (msg.code == 200) {
+          message.success('删除成功！');
+          this.reloadList();
+          this.clearSelection();
+        } else {
+          message.error(`批量删除失败：${msg.message}`);
+        }
+      }).catch((err) => {
+        message.error(`批量删除失败：${err.message}`);
+      }).finally(() => {
+        this.setState({ bulkDeleting: false });
+      })
+  }
+  onSelectionChange(selectedRowKeys: string[], selectedRows: T[]) {
+    this.setState({ selectedRowKeys: selectedRowKeys, selectedRows: selectedRows })
   }
   render() {
     const { filter, sorter } = this.state;
@@ -154,6 +190,11 @@ export class EntityManager<T> extends React.Component<EntityManagerProps<T>, Ent
       )
     }
     let renderringColumns: Array<ColumnProps<T>> = (typeof this.props.columns == 'function' ? this.props.columns(this.state.filter, this.state.sorter) : this.props.columns).concat(this.props.config.delete || this.props.config.update || this.props.actionOptionsExtra ? [defaultActions] : []);
+    let rowSelection: TableRowSelection<T> = {
+      selectedRowKeys: this.state.selectedRowKeys,
+      onChange: this.onSelectionChange
+    }
+    let selectedRowCount = this.state.selectedRowKeys.length;
     return (
       <>
         <div className="table-tools-bar">
@@ -164,7 +205,29 @@ export class EntityManager<T> extends React.Component<EntityManagerProps<T>, Ent
             }
           </div>
           <div className="table-tools-bar-extra">
-            {this.props.toolsBarExtra}
+            {
+              (this.props.config.bulkDelete || this.props.toolsBarExtra) &&
+              <BulkBar
+                count={selectedRowCount}
+                onClear={() => this.setState({ selectedRowKeys: [], selectedRows: [] })}
+              >
+                <span>批量操作：</span>
+                {
+                  this.props.config.bulkDelete &&
+                  <Popconfirm
+                    title="你真的要批量删除选中的项目吗？"
+                    disabled={selectedRowCount == 0}
+                    onConfirm={() => this.onBulkDelete(this.state.selectedRows)}
+                  >
+                    <BulkAction
+                      name="删除"
+                      disabled={selectedRowCount == 0}
+                    />
+                  </Popconfirm>
+                }
+                {this.props.toolsBarExtra && this.props.toolsBarExtra(this.state.selectedRowKeys, this.state.selectedRows, () => this.clearSelection(), () => this.reloadList())}
+              </BulkBar>
+            }
           </div>
           {
             this.props.config.searchableColumns &&
@@ -199,7 +262,7 @@ export class EntityManager<T> extends React.Component<EntityManagerProps<T>, Ent
           onChange={this.onChange}
           rowKey={this.props.rowKey}
           loading={this.state.loading}
-          rowSelection={this.props.rowSelection}
+          rowSelection={(this.props.toolsBarExtra || this.props.config.bulkDelete) && rowSelection}
           expandedRowRender={this.props.expandedRowRender}
           pagination={pagination}
           columns={renderringColumns}
