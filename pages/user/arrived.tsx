@@ -2,16 +2,13 @@ import { Button, Calendar, Card, Col, Divider, List, message, Row, Spin } from '
 import moment from 'moment';
 import React, { CSSProperties } from 'react';
 import AvatarView from '../../components/avatar-view';
+import BookPreviewView from '../../components/book-preview-view';
 import { UserContext } from '../../components/hooks/with-user';
 import { API } from '../../configs/api-config';
 import { EntityJSON } from '../../types/api';
 import { ArrivedData } from '../../types/arriveddata';
-import { Book, BookPreview } from '../../types/book';
 import DatetimeUtil from '../../util/datetime-util';
 import { fetchDataByGet, fetchMessageByPost } from '../../util/network-util';
-import UploadUtil from '../../util/upload-util';
-import BookView from '../../components/book-view';
-import BookPreviewView from '../../components/book-preview-view';
 
 
 export interface ArrivedProps {
@@ -45,7 +42,8 @@ export default class Arrived extends React.Component<ArrivedProps, ArrivedState>
   onArrived() {
     this.setState({ signing: true });
     fetchMessageByPost(API.UserArrived, {
-      date: DatetimeUtil.now()
+      date: DatetimeUtil.now(),
+      motto: '每天读书，每天快乐！'
     }).then((msg) => {
       if (msg.code == 200) {
         message.success('打卡成功！');
