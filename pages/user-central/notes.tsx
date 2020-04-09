@@ -8,6 +8,7 @@ import DatetimeUtil from '../../util/datetime-util';
 import Link from 'next/link';
 import { ListJSON } from '../../types/api';
 import BookCover from '../../components/book/book-cover';
+import BookHeader from '../../components/book/book-header';
 
 
 interface BookNotesViewProps {
@@ -22,7 +23,7 @@ function BookNotesView(props: BookNotesViewProps) {
       <BookCover book={book} />
       <div className="body">
         <div>
-          <strong>{book.metadata.name}</strong> <Tag>{book.status}</Tag>
+          <BookHeader book={book} />
         </div>
         <div>{book.metadata.author}</div>
         <div>修改时间：{DatetimeUtil.format(bookNotes.updateTime)}</div>
@@ -117,7 +118,7 @@ export default class Notes extends React.Component<NotesProps, NotesState> {
               <List.Item style={{ justifyContent: 'space-between' }}>
                 <BookNotesView bookNotes={item} />
                 <div className="notes-item-meta">
-                  <strong>{item.notes.length} 条</strong>
+                  <strong>{item.noteCount} 条</strong>
                   <Link href={`/reader/[book_id]`} as={`/reader/${item.book.id}`}><a>转到阅读页</a></Link>
                 </div>
               </List.Item>

@@ -103,13 +103,19 @@ export class SubscribeActionView extends React.Component<SubscribeActionViewProp
     const { subscribe } = this.props;
     const { unsubcribing } = this.state;
     let book = subscribe.book;
-    let basePath = `${book.type == BookType.AudioBook ? 'player' : 'reader'}`;
+    let basePath = `${book && book.type == BookType.AudioBook ? 'player' : 'reader'}`;
     return (
       <>
         <Button.Group>
+          {
+            !book && <span style={{ color: 'red' }}>数据不存在！</span>
+          }
           <Button type="link" loading={unsubcribing} onClick={() => this.onUnsubscribe(subscribe)} style={{ padding: '0' }}>取消订阅</Button>
           <Divider type="vertical" />
-          <Link href={`/${basePath}/[book_id]`} as={`/${basePath}/${book.id}`}><a><Button type="link" style={{ padding: '0' }}>阅读</Button></a></Link>
+          {
+            book &&
+            <Link href={`/${basePath}/[book_id]`} as={`/${basePath}/${book.id}`}><a><Button type="link" style={{ padding: '0' }}>阅读</Button></a></Link>
+          }
         </Button.Group>
       </>
     )
@@ -170,7 +176,7 @@ export default class Subscribes extends React.Component<SubscribesProps, Subscri
         <h1>我的订阅</h1>
         <div>
           <Tabs>
-            <TabPane tab="书籍更新">
+            <TabPane tab="书籍更新" key="book-update">
               <div style={{ paddingBottom: '0.5em', textAlign: 'right' }}>
                 <Pagination
                   size="small"
@@ -184,8 +190,12 @@ export default class Subscribes extends React.Component<SubscribesProps, Subscri
                 grid={{ gutter: 16, column: 2 }}
                 loading={fetching}
                 renderItem={(item) => (
-                  <List.Item style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <SubscribeView subscribe={item} />
+                  <List.Item key={item.id} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    {
+                      item.book ?
+                      <SubscribeView subscribe={item} /> :
+                      <span>没有封面</span>
+                    }
                     <SubscribeActionView subscribe={item} onUnsubscribed={() => this.fetchSubscribeList(page, limit)} />
                   </List.Item>
                 )}
