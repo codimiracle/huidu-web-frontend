@@ -8,8 +8,7 @@ import RetryView from './retry-view';
 import BookHeader from './book/book-header';
 import BookCover from './book/book-cover';
 import LoginRequiredView from './user/login-required-view';
-
-const EMPTY_IMAGE = '/assets/empty-audio.png';
+import BookDescription from './book/book-description';
 
 export interface AudioBookViewProps {
   id?: string,
@@ -74,7 +73,7 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
           <div className="body">
             <div><BookHeader book={book} status author /></div>
             <div><Rate defaultValue={book.rate} disabled style={{ fontSize: '1em' }} /></div>
-            <p className="description">{book.description || book.metadata.description}</p>
+            <BookDescription book={book} />
             <div className="huidu-actions-left">
               <LoginRequiredView
                 renderNonlogin={(opener) =>
@@ -101,13 +100,6 @@ export default class AudioBookView extends React.Component<AudioBookViewProps, A
             padding: 0.5em;
             display: flex;
             flex-direction: column;
-          }
-          .description {
-            flex: 1;
-            
-            max-height: 3em;
-            word-break: break-all;
-            overflow: hidden;
           }
           `}</style>
       </RetryView>

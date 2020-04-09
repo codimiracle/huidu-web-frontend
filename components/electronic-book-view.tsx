@@ -9,6 +9,7 @@ import DirectLink from './direct-link';
 import ElectronicBookStatusView from './electronic-book-status-view';
 import BookCover from './book/book-cover';
 import LoginRequiredView from './user/login-required-view';
+import BookHeader from './book/book-header';
 
 const EMPTY_IMAGE = '/assets/empty.png';
 
@@ -62,7 +63,7 @@ export default class ElectronicBookView extends React.Component<ElectronicBookVi
           <BookCover book={renderringBook} />
         </div>
         <div className="body">
-          <div><strong><Link href="/bookshop/electronic-books/[book_id]" as={`/bookshop/electronic-books/${renderringBook.id}`}><a>{renderringBook.metadata.name}</a></Link></strong> <ElectronicBookStatusView status={renderringBook.status} /> <span className="author">{renderringBook.metadata.author}</span></div>
+          <BookHeader book={renderringBook} status author />
           <div><Rate defaultValue={renderringBook.rate} disabled style={{ fontSize: '18px' }} /></div>
           <BookDescription book={renderringBook} size="small" style={{ flex: 1 }} />
           <div className="actions">

@@ -1,6 +1,8 @@
 import React from 'react';
+import { Row, Col } from 'antd';
 import { Book, BookPreview } from '../types/book';
 import BookStatusView from './book-status-view';
+import Name from './base/name';
 
 export interface BookRankItemProps {
   rank: number,
@@ -15,7 +17,10 @@ export default class BookRankItem extends React.Component<BookRankItemProps, Boo
     const bookPreview = BookPreview.valueOf(book);
     return (
       <div className={`book-rank-item ${selected ? 'selected' : ''}`}>
-        <span>{rank}</span><span>{bookPreview.name}</span> <BookStatusView book={book} /> <span>{bookPreview.author}</span>
+        <Row type="flex">
+          <Col><span>{rank}</span></Col>
+          <Col style={{ flex: 1 }}><Name name={bookPreview.name} /> <BookStatusView book={book} /></Col>
+        </Row>
         <style jsx>{`
           div {
             width: 100%;

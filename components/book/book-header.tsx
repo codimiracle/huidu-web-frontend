@@ -2,6 +2,7 @@ import Link from 'next/link';
 import React, { CSSProperties } from 'react';
 import { Book, BookPreview } from '../../types/book';
 import BookStatusView from '../book-status-view';
+import Name from '../base/name';
 
 export interface BookHeaderProps {
   book: Book;
@@ -23,10 +24,12 @@ export default class BookHeader extends React.Component<BookHeaderProps, BookHea
     const type = this.props.book.type;
     let headerNode = <strong>{preview.name}</strong>;
     if (this.props.link || this.props.link == undefined) {
-      headerNode = <Link href={`/bookshop/${type}s/[book_id]`} as={`/bookshop/${type}s/${book.id}`}><a><strong>{preview.name}</strong></a></Link>;
+      headerNode = <Link href={`/bookshop/${type}s/[book_id]`} as={`/bookshop/${type}s/${book.id}`}><a><strong><Name name={preview.name} /></strong></a></Link>;
     }
     return (
-    <div style={this.props.style}> {headerNode} {this.props.status && <BookStatusView book={book} />} {this.props.author && <span className="author">{preview.author}</span>}</div>
+      <div style={this.props.style}> {headerNode} {this.props.status && <BookStatusView book={book} />}
+        <div>{this.props.author && <Name name={preview.author} />}</div>
+      </div>
     )
   }
 }

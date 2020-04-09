@@ -6,52 +6,12 @@ import React from 'react';
 import EditorView from '../../../components/editor-view';
 import ContentSection from '../../../components/section-view';
 import { API } from '../../../configs/api-config';
-import { Book, BookPreview } from '../../../types/book';
+import { EntityJSON } from '../../../types/api';
+import { Book } from '../../../types/book';
+import { ElectronicBook } from '../../../types/electronic-book';
 import { Review } from '../../../types/review';
 import { fetchDataByGet, fetchMessageByPost } from '../../../util/network-util';
-import { EntityJSON } from '../../../types/api';
-import { ElectronicBook } from '../../../types/electronic-book';
-import UploadUtil from '../../../util/upload-util';
-
-const EMPTY_IMAGE = '/assets/empty.png';
-
-interface BookPreviewViewProps {
-  book: Book
-}
-
-function BookPreviewView(props: BookPreviewViewProps) {
-  const { book } = props;
-  const bookPreview = BookPreview.valueOf(book);
-  return (
-    <div className="book-reference-view">
-      <img src={UploadUtil.absoluteUrl(API.CoverSource, bookPreview.cover) || EMPTY_IMAGE} />
-      <div className="body">
-        <div><strong>{bookPreview.name}</strong> <span className="help-text">{bookPreview.author}</span></div>
-        <p title={bookPreview.description}>{bookPreview.description}</p>
-      </div>
-      <style jsx>{`
-        .book-reference-view {
-          display: flex;
-        }
-        .body {
-          display: flex;
-          padding-left: 0.5em;
-          flex-direction: column;
-        }
-        p {
-          flex: 1;
-          
-          max-height: 48px;
-          word-break: break-all;
-        }
-        img {
-          width: 68px;
-          height: 92px;
-        }
-      `}</style>
-    </div>
-  )
-}
+import BookPreviewView from '../../../components/book-preview-view';
 
 interface ReviewFormProps {
   form: WrappedFormUtils,

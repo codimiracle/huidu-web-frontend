@@ -16,7 +16,7 @@ export default function BookMiniView(props: BookMiniViewProps) {
     <div className="book-mini-view">
       <BookCover book={book} />
       <div className="body">
-        <BookHeader book={book}/>
+        <BookHeader book={book} author/>
         <Rate disabled defaultValue={book.rate} style={{ fontSize: '1.2em' }} />
         <BookDescription book={book} size="small" />
         <div className="huidu-actions-left">

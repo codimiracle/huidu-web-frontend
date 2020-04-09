@@ -6,6 +6,7 @@ import LoadingView from './loading-view';
 import BookStatusView from './book-status-view';
 import UploadUtil from '../util/upload-util';
 import { API } from '../configs/api-config';
+import BookDescription from './book/book-description';
 
 interface BookPreviewViewProps {
   book: Book,
@@ -23,7 +24,7 @@ function BookPreviewView(props: BookPreviewViewProps) {
         <div>
           <DirectLink href={`/bookshop/${book.type}/${book.id}`}><strong>{bookPreview.name}</strong></DirectLink> <BookStatusView book={book} />
         </div>
-        <p title={bookPreview.description}>{bookPreview.description}</p>
+        <BookDescription book={book} />
       </div>
       <style jsx>{`
         .book-preview-view {
