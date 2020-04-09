@@ -1,5 +1,5 @@
 import { BookMetadata, BookBase, BookType } from "./book";
-import { Content } from './content';
+import { Content, Examination } from './content';
 import { Episode } from "./episode";
 import { Commodity } from "./commodity";
 
@@ -48,17 +48,20 @@ AUDIO_EPISODE_STATUS_COLORS[AudioEpisodeStatus.Rejected] = 'red';
 AUDIO_EPISODE_STATUS_COLORS[AudioEpisodeStatus.Publish] = 'green';
 
 export interface AudioEpisode {
-  id: string,
-  title: string,
-  episode: Episode,
-  duration: number,
-  status: AudioEpisodeStatus,
-  book: AudioBook,
-  commodity: Commodity<any>,
-  streamUrl: string,
-  next: string,
-  createTime: string,
-  updateTime: string,
+  id: string;
+  title: string;
+  episode: Episode;
+  duration: number;
+  mediaNumber: number;
+  status: AudioEpisodeStatus;
+  book: AudioBook;
+  commodity: Commodity<any>;
+  streamUrl: string;
+  next: string;
+  contentId: string;
+  examination: Examination;
+  createTime: string;
+  updateTime: string;
 }
 
 export interface AudioBook extends Content, BookBase {

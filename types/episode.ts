@@ -1,5 +1,6 @@
 import { Commodity } from "./commodity";
 import { ElectronicBook } from "./electronic-book";
+import { Examination } from "./content";
 
 export enum EpisodeStatus {
   Draft = 'draft',
@@ -32,6 +33,8 @@ export interface Episode {
   episodeNumber: number;
   next: string,
   book: ElectronicBook,
+  contentId: string;
+  examination: Examination;
   createTime: string,
   updateTime: string,
 }

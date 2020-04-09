@@ -20,11 +20,14 @@ export enum BookType {
 }
 
 export interface BookBase {
-  id: string,
-  metadata: BookMetadata,
-  category: Category,
-  tags: Array<Tag>,
-  type: BookType
+  id: string;
+  metadata: BookMetadata;
+  category: Category;
+  tags: Array<Tag>;
+  type: BookType;
+  joinedShelf: boolean;
+  avgRate: number;
+  reviewRate: number;
 }
 
 export declare type Book = ElectronicBook | AudioBook | PaperBook
