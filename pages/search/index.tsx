@@ -64,7 +64,7 @@ export class SearchPage extends React.Component<SearchPageProps, SearchPageState
         <Content style={{ backgroundColor: 'white', padding: '0 1.5em' }}>
           <div className="huidu-actions-center" style={{ padding: '2em 0' }}>
             <h1><img src="./assets/huidu.png" width="128" height="128" />荟读搜索</h1>
-            <div><Search defaultValue={this.props.keyword} size="large" style={{ width: '30em' }} onSearch={(keyword) => {
+            <div><Search autoFocus defaultValue={this.props.keyword} size="large" style={{ width: '30em' }} onSearch={(keyword) => {
               this.props.router.replace(`/search?type=electronic-book&q=${keyword}`)
             }}/></div>
           </div>
