@@ -1,8 +1,9 @@
-import { Input, Radio, InputNumber } from 'antd';
+import { Input, InputNumber, Radio } from 'antd';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import React from 'react';
-import { AudioEpisode, AudioEpisodeStatus, AUDIO_EPISODE_STATUS_TEXTS } from '../../../types/audio-book';
+import { AudioEpisode } from '../../../types/audio-book';
+import { ContentStatus, CONTENT_STATUS_TEXTS } from '../../../types/content';
 import AudioUpload from '../../audio-upload';
 import EpisodeSelect from '../util/episode-select';
 
@@ -40,21 +41,22 @@ export default class AudioEpisodeForm extends React.Component<AudioEpisodeFormPr
           <FormItem label="章节状态">
             {
               form.getFieldDecorator('status', {
-                initialValue: AudioEpisodeStatus.Draft,
+                initialValue: audioEpisode && audioEpisode.status || ContentStatus.Draft,
                 rules: [{ required: true, message: '请设定有声书章节状态' }]
               })(
                 <Radio.Group>
-                  {Object.values(AudioEpisodeStatus).map((status, index) => <Radio key={status} disabled={this.props.author && index > 1} value={status}>{AUDIO_EPISODE_STATUS_TEXTS[status]}</Radio>)}
+                  {Object.values(ContentStatus).map((status, index) => <Radio key={status} disabled={this.props.author && index > 1} value={status}>{CONTENT_STATUS_TEXTS[status]}</Radio>)}
                 </Radio.Group>
               )
             }
           </FormItem>
+          {!this.props.author && <p>若没必要，请不要直接改动章节状态！</p>}
           <div>
             {
               audioEpisode && audioEpisode && audioEpisode.examination &&
               <div style={{ color: 'red', fontWeight: 'bold' }}>
-                <div>章节审核：{AUDIO_EPISODE_STATUS_TEXTS[audioEpisode.examination.toStatus]}</div>
-                <div>{audioEpisode.examination.reason}</div>
+                <div>审核结果：{CONTENT_STATUS_TEXTS[audioEpisode.examination.toStatus]}</div>
+                <div>理由：{audioEpisode.examination.reason}</div>
               </div>
             }
           </div>

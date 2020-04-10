@@ -19,6 +19,11 @@ export enum BookType {
   PaperBook = 'paper-book'
 }
 
+export const BOOK_TYPE_TEXTS = {};
+BOOK_TYPE_TEXTS[BookType.ElectronicBook] = "电子书";
+BOOK_TYPE_TEXTS[BookType.AudioBook] = "有声书";
+BOOK_TYPE_TEXTS[BookType.PaperBook] = "纸质书";
+
 export interface BookBase {
   id: string;
   metadata: BookMetadata;

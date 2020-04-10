@@ -1,4 +1,4 @@
-import { Tag } from 'antd';
+import { Tag, Divider } from 'antd';
 import { ColumnProps, SorterResult } from 'antd/lib/table';
 import { NextPageContext } from 'next';
 import React from 'react';
@@ -8,10 +8,13 @@ import HeaderBar from '../../../../../components/backend/header-bar';
 import BookPreviewView from '../../../../../components/book-preview-view';
 import { API } from '../../../../../configs/api-config';
 import { EntityJSON, ListJSON } from '../../../../../types/api';
-import { AudioBook, AudioEpisode } from '../../../../../types/audio-book';
+import { AudioBook, AudioEpisode, AudioEpisodeStatus } from '../../../../../types/audio-book';
 import { Episode, EpisodeStatus, EPISODE_STATUS_COLORS, EPISODE_STATUS_TEXTS } from '../../../../../types/episode';
 import DatetimeUtil from '../../../../../util/datetime-util';
 import { fetchDataByGet } from '../../../../../util/network-util';
+import { ContentStatus, Article } from '../../../../../types/content';
+import EntityAction from '../../../../../components/backend/entity-action';
+import WrappedContentExaminingDialog from '../../../../../components/backend/form/content-examining-dialog';
 
 function format(n: number) {
   n = Math.trunc(n);
@@ -60,7 +63,7 @@ export default class AudioEpisodeManager extends React.Component<AudioEpisodeMan
         title: '时长',
         key: 'duration',
         dataIndex: 'duration',
-        render: (duration: number) => <span>{format(duration / 60)}:{format(duration % 60)}</span>
+        render: (duration: number) => <span>{format(duration / 1000 / 60)}:{format(duration / 1000 % 60)}.{format(duration % 1000)}</span>
       }, {
         title: '状态',
         key: 'status',
@@ -93,12 +96,47 @@ export default class AudioEpisodeManager extends React.Component<AudioEpisodeMan
             getListingRequestExtraData: () => ({ book_id: this.props.book.id }),
             create: API.BackendAudioBookEpisodeCreate,
             renderCreateForm: (form) => <AudioEpisodeForm form={form} />,
-            getCreateRequestData: (form) => ({book_id: this.props.book.id, ...form.getFieldsValue()}),
+            getCreateRequestData: (form) => ({ book_id: this.props.book.id, ...form.getFieldsValue() }),
             update: API.BackendAudioBookEpisodeUpdate,
             renderUpdateForm: (form, entity) => <AudioEpisodeForm form={form} audioEpisode={entity} />,
-            getUpdateRequestData: (form, entity) =>({book_id: this.props.book.id, audio_episode_id: entity.id, ...form.getFieldsValue()}),
+            getUpdateRequestData: (form, entity) => ({ book_id: this.props.book.id, audio_episode_id: entity.id, ...form.getFieldsValue() }),
             delete: API.BackendAudioBookEpisodeDelete,
-            getDeleteRequestData: (entity) => ({book_id: this.props.book.id, audio_episode_id: entity.id})
+            getDeleteRequestData: (entity) => ({ book_id: this.props.book.id, audio_episode_id: entity.id })
+          }}
+          actionOptionsExtra={(entity, index, updater) => entity.status == ContentStatus.Examining ? <>
+            <EntityAction
+              entity={entity}
+              name="通过"
+              renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} onExamined={(entities) => updater(entities[0] as any as AudioEpisode)} accept visible={visible} onCancel={cancelor} />}
+            />
+            <Divider type="vertical" />
+            <EntityAction
+              entity={entity}
+              name="驳回"
+              renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} onExamined={(entities) => updater(entities[0] as any as AudioEpisode)} accept={false} visible={visible} onCancel={cancelor} />}
+            />
+          </> : undefined
+          }
+          bulkBarExtra={(selectedRowKeys, selectedRows, clearer, refersher) => {
+            let isSelectedExamining = selectedRowKeys.length > 0 && selectedRows.every((audioEpisode) => audioEpisode.status == ContentStatus.Examining);
+            let clearBulkState = () => {
+              clearer();
+              refersher();
+            }
+            return <>
+              <EntityAction
+                entity={null}
+                name="通过"
+                disabled={!isSelectedExamining}
+                renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={selectedRows as any as Article[]} onExamined={clearBulkState} accept visible={visible} onCancel={cancelor} />}
+              />
+              <EntityAction
+                entity={null}
+                name="驳回"
+                disabled={!isSelectedExamining}
+                renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={selectedRows as any as Article[]} onExamined={clearBulkState} accept={false} visible={visible} onCancel={cancelor} />}
+              />
+            </>
           }}
           columns={this.getColumns}
           rowKey={(episode) => episode.id}

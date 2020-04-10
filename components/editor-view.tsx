@@ -20,7 +20,7 @@ export default class EditorView extends React.Component<EditorViewProps, EditorV
     super(props);
     this.state = {
       loading: false,
-      value: props.value
+      value: ""
     }
     this.ckeditorRef = React.createRef();
   }
@@ -33,23 +33,28 @@ export default class EditorView extends React.Component<EditorViewProps, EditorV
   getWordCount() {
     return this.calculateWords(this.ckeditorRef.current.editor.document.getBody().$.innerText);
   }
-  componentDidUpdate() {
-    if (this.props.value != this.state.value) {
-      this.setState({ value: this.props.value });
-    }
-  }
   render() {
-    const { value, onChange } = this.props;
+    const { onChange } = this.props;
     return (
       <LoadingView loading={this.state.loading}>
-        <CKEditor
-          onLoad={() => this.setState({ loading: false })}
-          ref={this.ckeditorRef}
-          type={this.props.type || 'classic'}
-          data={this.state.value}
-          readOnly={this.props.disabled}
-          onChange={(event) => onChange && onChange(event.editor.getData(), this.calculateWords(event.editor.document.getBody().$.innerText))}
-        />
+        {
+          this.props.value ?
+            (<CKEditor
+              onLoad={() => this.setState({ loading: false })}
+              ref={this.ckeditorRef}
+              type={this.props.type || 'classic'}
+              data={this.props.value}
+              readOnly={this.props.disabled}
+              onChange={(event) => onChange && onChange(event.editor.getData(), this.calculateWords(event.editor.document.getBody().$.innerText))}
+            />) : (<CKEditor
+              onLoad={() => this.setState({ loading: false })}
+              ref={this.ckeditorRef}
+              type={this.props.type || 'classic'}
+              data={this.state.value}
+              readOnly={this.props.disabled}
+              onChange={(event) => onChange && onChange(event.editor.getData(), this.calculateWords(event.editor.document.getBody().$.innerText))}
+            />)
+        }
       </LoadingView>
     )
   }

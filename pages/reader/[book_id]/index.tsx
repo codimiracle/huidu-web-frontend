@@ -14,6 +14,7 @@ import { Button, message } from 'antd';
 import AuthenticationUtil from '../../../util/authentication-util';
 import Link from 'next/link';
 import LoginRequiredView from '../../../components/user/login-required-view';
+import { Router } from 'next/router';
 
 export interface ReaderPageProps { };
 export interface ReaderPageState {
@@ -23,6 +24,11 @@ export interface ReaderPageState {
   history: History;
   episodes: Array<Episode>;
   loading: boolean;
+  readingProgress: {
+    bookId: string;
+    episodeId: string;
+    progress: number;
+  }
 };
 
 export default class ReaderPage extends React.Component<ReaderPageProps, ReaderPageState> {
@@ -74,7 +80,8 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
       episodes: [],
       allLoaded: false,
       history: null,
-      loading: false
+      loading: false,
+      readingProgress: null,
     }
   }
   fetchNextEpisode() {
@@ -106,6 +113,11 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
       });
     }
   }
+  componentWillUnmount() {
+    if (AuthenticationUtil.isValidated() && this.state.readingProgress) {
+      fetchMessageByPost(API.ReaderHistoryRecord, this.state.readingProgress);
+    }
+  }
   render() {
     return (
       <InitializerView
@@ -126,13 +138,13 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
           progress={this.state.history && this.state.history.progress}
           onReadingProgress={(bookId, episodeId, progress) => {
             console.debug("recording: (%s %s %s)", bookId, episodeId, progress);
-            if (AuthenticationUtil.isValidated()) {
-              fetchMessageByPost(API.ReaderHistoryRecord, {
+            this.setState({
+              readingProgress: {
                 bookId: bookId,
                 episodeId: episodeId,
                 progress: progress
-              });
-            }
+              }
+            });
           }}
           renderExtraActions={
             () => this.state.allLoaded ? (

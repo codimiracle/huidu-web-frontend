@@ -9,6 +9,7 @@ import { ElectronicBook } from '../../../types/electronic-book';
 import { fetchDataByGet } from '../../../util/network-util';
 import { List } from 'antd';
 import BookView from '../../../components/book-view';
+import BookItemView from '../../../components/book/book-item-view';
 
 export interface BookShopProps {
   categories: Array<Category>,
@@ -52,12 +53,12 @@ export default class BookShop extends React.Component<BookShopProps, BookShopSta
         }}
         hotListProps={{
           api: API.ElectronicBookHotCollection,
-          renderItem: (item, index) => <List.Item><BookView book={item as Book} /></List.Item>
+          renderItem: (item, index) => <List.Item><BookItemView book={item as Book} /></List.Item>
         }}
         recommendListProps={{
           api: API.RecommendationByBookType,
           getReqeustArguments: () => ({type: 'electronic-book'}),
-          renderItem: (item, index) => <List.Item><BookView book={item as Book} /></List.Item>
+          renderItem: (item, index) => <List.Item><BookItemView book={item as Book} /></List.Item>
         }}
       />
     )

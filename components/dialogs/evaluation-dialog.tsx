@@ -15,10 +15,11 @@ export default class EvaluationCommentDialog extends React.Component<EvaluationC
     return (
       <Modal
         visible={this.props.visible}
-        cancelText={null}
-        onOk={() => this.props.onCancel && this.props.onCancel()}
+        footer={null}
+        onCancel={() => this.props.onCancel && this.props.onCancel()}
       >
-        <WrappedCommentEditor onCommented={() => {
+        <WrappedCommentEditor rate onCommented={() => {
+          this.props.onCancel && this.props.onCancel();
           this.props.onEvaluated && this.props.onEvaluated();
         }} orderNumber={this.props.orderNumber} contentId={null} />
       </Modal>

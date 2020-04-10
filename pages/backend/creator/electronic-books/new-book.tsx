@@ -31,7 +31,7 @@ export class NewElectronicBook extends React.Component<NewElectronicBookProps, N
         this.setState({ saving: true });
         fetchDataByPost<EntityJSON<ElectronicBook>>(API.CreatorElectronicBookCreate, values).then((data) => {
           message.success('添加成功！');
-          router.replace('./[book_id]', `./${data.entity.id}`);
+          router.replace(`${router.pathname}/[book_id]`, `${router.asPath}/${data.entity.id}`);
         }).finally(() => {
           this.setState({ saving: false });
         })

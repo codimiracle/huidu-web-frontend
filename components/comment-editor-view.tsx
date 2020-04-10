@@ -39,13 +39,19 @@ class CommentEditor extends React.Component<CommentEditorProps, CommentEditorSta
   }
   onPostComment() {
     const { form, contentId, replay, mention, orderNumber } = this.props;
-    let opstr = replay ? '回复' : '评论';
+    let opstr = "评论";
+    if (this.props.replay) {
+      opstr = "回复";
+    }
+    if (this.props.orderNumber) {
+      opstr = "评价";
+    }
     form.validateFields((errors, values) => {
       if (!errors) {
         let api = orderNumber ? API.UserOrderEvaluate : API.ContentCommentCreate;
         this.setState({ loading: true });
         fetchMessageByPost(api, {
-          orderNumber: orderNumber && orderNumber,
+          order_number: orderNumber && orderNumber,
           content_id: !orderNumber && contentId,
           ...values
         }).then((msg) => {
@@ -67,8 +73,15 @@ class CommentEditor extends React.Component<CommentEditorProps, CommentEditorSta
   render() {
     const { form, rate, replay, mention } = this.props;
     const { loading } = this.state;
+    let actionName = "评论";
+    if (this.props.replay) {
+      actionName = "回复";
+    }
+    if (this.props.orderNumber) {
+      actionName = "评价";
+    }
     form.getFieldDecorator('content.type', { initialValue: 'html' });
-    form.getFieldDecorator('metions[0]', { initialValue: mention ? [mention.id] : [] });
+    form.getFieldDecorator('metions', { initialValue: mention ? [mention.id] : [] });
     return (
       <div className="comment-editor">
         <UserContext.Consumer>
@@ -106,10 +119,10 @@ class CommentEditor extends React.Component<CommentEditorProps, CommentEditorSta
                         {
                           form.getFieldDecorator('content.source', {
                             rules: [
-                              { required: true, message: `${replay ? '回复' : '评论'}内容不能为空！` }
+                              { required: true, message: `${actionName}内容不能为空！` }
                             ]
                           })(
-                            <Mentions placeholder={replay ? `回复 @${mention.nickname}` : '评论内容'} disabled={!user} rows={replay ? 2 : 3} >
+                            <Mentions placeholder={replay ? `回复 @${mention.nickname}` : `${actionName}内容`} disabled={!user} rows={replay ? 2 : 3} >
                               {
                                 mention &&
                                 <Mentions.Option value={mention.id}>{mention.nickname}</Mentions.Option>
@@ -123,7 +136,7 @@ class CommentEditor extends React.Component<CommentEditorProps, CommentEditorSta
                       <FormItem>
                         {
                           user ?
-                          <Button loading={loading} block onClick={() => this.onPostComment()}>{replay ? '回复' : '评论'}</Button> :
+                          <Button loading={loading} block onClick={() => this.onPostComment()}>{actionName}</Button> :
                           <Button block onClick={() => this.setState({ signInDialogVisible: true })}>登录</Button>
                         }
                       </FormItem>

@@ -101,11 +101,12 @@ export class UserRecommendationDetails extends React.Component<UserRecommendatio
         </Row>
         <h3>相似用户</h3>
         <UserList
+          searchable
           api={API.BackendUserFigureSimilarUserCollection}
           getRequestArgeuments={() => ({ user_id: userId })}
           renderItem={(user) =>
             <List.Item style={{ textAlign: 'center' }}>
-              <Link href="./[user_id]" as={`./${user.id}`}><a><AvatarView size={64} user={user} /></a></Link>
+              <Link href={`${this.props.router.pathname}/[user_id]`} as={`${this.props.router.asPath}/${user.id}`}><a><AvatarView size={64} user={user} /></a></Link>
               <div>{user.nickname}</div>
             </List.Item>
           }

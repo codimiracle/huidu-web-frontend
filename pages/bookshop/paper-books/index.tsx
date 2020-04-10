@@ -3,6 +3,7 @@ import { NextPageContext } from 'next';
 import React from 'react';
 import { BookContentView } from '..';
 import BookView from '../../../components/book-view';
+import BookItemView from '../../../components/book/book-item-view';
 import CartButton from '../../../components/cart/cart-button';
 import { Filter } from '../../../components/filter-card';
 import { API } from '../../../configs/api-config';
@@ -51,12 +52,12 @@ export default class BookShop extends React.Component<BookShopProps, BookShopSta
           }}
           hotListProps={{
             api: API.PaperbookHotCollection,
-            renderItem: (item, index) => <List.Item><BookView book={item as Book} /></List.Item>
+            renderItem: (item, index) => <List.Item><BookItemView book={item as Book} /></List.Item>
           }}
           recommendListProps={{
             api: API.RecommendationByBookType,
             getReqeustArguments: () => ({type: 'paper-book'}),
-            renderItem: (item, index) => <List.Item><BookView book={item as Book} /></List.Item>
+            renderItem: (item, index) => <List.Item><BookItemView book={item as Book} /></List.Item>
           }}
         />
         <CartButton />

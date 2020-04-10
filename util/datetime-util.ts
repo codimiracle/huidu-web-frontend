@@ -16,4 +16,7 @@ export default class DatetimeUtil {
   static formatDate(date: string) {
     return moment(date).format('YYYY-MM-DD');
   }
+  static formatTinyDate(date: string) {
+    return moment(date).format('MM-DD');
+  }
 }

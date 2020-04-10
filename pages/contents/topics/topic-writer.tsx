@@ -98,7 +98,11 @@ export default class TopicWriter extends React.Component<TopicWriterProps, Topic
     return (
       <InitializerView
         initializer={() => this.getClientSideState()}
-        onInitialized={(data) => this.setState(data)}
+        onInitialized={(data) => this.setState(data, () => {
+          this.setState((state) => {
+            return {references: state.topic && state.topic.references.map((reference) => reference.ref) || []}
+          })
+        })}
       >
         <Row>
           <Col span={16}>

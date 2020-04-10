@@ -97,8 +97,6 @@ export class EpisodeCreator extends React.Component<EpisodeCreatorProps, Episode
       episode: episode_id ? episodeData.entity : null
     }
   }
-  componentDidMount() {
-  }
   render() {
     const { episode } = this.state;
     return (

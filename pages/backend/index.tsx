@@ -1,15 +1,14 @@
 import React from 'react';
 
-export interface BackendDashboardProps { };
-export interface BackendDashboardState { };
+export interface BackendIndexProps { };
+export interface BackendIndexState { };
 
-export default class BackendDashboard extends React.Component<BackendDashboardProps, BackendDashboardState> {
+export default class BackendIndex extends React.Component<BackendIndexProps, BackendIndexState> {
   render() {
     return (
-      <div style={{ textAlign: 'center' }}>
-        <img src="/assets/huidu.png" />
-        <h2>欢迎使用荟读</h2>
-      </div>
+      <>
+
+      </>
     )
   }
 }

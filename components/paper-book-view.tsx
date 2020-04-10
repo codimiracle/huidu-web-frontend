@@ -1,18 +1,14 @@
 import { Button, message, Rate } from 'antd';
-import Link from 'next/link';
 import React from 'react';
 import { API } from '../configs/api-config';
 import { PaperBook } from '../types/paper-book';
-import { fetchMessageByPost } from '../util/network-util';
-import CommodityStatusView from './commodity-status-view';
-import DirectLink from './direct-link';
-import LoginRequiredView from './user/login-required-view';
 import MoneyUtil from '../util/money-util';
+import { fetchMessageByPost } from '../util/network-util';
+import BookCover from './book/book-cover';
 import BookDescription from './book/book-description';
 import BookHeader from './book/book-header';
-import BookCover from './book/book-cover';
-
-const EMPTY_IMAGE = '/assets/empty.png';
+import DirectLink from './direct-link';
+import LoginRequiredView from './user/login-required-view';
 
 export interface PaperBookViewProps {
   id?: string,
@@ -30,7 +26,7 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
     this.state = {
       book: props.book,
       joining: false,
-      joinedCart: false,
+      joinedCart: props.book && props.book.joinedCart,
     }
   }
   private onJoinCartClick() {
@@ -62,7 +58,7 @@ export default class PaperBookView extends React.Component<PaperBookViewProps, P
         </div>
         <div className="body">
           <BookHeader book={book} status author />
-          <div><Rate defaultValue={2.5} disabled style={{ fontSize: '18px' }} /></div>
+          <div><Rate defaultValue={book.commodity.rate} disabled style={{ fontSize: '18px' }} /></div>
           <BookDescription book={book} size="small" style={{flex: 1}} />
           <div className="huidu-money">{MoneyUtil.format(book.commodity && book.commodity.prices)}</div>
           <div className="actions">

@@ -2,10 +2,11 @@ import { AudioEpisode, AudioEpisodeStatus } from "../../../types/audio-book";
 import { getMockAudioBook } from "./audio-book";
 import { getMockEpisode } from "./episode";
 import { getMockExamination } from "./examination";
+import { ContentStatus } from "../../../types/content";
 
 export const getMockAudioEpisode = (id?: number): AudioEpisode => {
   id = id || Math.trunc(Math.random() * 100000);
-  let status = Object.values(AudioEpisodeStatus);
+  let status = Object.values(ContentStatus);
   return {
     id: `${id}`,
     title: `有声书章节 ${id}`,

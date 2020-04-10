@@ -32,6 +32,7 @@ export default class UserRecommendation extends React.Component<UserRecommendati
         <h3>用户列表</h3>
         <Divider dashed type="horizontal" />
         <UserList
+          searchable
           api={API.BackendUserCollection}
           renderItem={(user) =>
             <List.Item style={{ textAlign: 'center' }}>

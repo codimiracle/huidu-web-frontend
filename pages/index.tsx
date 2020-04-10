@@ -178,7 +178,7 @@ class ComprehensivePage extends React.Component<ComprehensivePageProps, Comprehe
                 <h3>热气话题</h3>
                 <div>
                   <SimpleListView
-                    api={API.CommunityReviewHotCollection}
+                    api={API.CommunityTopicHotCollection}
                     renderItem={(item: Topic) => <TopicItemView topic={item} />}
                   />
                 </div>

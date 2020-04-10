@@ -17,7 +17,7 @@ export default class CategoryView extends React.Component<CategoryViewProps, Cat
       <div className="album">
         <Link href={`/categories/${category.id}`}>
           <a>
-            {album && <img width="100%" src={UploadUtil.absoluteUrl(API.UploadSource, category.extra.url)} />}
+            {album && <img width="212px" height="343px" src={UploadUtil.absoluteUrl(API.UploadSource, category.extra.url)} />}
             <strong>{category.name}</strong>
           </a>
         </Link>

@@ -119,9 +119,6 @@ export default class ShoppingOrders extends React.Component<ShoppingOrdersProps,
           title="订单管理"
           hint="这里列出了系统中存在的订单，您可以对订单进行操作，这将反馈给用户。"
         />
-        <div>
-          <h3>快捷操作操作</h3>
-        </div>
         <Divider type="horizontal" />
         <EntityManager
           bulkBarExtra={

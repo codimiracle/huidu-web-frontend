@@ -3,7 +3,7 @@ import React from 'react';
 import { API } from '../../configs/api-config';
 import { fetchDataByGet } from '../../util/network-util';
 import { ListJSON } from '../../types/api';
-import RetryView from '../retry-view';
+import InitializerView from '../ui/initializer-view';
 
 export interface SimpleListViewProps<T> {
   api: API;
@@ -32,14 +32,17 @@ export default class SimpleListView<T> extends React.Component<SimpleListViewPro
       loading: false
     }
   }
-  fetchList(page?: number, limit?: number) {
-    fetchDataByGet<ListJSON<T>>(this.props.api, {
+  async fetcher(page?: number, limit?: number) {
+    return await fetchDataByGet<ListJSON<T>>(this.props.api, {
       filter: this.props.filter || null,
       sorter: this.props.sorter || null,
       page: page || this.state.page,
       limit: limit || this.state.limit,
       ...(this.props.getReqeustArguments && this.props.getReqeustArguments())
-    }).then((data) => {
+    })
+  }
+  fetchList(page?: number, limit?: number) {
+    this.fetcher(page, limit).then((data) => {
       this.setState((state) => ({
         list: (this.props.single || state.page == 1) ? data.list : state.list.concat(data.list),
         page: data.page,
@@ -52,24 +55,19 @@ export default class SimpleListView<T> extends React.Component<SimpleListViewPro
       this.setState({ loading: false });
     })
   }
-  private doInitialize() {
-    this.fetchList(1, 10);
-  }
-  componentDidMount() {
-    this.doInitialize();
-  }
   render() {
     return (
-      <RetryView
-        visible={!this.state.loading && this.state.page == null}
-        onClick={() => this.doInitialize()}
+      <InitializerView
+        initializer={() => this.fetcher(1, 10)}
+        onInitialized={(data) => this.setState(data)}
       >
         <List
           loading={this.state.loading}
+          split={false}
           renderItem={this.props.renderItem}
           dataSource={this.state.list}
         />
-      </RetryView>
+      </InitializerView>
     )
   }
 }

@@ -1,5 +1,5 @@
 import { BookMetadata, BookBase, BookType } from "./book";
-import { Content, Examination } from './content';
+import { Content, Examination, ContentStatus } from './content';
 import { Episode } from "./episode";
 import { Commodity } from "./commodity";
 
@@ -53,7 +53,7 @@ export interface AudioEpisode {
   episode: Episode;
   duration: number;
   mediaNumber: number;
-  status: AudioEpisodeStatus;
+  status: ContentStatus;
   book: AudioBook;
   commodity: Commodity<any>;
   streamUrl: string;

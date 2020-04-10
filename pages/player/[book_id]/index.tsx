@@ -22,6 +22,11 @@ export interface PlayerPageState {
   bookNotes: BookNotes;
   loading: boolean;
   allLoaded: boolean;
+  playingProgress: {
+    bookId: string;
+    audioEpisodeId: string;
+    progress: number;
+  }
 };
 
 export default class PlayerPage extends React.Component<PlayerPageProps, PlayerPageState> {
@@ -34,6 +39,7 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
       history: null,
       loading: false,
       allLoaded: false,
+      playingProgress: null
     }
   }
   async getClientSideProps(query) {
@@ -79,7 +85,11 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
       bookNotes: bookNotesData && bookNotesData.entity
     }
   }
-
+  componentWillUnmount() {
+    if (AuthenticationUtil.isValidated() && this.state.playingProgress) {
+      fetchMessageByPost(API.ReaderHistoryRecord, this.state.playingProgress);
+    }
+  }
   fetchNextEpisode() {
     let audioEpisode = this.state.audioEpisode;
     if (audioEpisode && !audioEpisode.next) {
@@ -149,13 +159,13 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
               audioEpisode ?
                 <AudioPlayerView progress={history && history.progress} onProgress={(progress) => {
                   console.debug("recording: (%s %s %s)", book.id, audioEpisode.id, progress);
-                  if (AuthenticationUtil.isValidated()) {
-                    fetchMessageByPost(API.PlayerHistoryRecord, {
+                  this.setState({
+                    playingProgress: {
                       bookId: book.id,
                       audioEpisodeId: audioEpisode.id,
                       progress: progress
-                    });
-                  }
+                    }
+                  });
                 }} src={UploadUtil.absoluteUrl(API.UploadSource, audioEpisode.streamUrl)} onError={() => message.error('播放地址无效！')} />
                 : <Alert type="warning" showIcon message="无章节数据，播放器已隐藏" closable />
             }

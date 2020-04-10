@@ -12,6 +12,7 @@ import InitializerView from '../../ui/initializer-view';
 export interface UserListProps {
   api: API;
   getRequestArgeuments?: () => any;
+  searchable?: boolean;
   renderItem: (user: User) => React.ReactNode;
 };
 export interface UserListState {
@@ -63,14 +64,17 @@ export default class UserList extends React.Component<UserListProps, UserListSta
         initializer={() => this.getClientSideProps()}
         onInitialized={(data) => this.setState(data)}
       >
-        <Row>
-          <Col span={6}>
-            <Search
-              loading={this.state.searching}
-              onSearch={(keyword) => this.onSearchUser(keyword)}
-            />
-          </Col>
-        </Row>
+        {
+          this.props.searchable &&
+          <Row>
+            <Col span={6}>
+              <Search
+                loading={this.state.searching}
+                onSearch={(keyword) => this.onSearchUser(keyword)}
+              />
+            </Col>
+          </Row>
+        }
         <List
           grid={{ gutter: 16, column: 8 }}
           renderItem={this.props.renderItem}

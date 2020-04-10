@@ -34,7 +34,7 @@ export default class ReviewWriter extends React.Component<ReviewWriterProps, Rev
     this.onContentChange = this.onContentChange.bind(this);
     this.onContentSave = this.onContentSave.bind(this);
   }
-  
+
   onReference(books: Array<Book>) {
     this.setState({ references: books, saved: false });
   }
@@ -103,7 +103,11 @@ export default class ReviewWriter extends React.Component<ReviewWriterProps, Rev
     return (
       <InitializerView
         initializer={(query) => this.getClientSideState(query)}
-        onInitialized={(data) => this.setState(data)}
+        onInitialized={(data) => this.setState(data, () => {
+          this.setState((state) => {
+            return { references: state.review && state.review.references.map((e) => e.ref) || []}
+          })
+        })}
       >
         <Row>
           <Col span={16}>

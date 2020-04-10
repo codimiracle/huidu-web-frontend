@@ -176,6 +176,14 @@ export enum API {
   CreatorAudioBookEpisodeLastNumber = "creator.audioBook.episode.lastEpisodeNumber",
   CreatorAudioBookLastEditedEpisode = "creator.audioBook.episode.lastUpdatedEpisode",
   // backend
+
+  // backend dashboard
+  BackendDashboardPaperBookSales = "backend.dashboard.paperBookSales",
+  BackendDashboardUserBookPreference = "backend.dashboard.userBookPreference",
+  BackendDashboardBookCategoryCount = "backend.dashboard.bookCategoryCount",
+  BackendDashboardBookCategoryDistribution = "backend.dashboard.bookCategoryDistribution",
+  BackendDashboardOnlineUsers = "backend.dashboard.onlineUsers",
+  //
   BackendOrderCollection = "backend.order.collection",
   BackendOrderLogisticsInformationUpdate = "backend.order.logisticsInformation.update",
   BackendOrderChargeback = "backend.order.chargeback",
@@ -316,6 +324,12 @@ export enum API {
  */
 export const APIDefinitionData: APIDefinitionSet = {
   backend: {
+    dashboard: {
+      userBookPreference: `${testOrigin}/api/backend/dashboard/user-book-preference`,
+      bookCategoryCount: `${testOrigin}/api/backend/dashboard/book-category-count`,
+      paperBookSales: `${testOrigin}/api/backend/dashboard/paper-book-sales`,
+      onlineUsers: `${testOrigin}/api/backend/dashboard/online-users?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
+    },
     comprehensivePage: {
       url: `${testOrigin}/api/backend/comprehensive-page`,
       method: 'post',
@@ -564,6 +578,7 @@ export const APIDefinitionData: APIDefinitionSet = {
           commodity: null,
           categoryId: null,
           category: null,
+          specification: null,
           tags: [],
           publishYear: null,
         }
@@ -580,6 +595,7 @@ export const APIDefinitionData: APIDefinitionSet = {
           commodity: null,
           categoryId: null,
           category: null,
+          specification: null,
           tags: [],
           publishYear: null,
         }
@@ -1492,6 +1508,14 @@ export const APIDefinitionData: APIDefinitionSet = {
         url: `${testOrigin}/api/user/orders/@{order_number}/cancel`,
         method: 'post',
         body: {}
+      },
+      evaluate: {
+        url: `${testOrigin}/api/user/orders/@{order_number}/evaluate`,
+        method: 'post',
+        body: {
+          rate: null,
+          content: null,
+        }
       },
       received: {
         url: `${testOrigin}/api/user/orders/@{order_number}/receive`,
