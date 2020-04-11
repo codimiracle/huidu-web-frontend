@@ -86,7 +86,7 @@ const Entries: EntryInfoMap = {
     icon: 'dashboard',
     title: '后台面板',
     key: 'dashboard',
-    link: '/'
+    link: '/dashboard'
   },
   'author-dashboard': {
     icon: 'dashboard',

@@ -108,22 +108,25 @@ export class BackendDashboard extends React.Component<BackendDashboardProps, Bac
                 </Card>
               </Col>
               <Col span={24}>
-                <Card title="统计" size="small">
-                  <Row>
-                    <Col span={12}>
-                      <Statistic title="用户数" />
-                    </Col>
-                    <Col span={12}>
-                      <Statistic title="图书数" />
-                    </Col>
-                    <Col span={12}>
-                      <Statistic title="订单数" />
-                    </Col>
-                    <Col span={12}>
-                      <Statistic title="交易额（￥）" />
-                    </Col>
-                  </Row>
-                </Card>
+                <ChartView
+                  api={API.BackendDashboardPlatformDataStatistics}
+                  title="统计"
+                  renderChart={(data) =>
+                    <Row>
+                      <Col span={12}>
+                        <Statistic title="用户数" value={data && data.userCount} />
+                      </Col>
+                      <Col span={12}>
+                        <Statistic title="图书数" value={data && data.bookCount} />
+                      </Col>
+                      <Col span={12}>
+                        <Statistic title="订单数" value={data && data.orderCount} />
+                      </Col>
+                      <Col span={12}>
+                        <Statistic title="交易额" value={data && MoneyUtil.format(data.orderAmount)} />
+                      </Col>
+                    </Row>}
+                />
               </Col>
             </Row>
           </Col>
@@ -140,11 +143,12 @@ export class BackendDashboard extends React.Component<BackendDashboardProps, Bac
                     data={data}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" name="日期" tickFormatter={(value) => DatetimeUtil.formatTinyDate(value)} />
+                    <XAxis dataKey="dateFormatted" name="日期"/>
                     <YAxis dataKey="amount" name="金额" tickFormatter={(value) => MoneyUtil.formatNumber(value)} />
-                    <Tooltip />
+                    <Tooltip formatter={(value, name) => name === 'amount' ? MoneyUtil.formatNumber(value as number) : value} />
                     <Legend />
                     <Line type="monotone" dataKey="quantity" name="销量" stroke="#8884d8" activeDot={{ r: 8 }} />
+                    <Line type="monotone" dataKey="amount" name="金额" stroke="#82ca9d" />
                   </LineChart>
                 </ResponsiveContainer>
               )}
@@ -195,27 +199,6 @@ export class BackendDashboard extends React.Component<BackendDashboardProps, Bac
                       onMouseEnter={this.onPieEnter}
                     />
                   </PieChart>
-                </ResponsiveContainer>
-              )}
-            />
-          </Col>
-          <Col span={12}>
-            <ChartView
-              title="图书类别分布"
-              api={API.BackendDashboardBookCategoryDistribution}
-              renderChart={(data) => (
-                <ResponsiveContainer
-                  width="100%"
-                  minHeight={260}
-                >
-                  <RadarChart outerRadius={150} data={data}>
-                    <PolarGrid />
-                    <PolarAngleAxis dataKey="subject" />
-                    <PolarRadiusAxis angle={30} domain={[0, 150]} />
-                    <Radar name="Mike" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-                    <Radar name="Lily" dataKey="B" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />
-                    <Legend />
-                  </RadarChart>
                 </ResponsiveContainer>
               )}
             />

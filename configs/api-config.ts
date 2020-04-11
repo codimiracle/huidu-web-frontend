@@ -149,6 +149,13 @@ export enum API {
   AudioBookCreate = "audioBook.entity",
   BookMetadataSuggestion = "bookMetadata.suggestion",
   // creator
+
+  // creator dashboard
+  CreatorDashboardCreativeStatistics = "creator.dashboard.creativeStatistics",
+  CreatorDashboardCreativeCategoryStatistics = "creator.dashboard.creativeCategoryStatistics",
+  CreatorDashboardAuthorStatistics = "creator.dashboard.authorStatistics",
+  CreatorDashboardBookCreativeStatistics = "creator.dashboard.bookReadingStatistics",
+  //
   CreatorElectronicBookCollection = "creator.electronicBook.collection",
   CreatorElectronicBookSearch = "creator.electronicBook.search",
   CreatorElectronicBookCreate = "creator.electronicBook.create",
@@ -182,8 +189,9 @@ export enum API {
   BackendDashboardUserBookPreference = "backend.dashboard.userBookPreference",
   BackendDashboardBookCategoryCount = "backend.dashboard.bookCategoryCount",
   BackendDashboardBookCategoryDistribution = "backend.dashboard.bookCategoryDistribution",
+  BackendDashboardPlatformDataStatistics = "backend.dashboard.platformDataStatistics",
   BackendDashboardOnlineUsers = "backend.dashboard.onlineUsers",
-  //
+  
   BackendOrderCollection = "backend.order.collection",
   BackendOrderLogisticsInformationUpdate = "backend.order.logisticsInformation.update",
   BackendOrderChargeback = "backend.order.chargeback",
@@ -325,6 +333,7 @@ export enum API {
 export const APIDefinitionData: APIDefinitionSet = {
   backend: {
     dashboard: {
+      platformDataStatistics: `${testOrigin}/api/backend/dashboard/platform-statistics`,
       userBookPreference: `${testOrigin}/api/backend/dashboard/user-book-preference`,
       bookCategoryDistribution: `${testOrigin}/api/backend/dashboard/book-category-distribution`,
       bookCategoryCount: `${testOrigin}/api/backend/dashboard/book-category-count`,
@@ -892,7 +901,11 @@ export const APIDefinitionData: APIDefinitionSet = {
     }
   },
   creator: {
-    statistics: `${origin}/api/creator/statistics`,
+    dashboard: {
+      creativeCategoryStatistics: `${testOrigin}/api/creator/dashboard/creative-category-statistics`,
+      creativeStatistics: `${testOrigin}/api/creator/dashboard/creative-statistics`,
+      bookReadingStatistics: `${testOrigin}/api/creator/dashboard/book-reading-statistics`,
+    },
     audioBook: {
       search: `${testOrigin}/api/creator/audio-books/search?keyword=@{keyword}`,
       collection: `${testOrigin}/api/creator/audio-books?filter=null&sorter=null&page=@{page}&limit=@{limit}`,

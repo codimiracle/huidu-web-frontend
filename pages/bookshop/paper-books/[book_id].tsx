@@ -66,7 +66,7 @@ export default class BookDetails extends React.Component<BookDetailsProps, BookD
             <Divider type="horizontal" dashed />
             <h3>出版信息</h3>
             <p>
-              {JSON.stringify(book.commodity.extra)}
+              {book.commodity && book.commodity.extra}
             </p>
             <div></div>
             <style jsx>{`
