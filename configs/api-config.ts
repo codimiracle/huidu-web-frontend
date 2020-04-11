@@ -326,6 +326,7 @@ export const APIDefinitionData: APIDefinitionSet = {
   backend: {
     dashboard: {
       userBookPreference: `${testOrigin}/api/backend/dashboard/user-book-preference`,
+      bookCategoryDistribution: `${testOrigin}/api/backend/dashboard/book-category-distribution`,
       bookCategoryCount: `${testOrigin}/api/backend/dashboard/book-category-count`,
       paperBookSales: `${testOrigin}/api/backend/dashboard/paper-book-sales`,
       onlineUsers: `${testOrigin}/api/backend/dashboard/online-users?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,

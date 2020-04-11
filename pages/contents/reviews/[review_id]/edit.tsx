@@ -1,36 +1,24 @@
 import React from 'react';
-import { Review } from '../../../../types/review';
-import ContentSection from '../../../../components/section-view';
+import { Router } from 'next/router';
+import ReviewWriter from '../review-writer';
 
 export interface ReviewEditorProps {
-  review: Review
+  router: Router;
+  reviewId: string;
 };
 export interface ReviewEditorState { };
 
 export default class ReviewEditor extends React.Component<ReviewEditorProps, ReviewEditorState> {
-  static async getInitialProps() {
+  static async getInitialProps(context) {
+    const { query } = context;
+
     return {
-      review: null
+      reviewId: query.review_id
     }
   }
   render() {
     return (
-      <div className="review-editor">
-        <ContentSection
-          content={
-            <>
-              
-            </>
-          }
-          aside={
-            <>
-            </>
-          }
-        />
-        <style jsx>{`
-          
-        `}</style>
-      </div>
+      <ReviewWriter reviewId={this.props.reviewId} />
     )
   }
 }

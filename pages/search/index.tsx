@@ -15,20 +15,12 @@ const { Sider, Content } = Layout;
 
 export interface SearchPageProps {
   router: Router;
-  keyword: string;
-  type: string;
 };
 export interface SearchPageState {
   list: Array<any>;
 };
 
 export class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
-  static async getInitialProps(context: NextPageContext) {
-    return {
-      keyword: context.query.q,
-      type: context.query.type
-    }
-  }
   private listRef: React.RefObject<InfiniteListView<any>>;
   constructor(props) {
     super(props);
@@ -48,23 +40,25 @@ export class SearchPage extends React.Component<SearchPageProps, SearchPageState
     Router.events.off('routeChangeComplete', this.refreshList);
   }
   render() {
-    let bookSearch = this.props.type.includes('book');
+    let type = this.props.router.query.type;
+    let keyword = this.props.router.query.q;
+    let bookSearch = type.includes('book');
     return (
       <Layout>
         <Sider theme="light">
           <Affix offsetTop={12}>
-            <Menu defaultSelectedKeys={[this.props.type]}>
-              <Menu.Item key="electronic-book"><Link href={`/search?type=electronic-book&q=${this.props.keyword || ''}`}><a>电子书</a></Link></Menu.Item>
-              <Menu.Item key="audio-book"><Link href={`/search?type=audio-book&q=${this.props.keyword || ''}`}><a>有声书</a></Link></Menu.Item>
-              <Menu.Item key="paper-book"><Link href={`/search?type=paper-book&q=${this.props.keyword || ''}`}><a>纸质书</a></Link></Menu.Item>
-              <Menu.Item key="community"><Link href={`/search?type=community&q=${this.props.keyword || ''}`}><a>社区</a></Link></Menu.Item>
+            <Menu defaultSelectedKeys={[type as string]}>
+              <Menu.Item key="electronic-book"><Link href={`/search?type=electronic-book&q=${keyword || ''}`}><a>电子书</a></Link></Menu.Item>
+              <Menu.Item key="audio-book"><Link href={`/search?type=audio-book&q=${keyword || ''}`}><a>有声书</a></Link></Menu.Item>
+              <Menu.Item key="paper-book"><Link href={`/search?type=paper-book&q=${keyword || ''}`}><a>纸质书</a></Link></Menu.Item>
+              <Menu.Item key="community"><Link href={`/search?type=community&q=${keyword || ''}`}><a>社区</a></Link></Menu.Item>
             </Menu>
           </Affix>
         </Sider>
         <Content style={{ backgroundColor: 'white', padding: '0 1.5em' }}>
           <div className="huidu-actions-center" style={{ padding: '2em 0' }}>
             <h1><img src="./assets/huidu.png" width="128" height="128" />荟读搜索</h1>
-            <div><Search autoFocus defaultValue={this.props.keyword} size="large" style={{ width: '30em' }} onSearch={(keyword) => {
+            <div><Search autoFocus defaultValue={keyword} size="large" style={{ width: '30em' }} onSearch={(keyword) => {
               this.props.router.replace(`/search?type=electronic-book&q=${keyword}`)
             }}/></div>
           </div>
@@ -75,8 +69,8 @@ export class SearchPage extends React.Component<SearchPageProps, SearchPageState
             api={API.Search}
             getRequestArguments={
               () => ({
-                keyword: this.props.keyword,
-                type: this.props.type
+                keyword: keyword,
+                type: type
               })
             }
             renderItem={
