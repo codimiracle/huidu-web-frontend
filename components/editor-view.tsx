@@ -38,22 +38,25 @@ export default class EditorView extends React.Component<EditorViewProps, EditorV
     return (
       <LoadingView loading={this.state.loading}>
         {
-          this.props.value ?
-            (<CKEditor
-              onLoad={() => this.setState({ loading: false })}
-              ref={this.ckeditorRef}
-              type={this.props.type || 'classic'}
-              data={this.props.value}
-              readOnly={this.props.disabled}
-              onChange={(event) => onChange && onChange(event.editor.getData(), this.calculateWords(event.editor.document.getBody().$.innerText))}
-            />) : (<CKEditor
-              onLoad={() => this.setState({ loading: false })}
-              ref={this.ckeditorRef}
-              type={this.props.type || 'classic'}
-              data={this.state.value}
-              readOnly={this.props.disabled}
-              onChange={(event) => onChange && onChange(event.editor.getData(), this.calculateWords(event.editor.document.getBody().$.innerText))}
-            />)
+          this.props.value &&
+          (<CKEditor
+            onLoad={() => this.setState({ loading: false })}
+            ref={this.ckeditorRef}
+            type={this.props.type || 'classic'}
+            data={this.props.value}
+            readOnly={this.props.disabled}
+            onChange={(event) => onChange && onChange(event.editor.getData(), this.calculateWords(event.editor.document.getBody().$.innerText))}
+          />)
+        }
+        {!this.props.value &&
+          (<CKEditor
+            onLoad={() => this.setState({ loading: false })}
+            ref={this.ckeditorRef}
+            type={this.props.type || 'classic'}
+            data={this.state.value}
+            readOnly={this.props.disabled}
+            onChange={(event) => onChange && onChange(event.editor.getData(), this.calculateWords(event.editor.document.getBody().$.innerText))}
+          />)
         }
       </LoadingView>
     )
