@@ -28,7 +28,7 @@ export class InitializerView<T> extends React.Component<InitializerViewProps<T>,
       this.setState({ initialized: true });
       this.props.onInitialized && this.props.onInitialized(data)
     }).catch((err) => {
-      message.error(`初始化页面失败：${err.message}`);
+      message.error(`初始化失败：${err.message}`);
     }).finally(() => {
       this.setState({ initializing: false })
     })

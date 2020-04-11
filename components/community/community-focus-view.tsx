@@ -17,6 +17,7 @@ export default function CommunityFocusView(props: CommunityFocusViewProps) {
   let right = (
     <Col style={{ flex: 1}}>
       <List
+        split={false}
         renderItem={(topic) => <List.Item style={{ display: 'block', padding: '4px 0' }}><TopicItemView topic={topic} /></List.Item>}
         dataSource={props.focus.topics}
         style={{padding: '0 0.5em'}}
@@ -29,7 +30,6 @@ export default function CommunityFocusView(props: CommunityFocusViewProps) {
   return (
     <Row type="flex" justify="space-between">
       {left}
-      <Col><Divider type="vertical" style={{ height: '100%' }} /></Col>
       {right}
     </Row>
   );
