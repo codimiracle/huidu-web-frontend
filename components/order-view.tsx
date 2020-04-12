@@ -77,10 +77,14 @@ class OrderActionView extends React.Component<OrderActionViewProps, OrderActionV
       // 取消订单
       this.setState({ seconddoing: true });
       fetchMessageByPost(API.UserOrderCancel, {
-        order_number: this.props.orderNumber
+        order_number: this.props.orderNumber,
+        status: this.props.order.status
       }).then((msg) => {
         if (msg.code == 200) {
           message.success('取消订单成功！');
+          let order = this.props.order;
+          order.status = OrderStatus.Canceled
+          this.props.onOrderRefresh(order);
         } else {
           message.error(`取消订单失败：${msg.message}`);
         }
@@ -98,6 +102,9 @@ class OrderActionView extends React.Component<OrderActionViewProps, OrderActionV
       }).then((msg) => {
         if (msg.code == 200) {
           message.success('收货成功！');
+          let order = this.props.order;
+          order.status = OrderStatus.AwaitingEvaluation
+          this.props.onOrderRefresh(order);
         } else {
           message.error(`收货失败：${msg.message}`);
         }
@@ -118,7 +125,7 @@ class OrderActionView extends React.Component<OrderActionViewProps, OrderActionV
         {
           buttons.map((text: string, index: number) =>
             text == '取消' ? (
-              <Popconfirm key={text} title="您真的要取消订单吗？" onConfirm={() => () => triggers[index]()}>
+              <Popconfirm key={text} title="您真的要取消订单吗？" onConfirm={() => triggers[index]()}>
                 <Button {...(index == 0 ? { type: "primary" } : {})} style={{ marginLeft: '0.5em' }}>{text}</Button>
               </Popconfirm>
             ) : (<Button key={text} {...(index == 0 ? { type: "primary" } : {})} onClick={() => triggers[index]()} style={{ marginLeft: '0.5em' }}>{text}</Button>)

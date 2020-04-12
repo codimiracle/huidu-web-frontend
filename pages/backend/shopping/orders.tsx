@@ -150,6 +150,7 @@ export default class ShoppingOrders extends React.Component<ShoppingOrdersProps,
                         logisticsInformation={entity.logisticsInformation}
                         onUpdated={(updatedLogisticsInformation) => {
                           entity.logisticsInformation = updatedLogisticsInformation;
+                          entity.status = OrderStatus.AwaitingDelivery;
                           updater(entity);
                         }}
                         visible={visible}

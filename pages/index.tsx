@@ -168,7 +168,7 @@ class ComprehensivePage extends React.Component<ComprehensivePageProps, Comprehe
                 <h3>交流热点</h3>
                 <List
                   split={false}
-                  renderItem={(item: CommunityFocus, index: number) => <List.Item key={index}><CommunityFocusView swap={index % 2 == 0} focus={item} /></List.Item>}
+                  renderItem={(item: CommunityFocus, index: number) => <List.Item style={{display: 'block'}} key={index}><CommunityFocusView swap={index % 2 == 0} focus={item} /></List.Item>}
                   dataSource={community.focus}
                 />
               </>

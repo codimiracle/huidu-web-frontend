@@ -15,6 +15,7 @@ import { Commodity } from '../../types/commodity';
 import { Order, OrderType, Money } from '../../types/order';
 import { PaperBook } from '../../types/paper-book';
 import { fetchDataByGet, fetchDataByPost } from '../../util/network-util';
+import Link from 'next/link';
 
 interface OrderDetails {
   commodityId: string;
@@ -86,15 +87,17 @@ export class Orderring extends React.Component<OrderringProps, OrderringState> {
       orderringDetails = orderringDetails.concat(data.list.map((cartItem) => ({ commodityId: cartItem.commodityId, commodity: cartItem.commodity, cartItemId: cartItem.id, quantity: cartItem.quantity })));
     }
     let defaultAddressData = await fetchDataByGet<EntityJSON<Address>>(API.UserAddressDefault);
-
-    let shipmentMoneyData = await fetchDataByPost<Money>(API.UserOrderShipment, {
-      addressId: defaultAddressData.entity.id,
-      items: orderringDetails.map((orderingDetail) => ({ commodityId: orderingDetail.commodityId, quantity: orderingDetail.quantity, cartItemId: orderingDetail.cartItemId }))
-    });
+    let shipmentMoneyData = null;
+    if (defaultAddressData.entity) {
+      shipmentMoneyData = await fetchDataByPost<Money>(API.UserOrderShipment, {
+        addressId: defaultAddressData.entity.id,
+        items: orderringDetails.map((orderingDetail) => ({ commodityId: orderingDetail.commodityId, quantity: orderingDetail.quantity, cartItemId: orderingDetail.cartItemId }))
+      });
+    }
     return {
       address: defaultAddressData.entity,
       orderringDetails: orderringDetails,
-      shipmentMoney: shipmentMoneyData.amount
+      shipmentMoney: shipmentMoneyData && shipmentMoneyData.amount || 0
     };
   }
   onOrderring() {
@@ -135,6 +138,9 @@ export class Orderring extends React.Component<OrderringProps, OrderringState> {
     }
   }
   refreshShipment() {
+    if (!this.state.address) {
+      return;
+    }
     this.setState({ refreshing: true });
     fetchDataByPost<Money>(API.UserOrderShipment, {
       addressId: this.state.address.id,
@@ -165,7 +171,7 @@ export class Orderring extends React.Component<OrderringProps, OrderringState> {
             {
               address ?
                 <AddressView address={address} />
-                : <p>请选择地址</p>
+                : <p>请选择地址 <Link href="/user-central/address"><a target="_blank">前往收货地址界面</a></Link></p>
             }
           </div>
           <h3>商品</h3>
@@ -196,9 +202,13 @@ export class Orderring extends React.Component<OrderringProps, OrderringState> {
           value={this.state.address}
 
           onCancel={() => this.setState({ addressDialogVisible: false })}
-          onSelected={(address) => this.setState({ address: address })}
+          onSelected={(address) => {
+            this.setState({ address: address }, () => {
+              this.refreshShipment();
+            });
+          }}
         />
-        <WrappedPaymentDialog onCancel={() => this.setState({paymentDialogVisible: false})} visible={paymentDialogVisible} order={createdOrder} />
+        <WrappedPaymentDialog onCancel={() => this.setState({ paymentDialogVisible: false })} visible={paymentDialogVisible} order={createdOrder} />
         <style jsx>{`
           .footer {
             display: flex;

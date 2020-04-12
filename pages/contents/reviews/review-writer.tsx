@@ -9,6 +9,7 @@ import { EntityJSON } from '../../../types/api';
 import { Book } from '../../../types/book';
 import { Review } from '../../../types/review';
 import { fetchDataByGet, fetchDataByPost, fetchDataByPut } from '../../../util/network-util';
+import { ContentStatus } from '../../../types/content';
 
 export interface ReviewWriterProps {
   reviewId: string;
@@ -105,7 +106,7 @@ export default class ReviewWriter extends React.Component<ReviewWriterProps, Rev
         initializer={(query) => this.getClientSideState(query)}
         onInitialized={(data) => this.setState(data, () => {
           this.setState((state) => {
-            return { references: state.review && state.review.references.map((e) => e.ref) || []}
+            return { references: state.review ? state.review.references.map((e) => e.ref) : state.references }
           })
         })}
       >

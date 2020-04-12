@@ -1,4 +1,4 @@
-import { Button, Form, Tooltip } from 'antd';
+import { Button, Form, Tooltip, message } from 'antd';
 import React from 'react';
 import { Episode } from '../../../types/episode';
 import { BookNotes, Note } from '../../../types/notes';
@@ -6,6 +6,7 @@ import { DEAULT_THEME, Theme } from '../../../types/theme';
 import { default as Dommark, default as DommarkUtil } from '../../../util/dommark-util';
 import CreateNotesDialog, { CreateNotesDialogProps } from '../../dialogs/create-notes-dialog';
 import LoginRequiredView from '../../user/login-required-view';
+import { ObjectSet } from '../../../util/struct/set';
 
 export interface DommarkedNote {
   range: Range;
@@ -23,6 +24,7 @@ export interface ReaderEpisodeViewProps {
 }
 
 export interface ReaderEpisodeViewState {
+  notes: ObjectSet<Note>;
   markLeft: number,
   markTop: number,
   markHeight: number,
@@ -39,7 +41,9 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
   private pageContentRef: React.RefObject<HTMLDivElement>;
   constructor(props: ReaderEpisodeViewProps) {
     super(props);
+    let noteSet = new ObjectSet([], (note) => note.id);
     this.state = {
+      notes: noteSet,
       markLeft: 0,
       markTop: 0,
       markHeight: 0,
@@ -80,9 +84,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
     }
     let dommarkedNoteIdSet = new Set();
     this.state.dommarkedNotes.forEach((e) => dommarkedNoteIdSet.add(e.note.id));
-    let relativeNotes = this.props.bookNotes.notes.filter((notes) => notes.episodeId == this.props.episode.id);
-    console.log(relativeNotes);
-    let ranges = relativeNotes.map((note) => {
+    let ranges = this.state.notes.toArray().map((note) => {
       //跳过已经标记的 Dommark
       if (dommarkedNoteIdSet.has(note.id)) {
         return null;
@@ -134,13 +136,18 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
   componentDidMount() {
     document.addEventListener('selectionchange', this.onSelectionChange);
     window.addEventListener('scroll', this.onScrollProgress);
+    this.showMarkedNotes();
   }
   componentDidUpdate() {
     const { dommarkedKey } = this.state;
-    if (!this.props.bookNotes) {
+    if (this.props.bookNotes.notes.length == this.state.notes.size) {
       return;
     }
-    let newDommarkedKey = this.props.bookNotes.notes.filter((notes) => notes.episodeId == this.props.episode.id).map((n) => n.id).join('-');
+    if (this.props.bookNotes) {
+      let episodeNotes = this.props.bookNotes.notes.filter((notes) => notes.episodeId == this.props.episode.id);
+      this.state.notes.addAll(...episodeNotes);
+    }
+    let newDommarkedKey = this.state.notes.toArray().map((n) => n.id).join('-');
     if (newDommarkedKey != dommarkedKey) {
       this.setState({ dommarkedKey: newDommarkedKey }, () => this.showMarkedNotes());
     }
@@ -173,6 +180,16 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
       }
     </>)
   }
+  onCreateNote() {
+    let selection = window.getSelection();
+    let range = selection.getRangeAt(0);
+    let hasNotes = range.cloneContents().querySelectorAll('.dommark-notes').length > 0;
+    if (hasNotes) {
+      message.warn('已经有笔记了！');
+      return;
+    }
+    this.setState({ createNotesVisible: true })
+  }
   renderMarker() {
     return (
       <div className="marker-actions">
@@ -180,7 +197,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
           renderNonlogin={(opener) => <span className="action"><Button type="link" onClick={opener} style={{ color: 'inherit' }}>笔记</Button></span>}
         >
           <span className="action">
-            <Button type="link" onClick={() => this.setState({ createNotesVisible: true })} style={{ color: 'inherit' }}>笔记</Button>
+            <Button type="link" onClick={() => this.onCreateNote()} style={{ color: 'inherit' }}>笔记</Button>
           </span>
         </LoginRequiredView>
         <style jsx>{`
@@ -219,6 +236,9 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
           range={markRange}
           dommark={dommark}
           visible={createNotesVisible}
+          onCreated={(note) => {
+            this.state.notes.add(note);
+          }}
           onCancel={() => this.setState({ createNotesVisible: false })}
         />
         <style jsx>{`

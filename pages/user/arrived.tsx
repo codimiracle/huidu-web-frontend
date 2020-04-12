@@ -8,7 +8,7 @@ import { API } from '../../configs/api-config';
 import { EntityJSON } from '../../types/api';
 import { ArrivedData } from '../../types/arriveddata';
 import DatetimeUtil from '../../util/datetime-util';
-import { fetchDataByGet, fetchMessageByPost } from '../../util/network-util';
+import { fetchDataByGet, fetchDataByPost } from '../../util/network-util';
 
 
 export interface ArrivedProps {
@@ -41,22 +41,14 @@ export default class Arrived extends React.Component<ArrivedProps, ArrivedState>
   }
   onArrived() {
     this.setState({ signing: true });
-    fetchMessageByPost(API.UserArrived, {
+    fetchDataByPost<EntityJSON<ArrivedData>>(API.UserArrived, {
       date: DatetimeUtil.now(),
       motto: '每天读书，每天快乐！'
-    }).then((msg) => {
-      if (msg.code == 200) {
-        message.success('打卡成功！');
-        this.setState((state) => {
-          let arriveddata = state.arriveddata;
-          arriveddata.signed = true;
-          return ({
-            arriveddata: arriveddata
-          });
-        })
-      } else {
-        message.error(`打卡失败：${msg.message}`);
-      }
+    }).then((data) => {
+      message.success('打卡成功！');
+      this.setState({
+        arriveddata: data.entity
+      });
     }).catch((err) => {
       message.error(`打卡失败：${err}`);
     }).finally(() => {
@@ -129,7 +121,7 @@ export default class Arrived extends React.Component<ArrivedProps, ArrivedState>
                 <Col>
                   <Divider type="vertical" style={{ height: '100%' }} />
                 </Col>
-                <Col style={{flex: 1}}>
+                <Col style={{ flex: 1 }}>
                   <div>今天我读了</div>
                   <List
                     renderItem={(item) => (

@@ -1,12 +1,14 @@
 import { WrappedFormUtils } from "antd/lib/form/Form";
 import { Episode } from "../../types/episode";
 import React from "react";
-import { fetchMessageByPost } from "../../util/network-util";
+import { fetchMessageByPost, fetchDataByPost } from "../../util/network-util";
 import { API } from "../../configs/api-config";
 import { message, Modal, Form } from "antd";
 import FormItem from "antd/lib/form/FormItem";
 import TextArea from "antd/lib/input/TextArea";
 import Dommark from "../../util/dommark-util";
+import { Note } from "../../types/notes";
+import { EntityJSON } from "../../types/api";
 
 export interface CreateNotesDialogProps {
   visible: boolean,
@@ -14,7 +16,8 @@ export interface CreateNotesDialogProps {
   episode: Episode,
   dommark: Dommark,
   range: Range,
-  onCancel: () => void
+  onCreated?: (note: Note) => void;
+  onCancel: () => void;
 }
 export interface CreateNotesDialogState {
   creating: boolean,
@@ -28,9 +31,9 @@ export default class CreateNotesDialog extends React.Component<CreateNotesDialog
     }
   }
   createNotes(range: Range, notes: string) {
-    const { episode, dommark, form, onCancel } = this.props;
+    const { episode, dommark, form, onCreated, onCancel } = this.props;
     this.setState({ creating: true });
-    fetchMessageByPost(API.UserBookNotesCreate, {
+    fetchDataByPost<EntityJSON<Note>>(API.UserBookNotesCreate, {
       bookId: episode.book.id,
       episodeId: episode.id,
       ref: range.toString(),
@@ -39,14 +42,11 @@ export default class CreateNotesDialog extends React.Component<CreateNotesDialog
         source: notes,
       },
       dommark: dommark
-    }).then((msg) => {
-      if (msg.code == 200) {
+    }).then((data) => {
         message.success('添加笔记成功!');
+        onCreated && onCreated(data.entity)
         form.resetFields();
         onCancel();
-      } else {
-        message.error(`添加笔记失败：${msg.message}`);
-      }
     }).catch((err) => {
       message.error(`添加笔记失败：${err.message}`);
     }).finally(() => {

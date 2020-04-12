@@ -2,7 +2,7 @@ import { Affix, Button, Select, message, InputNumber } from 'antd';
 import React from 'react';
 import PageWriterView from '../../../../../../components/page-writer-view';
 import { ElectronicBook, ElectronicBookStatus } from '../../../../../../types/electronic-book';
-import { Episode, EPISODE_STATUS_TEXTS, EpisodeStatus } from '../../../../../../types/episode';
+import { Episode, EPISODE_STATUS_TEXTS } from '../../../../../../types/episode';
 import { DEAULT_THEME } from '../../../../../../types/theme';
 import { fetchDataByGet, fetchDataByPut, fetchDataByPost } from '../../../../../../util/network-util';
 import { EntityJSON } from '../../../../../../types/api';
@@ -11,6 +11,7 @@ import { API } from '../../../../../../configs/api-config';
 import { NextPageContext } from 'next';
 import DatetimeUtil from '../../../../../../util/datetime-util';
 import { Router, withRouter } from 'next/router';
+import { ContentStatus } from '../../../../../../types/content';
 
 export interface EpisodeWriterProps {
   book: ElectronicBook;
@@ -78,7 +79,7 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
         content: episode.content,
         words: episode.words,
         episodeNumber: episode.episodeNumber,
-        status: EpisodeStatus.Draft,
+        status: ContentStatus.Draft,
       }).then((data) => {
         this.setState({ episode: data.entity });
         router.replace(`${router.pathname}?episode_id=${data.entity.id}`, `${router.asPath}?episode_id=${data.entity.id}`);
@@ -121,8 +122,8 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
               <div>章节状态：{episode && episode.id ? (
                 <Select
                   size="small"
-                  disabled={episode && episode.status === EpisodeStatus.Publish}
-                  defaultValue={EpisodeStatus.Draft}
+                  disabled={episode && episode.status === ContentStatus.Publish}
+                  defaultValue={ContentStatus.Draft}
                   value={episode.status}
                   onChange={(status) => this.setState((state) => {
                     let episode = state.episode;
@@ -130,25 +131,25 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
                     return { episode: episode };
                   })}
                 >
-                  {Object.values(EpisodeStatus).map((status, index) => <Select.Option key={status} disabled={index > 1} value={status}>{EPISODE_STATUS_TEXTS[status]}</Select.Option>)}
+                  {Object.values(ContentStatus).map((status, index) => <Select.Option key={status} disabled={index > 1} value={status}>{EPISODE_STATUS_TEXTS[status]}</Select.Option>)}
                 </Select>
               ) : <span style={{ color: 'red' }}>未保存</span>}</div>
               {
-                episode && episode.status === EpisodeStatus.Examining &&
+                episode && episode.status === ContentStatus.Examining &&
                 <p className="huidu-powerpoint">审核后，在工作人员确认后将会发布</p>
               }
               {
-                episode && episode.status === EpisodeStatus.Publish &&
+                episode && episode.status === ContentStatus.Publish &&
                 <p className="huidu-powerpoint">文章已经发布，不能改动</p>
               }
-              <div>章节号：<InputNumber disabled={episode && episode.status === EpisodeStatus.Publish} size="small" min={1} value={episode && episode.episodeNumber || undefined} placeholder="章节号" onChange={(value) => this.setState((state) => {
+              <div>章节号：<InputNumber disabled={episode && episode.status === ContentStatus.Publish} size="small" min={1} value={episode && episode.episodeNumber || undefined} placeholder="章节号" onChange={(value) => this.setState((state) => {
                 let episode: any = state.episode || { episodeNumber: 0 };
                 episode.episodeNumber = value;
                 return { episode: episode }
               })} /></div>
             </div>
             <div>
-              <Button loading={saving} disabled={episode && episode.status === EpisodeStatus.Publish} onClick={() => this.onSave()}>保存</Button>
+              <Button loading={saving} disabled={episode && episode.status === ContentStatus.Publish} onClick={() => this.onSave()}>保存</Button>
             </div>
             {
               episode && episode.examination &&
@@ -161,7 +162,7 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
           </div>
         </Affix>
         <PageWriterView
-          disabled={episode && episode.status === EpisodeStatus.Publish}
+          disabled={episode && episode.status === ContentStatus.Publish}
           theme={DEAULT_THEME}
           defaultValue={{ title: episode && episode.title || '', content: { type: 'html', source: episode && episode.content && episode.content.source || '' } }}
           onChange={(value) => this.setState((state) => {

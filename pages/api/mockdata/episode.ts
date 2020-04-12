@@ -1,11 +1,12 @@
 import { Episode, EpisodeStatus } from "../../../types/episode";
 import { getMockElectronicBook } from "./electronic-book";
 import { getMockExamination } from "./examination";
+import { ContentStatus } from "../../../types/content";
 
 export const getMockEpisode = (id?: number): Episode => {
   id = id || Math.trunc(Math.random() * 1000000);
   let source = new Buffer(new Array(Math.trunc(Math.random() * 125)).fill('text').join('')).toString('base64');
-  let status = Object.values(EpisodeStatus);
+  let status = Object.values(ContentStatus);
   return {
     id: `${id}`,
     title: `章节 ${id}`,

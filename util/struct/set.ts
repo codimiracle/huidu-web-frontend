@@ -28,7 +28,7 @@ export class ObjectSet<T> {
     if (this.valuesCaches.length != this.size) {
       this.valuesCaches.length = 0;
     }
-    if (this.valuesCaches) {
+    if (this.valuesCaches && this.valuesCaches.length == this.size) {
       return this.valuesCaches.concat([]);
     }
     let list = new Array(this.size);
@@ -50,6 +50,7 @@ export class ObjectSet<T> {
   }
   public delete(element: T): boolean {
     let key = this.uniquer(element);
+    this.valuesCaches.length = 0
     return this.originSet.delete(key);
   }
   public has(element: T): boolean {
@@ -59,6 +60,7 @@ export class ObjectSet<T> {
   public clear(): void {
     this.originSet.clear();
     this.valueMap.clear();
+    this.valuesCaches.length = 0
   }
   public forEach(callbackfn: (value: T, value2: T, set: ObjectSet<T>) => void, thisArg?: any): void {
     this.originSet.forEach((value: string, value2: string) => {

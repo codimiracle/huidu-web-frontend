@@ -9,6 +9,7 @@ export enum ContentStatus {
   Publish = 'publish',
 }
 
+
 export const CONTENT_STATUS_TEXTS = {};
 CONTENT_STATUS_TEXTS[ContentStatus.Draft] = "草稿";
 CONTENT_STATUS_TEXTS[ContentStatus.Examining] = "待审";
@@ -28,6 +29,11 @@ export enum ContentType {
   Book = 'book'
 }
 
+export const CONTENT_TYPE_TEXTS = {};
+CONTENT_TYPE_TEXTS[ContentType.Book] = "图书";
+CONTENT_TYPE_TEXTS[ContentType.Comment] = "评论";
+CONTENT_TYPE_TEXTS[ContentType.Review] = "点评";
+CONTENT_TYPE_TEXTS[ContentType.Topic] = "话题";
 
 export interface Reference<T> {
   id: string;

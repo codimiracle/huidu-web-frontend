@@ -1,17 +1,15 @@
-import React from 'react';
-import { Divider, List, Pagination } from 'antd';
-import SectionView from '../../../components/section-view';
-import FilterCard, { Filter } from '../../../components/filter-card';
-import BookView from '../../../components/book-view';
+import { List } from 'antd';
 import { NextPageContext } from 'next';
-import { fetchDataByGet } from '../../../util/network-util';
-import { API } from '../../../configs/api-config';
-import { Category } from '../../../types/category'
-import { Book, BookType } from '../../../types/book';
-import { AudioBook } from '../../../types/audio-book';
-import Link from 'next/link';
+import React from 'react';
 import { BookContentView } from '..';
+import BookView from '../../../components/book-view';
 import BookItemView from '../../../components/book/book-item-view';
+import { Filter } from '../../../components/filter-card';
+import { API } from '../../../configs/api-config';
+import { AudioBook } from '../../../types/audio-book';
+import { Book, BookType } from '../../../types/book';
+import { Category } from '../../../types/category';
+import { fetchDataByGet } from '../../../util/network-util';
 
 export interface BookShopProps {
   categories: Array<Category>,

@@ -10,12 +10,12 @@ export interface CommunityFocusViewProps {
 
 export default function CommunityFocusView(props: CommunityFocusViewProps) {
   let left = (
-    <Col style={{ flex: 1 }}>
+    <Col span={12}>
       <BookView book={props.focus.book} />
     </Col>
   );
   let right = (
-    <Col style={{ flex: 1}}>
+    <Col span={12}>
       <List
         split={false}
         renderItem={(topic) => <List.Item style={{ display: 'block', padding: '4px 0' }}><TopicItemView topic={topic} /></List.Item>}
@@ -28,7 +28,7 @@ export default function CommunityFocusView(props: CommunityFocusViewProps) {
     [left, right] = [right, left];
   }
   return (
-    <Row type="flex" justify="space-between">
+    <Row gutter={8}>
       {left}
       {right}
     </Row>

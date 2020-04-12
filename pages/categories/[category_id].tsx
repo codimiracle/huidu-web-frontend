@@ -1,14 +1,14 @@
-import React from 'react';
-import { Divider, Tag as TagView, Radio, List, Pagination, message, Button } from 'antd';
-import { Router, withRouter } from 'next/router';
-import { Category, Tag } from '../../types/category';
+import { Button, Divider, List, message, Pagination, Tag as TagView } from 'antd';
 import { NextPageContext } from 'next';
-import { fetchDataByGet } from '../../util/network-util';
-import { API } from '../../configs/api-config';
-import { Book } from '../../types/book';
+import { Router, withRouter } from 'next/router';
+import React from 'react';
 import BookView from '../../components/book-view';
-import { CategoryJSON } from '../api/categories/[categories_id]';
-import { ListJSON, EntityJSON } from '../../types/api';
+import { API } from '../../configs/api-config';
+import { EntityJSON, ListJSON } from '../../types/api';
+import { Book } from '../../types/book';
+import { Category, Tag } from '../../types/category';
+import { fetchDataByGet, fetchMessageByGet } from '../../util/network-util';
+import AuthenticationUtil from '../../util/authentication-util';
 
 const { CheckableTag } = TagView;
 
@@ -66,6 +66,12 @@ class CategoryPage extends React.Component<CategoryPageProps, CategoryPageState>
     }
   }
   onTagSelected(tag: Tag) {
+    if (tag && AuthenticationUtil.isValidated()) {
+      fetchMessageByGet(API.UserHitTag, {
+        tagId: tag.id,
+        score: 0.2
+      });
+    }
     this.setState({ selectedTag: tag }, () => {
       this.fetchList(1, 10);
     })
@@ -96,6 +102,14 @@ class CategoryPage extends React.Component<CategoryPageProps, CategoryPageState>
     }).finally(() => {
       this.setState({ loading: false });
     })
+  }
+  componentDidMount() {
+    if (this.state.selectedTag && AuthenticationUtil.isValidated()) {
+      fetchMessageByGet(API.UserHitTag, {
+        tagId: this.state.selectedTag,
+        score: 0.4
+      });
+    }
   }
   render() {
     const { category } = this.props;

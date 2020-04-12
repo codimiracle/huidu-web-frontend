@@ -83,6 +83,15 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
       loading: false,
       readingProgress: null,
     }
+    this.unloadPostHandler = this.unloadPostHandler.bind(this);
+  }
+  unloadPostHandler() {
+    if (AuthenticationUtil.isValidated() && this.state.readingProgress) {
+      fetchMessageByPost(API.ReaderHistoryRecord, this.state.readingProgress);
+    }
+  }
+  componentDidMount() {
+    window.addEventListener("unload", this.unloadPostHandler);
   }
   fetchNextEpisode() {
     let lastEpisode: Episode = this.state.episodes.length > 0 ? this.state.episodes[this.state.episodes.length - 1] : null;
@@ -91,6 +100,9 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
       this.setState({ allLoaded: true });
       message.info('已加载全部章节。');
       return;
+    }
+    if (AuthenticationUtil.isValidated() && this.state.readingProgress) {
+      fetchMessageByPost(API.ReaderHistoryRecord, this.state.readingProgress);
     }
     if (lastEpisode && !this.state.allLoaded) {
       this.setState({ loading: true });
@@ -117,6 +129,7 @@ export default class ReaderPage extends React.Component<ReaderPageProps, ReaderP
     if (AuthenticationUtil.isValidated() && this.state.readingProgress) {
       fetchMessageByPost(API.ReaderHistoryRecord, this.state.readingProgress);
     }
+    window.removeEventListener("unload", this.unloadPostHandler);
   }
   render() {
     return (

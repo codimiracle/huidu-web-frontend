@@ -187,7 +187,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 <Result
                   status="success"
                   title="注册成功！"
-                  subTitle={`用户名：${this.state.userdata.username},密码：${form.getFieldValue('password')}`}
+                  subTitle={`用户名：${this.state.userdata.username},密码：${this.state.password}`}
                 >
                   点击 “完成” 转到登录页面
                 </Result>

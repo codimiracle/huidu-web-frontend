@@ -8,6 +8,8 @@ import { PreviewableCarousel } from '../../components/previewable-carousel';
 import { API } from '../../configs/api-config';
 import { Book } from '../../types/book';
 import { Category } from '../../types/category';
+import { fetchMessageByGet } from '../../util/network-util';
+import AuthenticationUtil from '../../util/authentication-util';
 
 const { TabPane } = Tabs;
 
@@ -31,15 +33,21 @@ export class BookContentView extends React.Component<BookContentViewProps, BookC
     this.mainList = React.createRef();
   }
   private onFilterChange(filter: Filter) {
+    if (filter.tag && AuthenticationUtil.isValidated()) {
+      fetchMessageByGet(API.UserHitTag, {
+        tagId: filter.tag.id,
+        score: 0.05
+      });
+    }
     let transformedFilter = {
-      categoryId: filter.category && [filter.category.id],
-      publishYear: filter.year && [filter.year],
-      moneyEquals: filter.fare == 'free' && [0],
-      moneyGreater: filter.fare == 'pay' && [0],
-      tagId: filter.tag && [filter.tag.id],
+      categoryId: filter.category ? [filter.category.id] : undefined,
+      publishYear: filter.year ? [filter.year] : undefined,
+      moneyEquals: filter.fare == 'free' ? [0] : undefined,
+      moneyGreater: filter.fare == 'pay' ? [0] : undefined,
+      tagId: filter.tag ? [filter.tag.id] : undefined,
     }; 
     this.setState({ filter: transformedFilter }, () => {
-      this.mainList.current.onFetch();
+      this.mainList.current.onFetch(1);
     });
   }
   render() {

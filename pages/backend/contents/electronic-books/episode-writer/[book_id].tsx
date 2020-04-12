@@ -1,18 +1,19 @@
-import { Affix, Button, Select, message, InputNumber, Divider } from 'antd';
-import React from 'react';
-import PageWriterView from '../../../../../components/page-writer-view';
-import { ElectronicBook, ElectronicBookStatus } from '../../../../../types/electronic-book';
-import { Episode, EPISODE_STATUS_TEXTS, EpisodeStatus } from '../../../../../types/episode';
-import { DEAULT_THEME } from '../../../../../types/theme';
-import { fetchDataByGet, fetchDataByPut, fetchDataByPost } from '../../../../../util/network-util';
-import { EntityJSON } from '../../../../../types/api';
-import BookPreviewView from '../../../../../components/book-preview-view';
-import { API } from '../../../../../configs/api-config';
+import { Affix, Button, Divider, InputNumber, message, Select } from 'antd';
 import { NextPageContext } from 'next';
-import DatetimeUtil from '../../../../../util/datetime-util';
 import { Router, withRouter } from 'next/router';
+import React from 'react';
 import EntityAction from '../../../../../components/backend/entity-action';
 import WrappedContentExaminingDialog from '../../../../../components/backend/form/content-examining-dialog';
+import BookPreviewView from '../../../../../components/book-preview-view';
+import PageWriterView from '../../../../../components/page-writer-view';
+import { API } from '../../../../../configs/api-config';
+import { EntityJSON } from '../../../../../types/api';
+import { ContentStatus } from '../../../../../types/content';
+import { ElectronicBook } from '../../../../../types/electronic-book';
+import { Episode, EPISODE_STATUS_TEXTS } from '../../../../../types/episode';
+import { DEAULT_THEME } from '../../../../../types/theme';
+import DatetimeUtil from '../../../../../util/datetime-util';
+import { fetchDataByGet, fetchDataByPost, fetchDataByPut } from '../../../../../util/network-util';
 
 export interface EpisodeWriterProps {
   book: ElectronicBook;
@@ -80,7 +81,7 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
         content: episode.content,
         words: episode.words,
         episodeNumber: episode.episodeNumber,
-        status: EpisodeStatus.Draft,
+        status: ContentStatus.Draft,
       }).then((data) => {
         this.setState({ episode: data.entity });
         router.replace(`${router.pathname}?episode_id=${data.entity.id}`, `${router.asPath}?episode_id=${data.entity.id}`);
@@ -111,9 +112,10 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
   }
   render() {
     const { episode, saving } = this.state;
+    let originalEpisode = this.props.episode;
     return (
       <div className="episode-writer">
-        <h2>{this.props.episode ? '编辑章节' : '创建新章节'}</h2>
+        <h2>{originalEpisode ? '编辑章节' : '创建新章节'}</h2>
         <Affix offsetTop={16} style={{ position: 'absolute', right: '24px', paddingTop: '8px' }}>
           <div className="episode-details">
             <BookPreviewView book={this.props.book} />
@@ -123,49 +125,49 @@ export class EpisodeWriter extends React.Component<EpisodeWriterProps, EpisodeWr
               <div>章节状态：{episode && episode.id ? (
                 <Select
                   size="small"
-                  defaultValue={EpisodeStatus.Draft}
-                  disabled={this.props.episode.status == EpisodeStatus.Examining}
+                  defaultValue={ContentStatus.Draft}
+                  disabled={originalEpisode && originalEpisode.status === ContentStatus.Examining}
                   value={episode.status}
                   onChange={(status) => this.setState((state) => {
-                    let episode = state.episode;
+                    let episode: any = state.episode || {};
                     episode.status = status;
                     return { episode: episode };
                   })}
                 >
-                  {Object.values(EpisodeStatus).map((status) => <Select.Option key={status} value={status}>{EPISODE_STATUS_TEXTS[status]}</Select.Option>)}
+                  {Object.values(ContentStatus).map((status) => <Select.Option key={status} value={status}>{EPISODE_STATUS_TEXTS[status]}</Select.Option>)}
                 </Select>
               ) : <span style={{ color: 'red' }}>未保存</span>}</div>
               {
-                this.props.episode.status == EpisodeStatus.Publish &&
+                originalEpisode && originalEpisode.status == ContentStatus.Publish &&
                 <p style={{ color: 'red' }}>当前章节已经发布，你不应该作任何修改！</p>
               }
               {
-                this.state.episode.status == EpisodeStatus.Examining &&
+                originalEpisode && this.state.episode.status == ContentStatus.Examining &&
                 <div>内容评审：
                   <EntityAction
                     entity={{
-                      contentId: this.props.episode.contentId
+                      contentId: originalEpisode.contentId
                     }}
                     name="通过"
-                    renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} onExamined={(entities) => this.setState({ episode: { ...this.state.episode, status: EpisodeStatus.Publish } })} accept visible={visible} onCancel={cancelor} />}
+                    renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} onExamined={(entities) => this.setState({ episode: { ...this.state.episode, status: ContentStatus.Publish } })} accept visible={visible} onCancel={cancelor} />}
                   />
                   <Divider type="vertical" />
                   <EntityAction
-                    entity={{ contentId: this.props.episode.contentId }}
+                    entity={{ contentId: originalEpisode.contentId }}
                     name="驳回"
-                    renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} onExamined={(entities) => this.setState({ episode: { ...this.state.episode, status: EpisodeStatus.Rejected } })} accept={false} visible={visible} onCancel={cancelor} />}
+                    renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} onExamined={(entities) => this.setState({ episode: { ...this.state.episode, status: ContentStatus.Rejected } })} accept={false} visible={visible} onCancel={cancelor} />}
                   />
                 </div>
               }
               <p></p>
-              <div>章节号：<InputNumber size="small" min={1} disabled={this.props.episode.status == EpisodeStatus.Examining} value={episode && episode.episodeNumber || undefined} placeholder="章节号" onChange={(value) => this.setState((state) => {
+              <div>章节号：<InputNumber size="small" min={1} disabled={originalEpisode && originalEpisode.status == ContentStatus.Examining} value={episode && episode.episodeNumber || undefined} placeholder="章节号" onChange={(value) => this.setState((state) => {
                 let episode: any = state.episode || {};
                 episode.episodeNumber = value;
                 return { episode: episode }
               })} /></div>
             </div>
             <div>
-              <Button disabled={this.props.episode.status == EpisodeStatus.Examining} loading={saving} onClick={() => this.onSave()}>保存</Button>
+              <Button disabled={originalEpisode && originalEpisode.status == ContentStatus.Examining} loading={saving} onClick={() => this.onSave()}>保存</Button>
             </div>
           </div>
         </Affix>

@@ -106,13 +106,13 @@ export default class Dashboard extends React.Component<DashboardProps, Dashboard
                       <Statistic title="有声书数量" value={data && data.audioBookCount || 0} />
                     </Col>
                     <Col span={8}>
-                      <Statistic title="章节数量" value={data && data.audioBookCount || 0} />
+                      <Statistic title="章节数量" value={data && data.episodeCount || 0} />
                     </Col>
                     <Col span={12}>
                       <Statistic title="章节总时长" value={data && data.episodeTotalTimes || 0} formatter={(value: number) => `${format(value / 1000 / 60)}:${format(value / 1000 % 60)}.${format(value % 1000)}`} />
                     </Col>
                     <Col span={12}>
-                      <Statistic title="章节总字数" value={data && data.episodeTotalWords || 0} formatter={(value: number) => value / 10000 > 0 ? `${value / 1000.0} 万字` : `${value} 字`} />
+                      <Statistic title="章节总字数" value={data && data.episodeTotalWords || 0} formatter={(value: number) => Math.trunc(value / 10000) > 0 ? `${value / 10000.0} 万字` : `${value} 字`} />
                     </Col>
                   </Row>
                   }

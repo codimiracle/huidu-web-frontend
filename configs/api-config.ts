@@ -83,6 +83,8 @@ export enum API {
   // frontend
   BookEntity = "book.entity",
   SystemRealtime = "system.realtime",
+  // user
+  UserHitTag = "user.buryingPoint.hitTag",
   UserOrderEntity = "user.order.entity",
   UserOrderCollection = "user.order.collection",
   UserOrderring = "user.order.orderring",
@@ -485,6 +487,13 @@ export const APIDefinitionData: APIDefinitionSet = {
             words: null,
             status: null,
             episodeNumber: null,
+          }
+        },
+        delete: {
+          url: `${testOrigin}/api/backend/contents/electronic-books/@{book_id}/episodes/@{episode_id}`,
+          query: {
+            book_id: null,
+            episode_id: null
           }
         },
         catalogs: `${testOrigin}/api/backend/contents/electronic-books/@{book_id}/catalogs`,
@@ -1311,6 +1320,9 @@ export const APIDefinitionData: APIDefinitionSet = {
     }
   },
   user: {
+    buryingPoint: {
+      hitTag: `${testOrigin}/api/user/burying-points/hit-tag?tag_id=@{tagId}&score=@{score}`,
+    },
     notification: {
       read: {
         collection: `${testOrigin}/api/user/notifications/reads?filter=@{filter}&sorter=@{sorter}&page=@{page}&limit=@{limit}`,
@@ -1365,7 +1377,8 @@ export const APIDefinitionData: APIDefinitionSet = {
         url: `${testOrigin}/api/user/arrive/signin`,
         method: 'post',
         body: {
-          date: null
+          date: null,
+          motto: null,
         }
       },
       today: `${testOrigin}/api/user/arrive/today`
@@ -1409,6 +1422,7 @@ export const APIDefinitionData: APIDefinitionSet = {
               type: 'html',
               source: ''
             },
+            status: null,
             references: []
           }
         },
@@ -1424,6 +1438,7 @@ export const APIDefinitionData: APIDefinitionSet = {
               type: 'html',
               source: ''
             },
+            status: null,
             references: []
           }
         },
@@ -1519,7 +1534,7 @@ export const APIDefinitionData: APIDefinitionSet = {
         method: 'get'
       },
       cancel: {
-        url: `${testOrigin}/api/user/orders/@{order_number}/cancel`,
+        url: `${testOrigin}/api/user/orders/@{order_number}/cancel?status=@{status}`,
         method: 'post',
         body: {}
       },

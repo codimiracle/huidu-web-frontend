@@ -48,7 +48,7 @@ export default class EditorView extends React.Component<EditorViewProps, EditorV
             onChange={(event) => onChange && onChange(event.editor.getData(), this.calculateWords(event.editor.document.getBody().$.innerText))}
           />)
         }
-        {!this.props.value &&
+        {!this.props.value && 
           (<CKEditor
             onLoad={() => this.setState({ loading: false })}
             ref={this.ckeditorRef}

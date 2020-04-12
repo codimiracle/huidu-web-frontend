@@ -37,9 +37,6 @@ export default class InfiniteListView<T> extends React.Component<InfiniteListVie
     }
     this.onFetch = this.onFetch.bind(this);
   }
-  componentDidUpdate() {
-    
-  }
   onFetch(page?: number) {
     if (this.state.loading) {
       return;
@@ -55,7 +52,7 @@ export default class InfiniteListView<T> extends React.Component<InfiniteListVie
       this.setState((state) => ({
         page: data.page,
         limit: data.limit,
-        list: data.page == 1 ? data.list : state.list.concat(data.list),
+        list: page == 1 || data.page == 1 ? data.list : state.list.concat(data.list),
         total: data.total
       }));
     }).catch((err) => {

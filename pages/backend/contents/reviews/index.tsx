@@ -97,6 +97,7 @@ export default class ReviewManager extends React.Component<ReviewManagerProps, R
       }, {
         title: '创建时间',
         key: 'createTime',
+        dataIndex: 'createTime',
         render: (createTime) => <span>{DatetimeUtil.format(createTime)}</span>
       }
     ];
@@ -115,7 +116,7 @@ export default class ReviewManager extends React.Component<ReviewManagerProps, R
           }}
           actionOptionsExtra={(entity, index, updater) =>
             <>
-              <Link href="reviews/[topic_id]" as={`reviews/${entity.contentId}`}><a target="blank">查看</a></Link>
+              <Link href="reviews/[topic_id]" as={`reviews/${entity.contentId}`}><a target="_blank">查看</a></Link>
               {entity.status == ContentStatus.Examining && <>
                 <Divider type="vertical" />
                 <EntityAction

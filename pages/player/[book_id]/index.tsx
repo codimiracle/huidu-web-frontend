@@ -41,6 +41,7 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
       allLoaded: false,
       playingProgress: null
     }
+    this.unloadPostHandler = this.unloadPostHandler.bind(this);
   }
   async getClientSideProps(query) {
     const { book_id, episode_id } = query;
@@ -85,9 +86,18 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
       bookNotes: bookNotesData && bookNotesData.entity
     }
   }
-  componentWillUnmount() {
+  unloadPostHandler() {
     if (AuthenticationUtil.isValidated() && this.state.playingProgress) {
-      fetchMessageByPost(API.ReaderHistoryRecord, this.state.playingProgress);
+      fetchMessageByPost(API.PlayerHistoryRecord, this.state.playingProgress);
+    }
+  }
+  componentDidMount() {
+    window.addEventListener("unload", this.unloadPostHandler);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("unload", this.unloadPostHandler);
+    if (AuthenticationUtil.isValidated() && this.state.playingProgress) {
+      fetchMessageByPost(API.PlayerHistoryRecord, this.state.playingProgress);
     }
   }
   fetchNextEpisode() {
@@ -96,6 +106,9 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
       message.info('已经加载全部章节！');
       this.setState({ allLoaded: true });
       return;
+    }
+    if (AuthenticationUtil.isValidated() && this.state.playingProgress) {
+      fetchMessageByPost(API.PlayerHistoryRecord, this.state.playingProgress);
     }
     if (audioEpisode && !this.state.allLoaded) {
       this.setState({ loading: true });
@@ -159,6 +172,11 @@ export default class PlayerPage extends React.Component<PlayerPageProps, PlayerP
               audioEpisode ?
                 <AudioPlayerView progress={history && history.progress} onProgress={(progress) => {
                   console.debug("recording: (%s %s %s)", book.id, audioEpisode.id, progress);
+                  if (progress >= 100) {
+                    if (AuthenticationUtil.isValidated() && this.state.playingProgress) {
+                      fetchMessageByPost(API.PlayerHistoryRecord, this.state.playingProgress);
+                    }
+                  }
                   this.setState({
                     playingProgress: {
                       bookId: book.id,

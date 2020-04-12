@@ -57,6 +57,7 @@ function getColumns(filter: Partial<Record<keyof Topic, string[]>>, sorter: Sort
     {
       title: '创建时间',
       key: 'createTime',
+      dataIndex: 'createTime',
       render: (createTime) => <span>{DatetimeUtil.format(createTime)}</span>
     },
     {
@@ -108,7 +109,7 @@ export default class TopicManager extends React.Component<TopicManagerProps, Top
             }}
             actionOptionsExtra={(entity, index, updater) =>
               <>
-                <Link href="topics/[topic_id]" as={`topics/${entity.contentId}`}><a target="blank">查看</a></Link>
+                <Link href="topics/[topic_id]" as={`topics/${entity.contentId}`}><a target="_blank">查看</a></Link>
                 {entity.status == ContentStatus.Examining && <>
                   <Divider type="vertical" />
                   <EntityAction

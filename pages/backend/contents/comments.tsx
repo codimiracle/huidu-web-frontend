@@ -1,21 +1,19 @@
+import { Divider, Tag } from 'antd';
+import { ColumnProps, SorterResult } from 'antd/lib/table';
 import React from 'react';
-import HeaderBar from '../../../components/backend/header-bar';
-import EntityManager from '../../../components/backend/entity-manager';
-import { fetchDataByGet } from '../../../util/network-util';
-import { ListJSON } from '../../../types/api';
-import { API } from '../../../configs/api-config';
-import { ColumnProps, SorterResult, TableRowSelection } from 'antd/lib/table';
-import { ContentStatus, CONTENT_STATUS_TEXTS, CONTENT_STATUS_COLORS } from '../../../types/content';
-import { Tag, Popover, Divider, Popconfirm, Button } from 'antd';
-import { Comment } from '../../../types/comment';
-import BulkBar from '../../../components/backend/bulk-bar';
-import { Topic } from '../../../types/topic';
 import EntityAction from '../../../components/backend/entity-action';
+import EntityManager from '../../../components/backend/entity-manager';
 import WrappedContentExaminingDialog from '../../../components/backend/form/content-examining-dialog';
-import Link from 'next/link';
+import HeaderBar from '../../../components/backend/header-bar';
+import Name from '../../../components/base/name';
+import { API } from '../../../configs/api-config';
+import { ListJSON } from '../../../types/api';
+import { Comment } from '../../../types/comment';
+import { Article, ContentStatus, ContentType, CONTENT_STATUS_COLORS, CONTENT_STATUS_TEXTS, CONTENT_TYPE_TEXTS } from '../../../types/content';
+import { fetchDataByGet } from '../../../util/network-util';
 
 interface ContentPreviewViewProps {
-  contentId: string
+  content: Article
 }
 interface ContentPreviewViewState {
   loading: boolean
@@ -30,11 +28,10 @@ class ContentPreviewView extends React.Component<ContentPreviewViewProps, Conten
   }
   render() {
     const { loading } = this.state;
+    let type = this.props.content && this.props.content.type;
     return (
       <>
-        <Popover>
-          <span>{loading ? '内容加载中...' : '啦啦啦啦'}</span>
-        </Popover>
+        <span>{!type ? '(无)' : <span>({CONTENT_TYPE_TEXTS[type] || '未知'}) {type != ContentType.Comment ? this.props.content.title : <Name name={this.props.content.content.source} />}</span>}</span>
       </>
     )
   }
@@ -75,9 +72,9 @@ export default class CommentManger extends React.Component<CommentMangerProps, C
     },
     {
       title: '目标内容',
-      key: 'target',
-      dataIndex: 'target',
-      render: (target) => <ContentPreviewView contentId={target} />
+      key: 'targetContent',
+      dataIndex: 'targetContent',
+      render: (target) => <ContentPreviewView content={target} />
     },
     {
       title: '评论用户',

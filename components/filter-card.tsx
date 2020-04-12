@@ -65,7 +65,7 @@ export default class FilterCard extends React.Component<FilterCardProps, FilterC
     const { categories, years } = this.props;
     const { selectedYear, selectedCategory, selectedTag, selectedFare } = this.state;
     return (
-      <div className="filter-card">
+      <Card size="small">
         <h3>年份</h3>
         <CheckableTag checked={selectedYear == null} onChange={() => this.onYearChange(null)}>全部</CheckableTag>
         {
@@ -91,15 +91,11 @@ export default class FilterCard extends React.Component<FilterCardProps, FilterC
         }
 
         <style jsx>{`
-          .filter-card {
-            padding-left: 4px;
-            font-size: 0.9em;
-          }
           h3 {
             margin 0.5em 0;
           }
         `}</style>
-      </div>
+      </Card>
     )
   }
 }

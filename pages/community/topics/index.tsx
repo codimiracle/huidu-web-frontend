@@ -50,7 +50,7 @@ export default class Topics extends React.Component<TopicsProps, TopicsState> {
                   <>
                     {
                       user ?
-                        (<Link href="/contents/topics/topic-writer"><a><Button icon="plus" block style={{ marginBottom: '8px' }}>发话题</Button></a></Link>) :
+                        (<Link href="/contents/topics/topic-writer"><a target="_blank"><Button icon="plus" block style={{ marginBottom: '8px' }}>发话题</Button></a></Link>) :
                         <Button onClick={() => this.setState({ signInDialogVisible: true })}>登录发布话题</Button>
                     }
                   </>

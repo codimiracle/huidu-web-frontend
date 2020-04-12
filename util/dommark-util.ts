@@ -14,11 +14,12 @@ export default class DommarkUtil {
     if (node.nodeName == '#text') {
       let markedIndex = null;
       let allTextNodes = xpath.findAll(path.replace('#text[1]', 'text()'), relativeRoot);
-      allTextNodes.forEach((node,index) => {
-        if (node == node) {
-          markedIndex = index + 1;
+      for (let i = 0; i < allTextNodes.length; i++) {
+        if (node == allTextNodes[i]) {
+          markedIndex = i + 1;
+          break;
         }
-      });
+      }
       path = path.replace('#text[1]', 'text()[' + markedIndex + ']');
     } else {
       path = path.replace('#text', 'text()');
@@ -39,8 +40,13 @@ export default class DommarkUtil {
     let endContainer = xpath.find(dommark.endDom, relativeRoot);
     if (startContainer && endContainer) {
       let range = new Range();
-      range.setStart(startContainer, dommark.startOffset);
-      range.setEnd(endContainer, dommark.endOffset);
+      try { 
+        range.setStart(startContainer, dommark.startOffset);
+        range.setEnd(endContainer, dommark.endOffset);
+      } catch (err) {
+        console.log("标注 %s 失败", dommark);
+        return null;
+      }
       return range;
     }
     return null;

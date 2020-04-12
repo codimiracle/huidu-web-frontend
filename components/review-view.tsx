@@ -50,7 +50,7 @@ export default class ReviewDisplayer extends React.Component<ReviewDisplayerProp
                   {
                     (user: User) => <>
                       {
-                        user && user.id &&
+                        user && user.id == review.owner.id &&
                         <Link href={`/contents/reviews/[review_id]/edit`} as={`/contents/reviews/${review.contentId}/edit`}><a>编辑</a></Link>
                       }
                     </>

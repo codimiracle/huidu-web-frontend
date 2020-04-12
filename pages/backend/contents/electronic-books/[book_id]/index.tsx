@@ -11,7 +11,11 @@ import { ListJSON, EntityJSON } from '../../../../../types/api';
 import BookPreviewView from '../../../../../components/book-preview-view';
 import DatetimeUtil from '../../../../../util/datetime-util';
 import Link from 'next/link';
-import { Button, Tag } from 'antd';
+import { Button, Tag, Divider } from 'antd';
+import EntityAction from '../../../../../components/backend/entity-action';
+import { ContentStatus, Article } from '../../../../../types/content';
+import WrappedContentExaminingDialog from '../../../../../components/backend/form/content-examining-dialog';
+import { AudioEpisode } from '../../../../../types/audio-book';
 
 export interface EpisodeManagerProps {
   book: ElectronicBook;
@@ -85,7 +89,50 @@ export default class EpisodeManager extends React.Component<EpisodeManagerProps,
             list: API.BackendElectronicBookEpisodeCollection,
             searchableColumns: [{ name: '章节标题', field: 'title' }],
             getListingRequestExtraData: () => ({ book_id: book.id }),
-            delete: API.BackendElectronicBookEpisodeDelete
+            delete: API.BackendElectronicBookEpisodeDelete,
+            getDeleteRequestData: (entity) => ({ book_id: book.id, episode_id: entity.id })
+          }}
+          actionOptionsExtra={(entity, index, updater) => <>
+            <Link href={`./episode-writer/[book_id]?episode_id=${entity.id}`} as={`./episode-writer/${book.id}?episode_id=${entity.id}`}><a target="_blank">查看</a></Link>
+            {
+              entity.status == ContentStatus.Examining &&
+              <>
+                <Divider type="vertical" />
+                <EntityAction
+                  entity={entity}
+                  name="通过"
+                  renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} onExamined={(entities) => updater(entities[0] as any as Episode)} accept visible={visible} onCancel={cancelor} />}
+                />
+                <Divider type="vertical" />
+                <EntityAction
+                  entity={entity}
+                  name="驳回"
+                  renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={[entity]} onExamined={(entities) => updater(entities[0] as any as Episode)} accept={false} visible={visible} onCancel={cancelor} />}
+                />
+              </>
+            }
+          </>
+          }
+          bulkBarExtra={(selectedRowKeys, selectedRows, clearer, refersher) => {
+            let isSelectedExamining = selectedRowKeys.length > 0 && selectedRows.every((audioEpisode) => audioEpisode.status == ContentStatus.Examining);
+            let clearBulkState = () => {
+              clearer();
+              refersher();
+            }
+            return <>
+              <EntityAction
+                entity={null}
+                name="通过"
+                disabled={!isSelectedExamining}
+                renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={selectedRows as any as Article[]} onExamined={clearBulkState} accept visible={visible} onCancel={cancelor} />}
+              />
+              <EntityAction
+                entity={null}
+                name="驳回"
+                disabled={!isSelectedExamining}
+                renderDialog={(entity, visible, cancelor) => <WrappedContentExaminingDialog entities={selectedRows as any as Article[]} onExamined={clearBulkState} accept={false} visible={visible} onCancel={cancelor} />}
+              />
+            </>
           }}
           toolsBarExtra={
             <Link
@@ -97,7 +144,6 @@ export default class EpisodeManager extends React.Component<EpisodeManagerProps,
               </a>
             </Link>
           }
-          actionOptionsExtra={(entity, index) => <Link href={`./episode-writer/[book_id]?episode_id=${entity.id}`} as={`./episode-writer/${book.id}?episode_id=${entity.id}`}><a>编辑</a></Link>}
           columns={this.getColumns}
           rowKey={(episode) => episode.id}
           initialDataSource={this.props.list}
