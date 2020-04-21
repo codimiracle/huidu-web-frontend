@@ -13,7 +13,7 @@ export default class MoneyUtil {
     if (!money) {
       return `￥ 0`
     }
-    return `￥ ${numberFormat(money / 100)}.${numberFormat(money % 100)}`;
+    return `￥ ${Math.trunc(money / 100)}.${numberFormat(money % 100)}`;
   }
   static formatHC(money: Money) {
     if (!money) {

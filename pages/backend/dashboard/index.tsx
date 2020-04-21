@@ -144,8 +144,8 @@ export class BackendDashboard extends React.Component<BackendDashboardProps, Bac
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="dateFormatted" name="日期"/>
-                    <YAxis dataKey="amount" name="金额" tickFormatter={(value) => MoneyUtil.formatNumber(value)} />
-                    <Tooltip formatter={(value, name) => name === 'amount' ? MoneyUtil.formatNumber(value as number) : value} />
+                    <YAxis dataKey="amount" name="金额" tickFormatter={(value) => MoneyUtil.formatNumber(value) }/>
+                    <Tooltip />
                     <Legend />
                     <Line type="monotone" dataKey="quantity" name="销量" stroke="#8884d8" activeDot={{ r: 8 }} />
                     <Line type="monotone" dataKey="amount" name="金额" stroke="#82ca9d" />
