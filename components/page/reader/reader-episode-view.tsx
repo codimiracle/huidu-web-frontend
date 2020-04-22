@@ -140,7 +140,7 @@ export default class ReaderEpisodeView extends React.Component<ReaderEpisodeView
   }
   componentDidUpdate() {
     const { dommarkedKey } = this.state;
-    if (this.props.bookNotes.notes.length == this.state.notes.size) {
+    if (this.props.bookNotes && this.props.bookNotes.notes.length == this.state.notes.size) {
       return;
     }
     if (this.props.bookNotes) {
