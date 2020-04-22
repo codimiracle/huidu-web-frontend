@@ -20,9 +20,9 @@ if (!browserWindow.location.origin) {
 }
 
 var origin: string = browserWindow.location.origin;
-var testOrigin = `http://${browserWindow.location.hostname}:4000`;
+var testOrigin = `${browserWindow.location.protocol}://${browserWindow.location.hostname}:4000`;
 if (BACKEND_HOSTNAME) {
-  testOrigin = `http://${BACKEND_HOSTNAME}:4000`;
+  testOrigin = `${browserWindow.location.protocol}://${BACKEND_HOSTNAME}:4000`;
 }
 
 
