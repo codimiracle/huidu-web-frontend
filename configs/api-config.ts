@@ -1,5 +1,5 @@
 import { ElectronicBookStatus } from "../types/electronic-book";
-import { FRONTEND_HOSTNAME, BACKEND_HOSTNAME,BACKEND_PORT } from './host-config';
+import { FRONTEND_HOSTNAME, FRONTEND_PORT, BACKEND_HOSTNAME, BACKEND_PORT } from './host-config';
 
 let serverSideRenderring = false;
 let browserWindow = null;
@@ -8,9 +8,9 @@ if (typeof window == 'object') {
 } else {
   browserWindow = {
     location: {
-      protocol: 'http',
+      protocol: 'http:',
       hostname: FRONTEND_HOSTNAME,
-      port: '3000'
+      port: FRONTEND_PORT
     }
   }
   serverSideRenderring = true;
@@ -18,16 +18,14 @@ if (typeof window == 'object') {
 
 // For IE
 if (!browserWindow.location.origin) {
-  browserWindow.location.origin = browserWindow.location.protocol + "://" + browserWindow.location.hostname + (browserWindow.location.port ? ':' + browserWindow.location.port : '');
+  browserWindow.location.origin = `${browserWindow.location.protocol}//${browserWindow.location.hostname + (browserWindow.location.port ? ':' + browserWindow.location.port : '')}`;
 }
 
 var origin: string = browserWindow.location.origin;
-var testOrigin = `${browserWindow.location.protocol}://${browserWindow.location.hostname}:4000`;
-
-if (BACKEND_HOSTNAME && !serverSideRenderring) {
-  testOrigin = `${browserWindow.location.protocol}://${BACKEND_HOSTNAME}${BACKEND_PORT ? `:${BACKEND_PORT}` : ''}`;
+var testOrigin = `${browserWindow.location.protocol}//${FRONTEND_HOSTNAME}${BACKEND_PORT ? `:${BACKEND_PORT}` : ''}`;
+if (BACKEND_HOSTNAME) {
+  testOrigin = `${browserWindow.location.protocol}//${BACKEND_HOSTNAME ? BACKEND_HOSTNAME : FRONTEND_HOSTNAME}${BACKEND_PORT ? `:${BACKEND_PORT}` : ''}`;
 }
-
 
 export interface APIDefinition {
   url: string,
