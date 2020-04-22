@@ -1,6 +1,7 @@
 import { ElectronicBookStatus } from "../types/electronic-book";
-import { FRONTEND_HOSTNAME, BACKEND_HOSTNAME } from './host-config';
+import { FRONTEND_HOSTNAME, BACKEND_HOSTNAME,BACKEND_PORT } from './host-config';
 
+let serverSideRenderring = false;
 let browserWindow = null;
 if (typeof window == 'object') {
   browserWindow = window;
@@ -12,6 +13,7 @@ if (typeof window == 'object') {
       port: '3000'
     }
   }
+  serverSideRenderring = true;
 }
 
 // For IE
@@ -21,8 +23,9 @@ if (!browserWindow.location.origin) {
 
 var origin: string = browserWindow.location.origin;
 var testOrigin = `${browserWindow.location.protocol}://${browserWindow.location.hostname}:4000`;
-if (BACKEND_HOSTNAME) {
-  testOrigin = `${browserWindow.location.protocol}://${BACKEND_HOSTNAME}:4000`;
+
+if (BACKEND_HOSTNAME && !serverSideRenderring) {
+  testOrigin = `${browserWindow.location.protocol}://${BACKEND_HOSTNAME}${BACKEND_PORT ? `:${BACKEND_PORT}` : ''}`;
 }
 
 
